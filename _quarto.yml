@@ -1,0 +1,22 @@
+project:
+  title: "Modelling Infectious Diseases"
+  output-dir: student_files
+  type: website
+toc: true
+format:
+  html:
+    css: style.css
+    title-block-style: none
+    embed-resources: true
+    link-external-icon: true
+    link-external-newwindow: true
+    code-copy: true
+
+execute:
+  freeze: auto
+
+website:
+  sidebar:
+    contents:
+      - href: session1_intro_to_mathematical_modelling/session1_intro_to_mathematical_modelling.qmd
+      - href: session2_differential_equations_in_r/session2_differential_equations_in_r.qmd

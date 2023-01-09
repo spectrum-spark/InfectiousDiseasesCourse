@@ -1,0 +1,378 @@
+---
+title: "Introduction to Mathematical Modelling"
+author:
+    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
+    - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+    - Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
+    - July 2022
+output:
+    html_document:
+        self_contained: yes
+---
+    
+```{r, echo=F}
+knitr::opts_chunk$set(
+    fig.align = "center"
+)
+```
+```{css, echo=F}
+textarea {
+    width: 100%;
+}
+
+.line-block {
+    line-height: 1.5em;
+}
+
+.line-block a {
+    font-style: italic;
+}
+```
+# Summary
+
+This is an interactive session to introduce the basic concepts of mathematical modelling of infectious diseases. The SIRS model will be derived and explained. Typical epidemiological measures such as prevalence, incidence and the basic reproduction number will be explored. Types of transmission dynamic models will be compared.
+
+This session is divided into three parts:
+
+**Part 1** covers:
+
+* Brief introduction to the module
+* First practical session
+
+**Part 2** covers:
+
+* Explanation of the dynamic relationships between the changing numbers of susceptible (S), infectious (I), and recovered (R) individuals
+* Introduction to key definitions
+* Introduction to compartmental modelling
+
+**Part 3** covers:
+
+* Development of the running example model for the module which will be revisited in multiple subsequent sessions
+* Review of selected biological information to derive an appropriate model structure
+* Further review of the information will guide participants to extract essential parameter values
+
+_We recommend to save your text at the end of each part by printing the file._
+
+# Intro Notes
+
+## What is a model?
+* A simplified descritpion of a system or process used to aid understanding
+![](real_world.png)
+* A model is useful if it provides relevant (and correct) information for a particular purpose/question
+* A model is efficient if it will do this with minimal inputs and without providing superfluous information
+
+## Why use mathematical models?
+![](why_use_models.png)
+
+## Types of infectious disease model
+**Covered in this course**:
+
+* Mechanistic models
+    * Describe the biological mechanism in mathematical language
+    * Can reproduce previous trends and also predict future impacts of interventions
+* Economic models
+    * Focus on the cost specific disease burden and control
+    * Assess the cost-effectiveness of competing interventions
+
+**Not covered in this course**:
+
+* Bioinformatics
+    * Mainly for the analysis and interpretation of genetic data
+* Statistical models
+    * Data-driven and describe historical trends and relationships such as auto-regressive models
+* Spatial models (though they will be discussed briefly)
+* Focus on spatially heterogeneous systems
+
+**There are many examples of hybrid models that span several of these categories.**
+
+## Model Complexity - or not!
+
+* Models should be formulated based on understanding of disease mechanisms, available information and policy questions
+* Models should be as simple as possible, but no simpler
+![](car.png)
+* Some models are simple but useful
+* The more functions a model performs, the more complex it becomes
+* Faster processing speed, new methods and technology allow for more complexity
+    * but this is not always superior
+
+**Advice: start simple and build**
+
+# **Part 1**: Our first model
+
+## Summary
+This is a practical session in which, individually or as part of a group, you will simulate an epidemic using some simple apparatus. The objective of this exercise is to simulate and graphically illustrate the SIR compartmental model.
+
+## Materials
+* Three types of beans of a similar size but different colours, 20 of each type
+* An A4 piece of paper, folded in quarters in concertina style
+* One cup
+![](beans.png)
+
+## Instructions
+
+1. Assign a state for each type of bean:
+
+![](SIR.png)
+
+| State variable  | Colour of Bean                           |
+|----------------:|:----------------------------------------:|
+| Susceptible (S) | <input type="text" id="name" name="name">|
+| Infectious (I)  | <input type="text" id="name" name="name">|
+| Recovered (R)   | <input type="text" id="name" name="name">|
+
+2. Each time step is one week. For the first time step, place 19 susceptible beans in the cup along with one infectious bean. Pour the beans in a line on your folded paper. Record your result in the table below for week 1. Check that your total population, P, remains at 20 throughout the experiment.
+
+| Week| S | I | R | P |
+|:----|:----:|:----:|:----:|:----:|
+| 1   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 2   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 3   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 4   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 5   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 6   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 7   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 8   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 9   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+| 10   | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> | <input type="text" id="name" name="name" size="5"> |
+
+3. The infectious bean can infect susceptible neighbours so replace any susceptible neighbours with infectious beans. The infectious period is one week, so keep track of the original infected bean and replace it with a recovered bean. Record the numbers of susceptible, infectious and recovered individuals in the table above for week 2.
+
+4. Once the status of the individuals has been updated, place the beans in the cup. Then pour them out again. Replace all susceptible neighbours of infectious beans with new infectious beans (recovered beans are immune and cannot be infected). Don’t forget to replace the original infected beans with recovered beans. Record the numbers of susceptible, infectious and recovered individuals in the table above for week 3.
+
+5. Repeat until you reach 10 weeks.
+
+## Recording results in R
+Here is some code to record and plot your results in R. Open RStudio, open from your folder "lesson1_introduction_beans.R" using the Session tab, Set Working Directory / To Source File Location. Copy and paste the code chunk below into your editor. Then replace the default results with your own.
+
+```{r bean-plot}
+# Mathematical Modelling of Infectious Diseases
+###################################################
+## INTRODUCTION TO MATHEMATICAL MODELLING PRACTICAL SESSION## 
+###################################################
+
+# Record and plot simulated epidemics
+
+# create a matrix to store experimental results
+result <- matrix(NA,nrow=10,ncol=5)
+# weeks
+result[,1]<-1:10 # weeks
+
+# replace with your S count for each week
+result[,2]<-c(19, 17, 13,  9,  5,  2,  1,  1,  1,  1) # S
+
+# replace with your I count for each week
+result[,3]<-c(1, 2, 4, 4, 4, 3, 1, 0, 0, 0) # I
+
+# replace with your R count for each week
+result[,4]<-c(0,  1,  3,  7, 11, 15, 18, 19, 19, 19) # R
+```
+
+## Checking results in R
+6. Write a line of R code to calculate the sum `S+I+R` for each week and assign this to column 5 of the results matrix.
+<textarea name="Text1" cols="127" rows="1"></textarea>
+
+7. Type `results[, 5]` in your console. What do you see and why?
+<textarea name="Text1" cols="127" rows="1"></textarea>
+
+## Plotting results in R
+Copy and paste the code chunk below into your editor to plot your results:
+
+```{r plot-beans}
+#| warning: false
+library(ggplot2)
+ggplot() +
+    geom_point(aes(x=result[, 1], y=result[, 3]), colour="red") +
+    ggtitle("My simulated epidemic") +
+    labs(x="Time in weeks", y="I")
+```
+
+8. How does your result differ from the above plot?
+<textarea name="Text1" cols="127" rows="5"></textarea>
+
+9. Why would we expect a different result if we did the bean counting experiment again?
+<textarea name="Text1" cols="127" rows="5"></textarea>
+
+# **Part 2**: Compartmental Models
+
+## Summary
+This will be an interactive lecture session to familiarise you with some of the theory and methods for compartmental modelling. Notes appear below for your reference with a few questions thrown in.
+
+## The characteristic epidemic curve
+* 4 regions: Exponential; Saturation; Decline; Post epidemic behaviour
+![](epicurve.png)
+
+### Thinking like a mathematical modeller
+* What are the **mechanistic** reasons for the shape?
+![](epimodel.png)
+
+## The basic reproduction number, $R_0$
+$R_0$ is defined as the average number of new infections that result from a single infection introduced into a totally susceptible population. This will depend on:
+
+* The number of contacts per unit time (e.g. week$^{−1}$), $c$
+* The probability of infection given a contact between an infectious and a susceptible individual, $p$
+* The duration of infection, $D$
+
+The equation for the basic reproduction number is
+$$R_0=pcD.$$
+The product, $pc$, can be replaced by the single parameter, $\beta$, defined as the effective contact rate per unit time.
+
+## Estimating $R_0$ from your simulation experiment
+
+1. For $D$, what were the value and units for the duration of infection?
+<textarea name="Text1" cols="127" rows="1"></textarea>
+
+2. For $p$, what was the probability of an infected individual (bean) infecting a susceptible neighbour?
+<textarea name="Text1" cols="127" rows="1"></textarea>
+
+3. For $c$, what was the average number of contacts for each individual?
+<textarea name="Text1" cols="127" rows="4"></textarea>
+
+:::: {.callout-tip}
+Don't forget either end of the line!
+::::
+
+4. Explain why the basic reproduction number is 1.9.
+<textarea name="Text1" cols="127" rows="4"></textarea>
+
+## Saturation
+Not all contacts are with susceptible individuals:
+![](saturation.png)
+
+### Some theory
+* The effective reproduction number Rt is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
+* $R_t=R_0 x^∗$ varies over time depending on the fraction of the population susceptible, $x^∗=\left(\frac{S}{pop}\right)$
+* Incidence of infections increases when $R_t>1$ and declines when $R_t<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for R_t=1:
+$$R_t=1\Rightarrow R_0x^∗=1 \Rightarrow x^∗=\frac{1}{R_0}$$
+
+## Implications for vaccination
+* Critical proportion immune or the herd immunity threshold:
+$$HIT = 1-x^* \Rightarrow HIT = 1 - \frac{1}{R_0}$$
+
+5. Using the HIT formula, explain why a target vaccination coverage of over 50% would be sufficient to control the spread of infection in your simulated epidemic.
+<textarea name="Text1" cols="127" rows="4"></textarea>
+
+6. If the target coverage for a particular vaccine is 90%, what can you infer about the $R_0$ of the pathogen in question?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+## Building models
+
+To design your own mathematical model you must understand
+* The research question
+* The natural history of the infection
+* What data are available
+
+You will learn to
+* Write the model in the form of ordinary differential equations (ODEs)
+* Run the model using suitable software
+
+You will use your model, for example to predict the effect of interventions
+
+## Compartmental models
+
+* Each box (compartment, state) has an equation
+* Each arrow (flow) has a rate
+![](simple_flow.png)
+
+### Example: The SIRS model
+
+* Has three states so has three equations
+* The rate at which susceptible individuals become infected is **special** because it depends on the proportion of the population that is infected at each time $I(t)$
+* We define the force of infection, $\lambda(t) = \beta I(t)$.
+![](SIR_flow.png)
+
+### Some definitions
+A parameter is a constant value used in the model which usually has some biological significance. For example the duration of infection is a parameter
+
+7. What is the name of another model parameter and it's meaning?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+A variable is a value in the model that can change over time. All the states are known as state variables for this reason
+
+8. What is the name of a model variable which is not a state variable?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+Prevalence is the proportion or percentage of the population infected at any time
+
+9. What is the formula for prevalence in terms of the model states and parameters?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+Incidence is the number of new cases per unit time and is given by the rate into the infected compartment
+$$\text{incidence} = \lambda(t)S(t)$$
+
+### Model assumptions
+* All models have assumptions, so what does the example SIRS model assume?
+* **Deterministic** dynamics
+    * No role for chance, model is ‘predetermined’
+* Population is stratified in broad groups (i.e. compartments). Within each compartment, individuals are homogeneous
+
+10. What does this mean?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+* Homogenous mixing
+
+11. What does this mean?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+* Dynamic transmission
+
+12. What does this mean?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+:::: {.callout-tip}
+Think special rates
+::::
+
+
+* Closed population
+
+13. What does this mean?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+### Common model structures
+![](structures.png)
+
+14. Suggest a suitable infectious disease for each of the common model structures listed below.
+
+| Model Structure | Suitable Infectious Disease |
+|----------------:|:---------------------------:|
+| SI    | <input type="text" id="name" name="name" size="30"> |
+| SIS   | <input type="text" id="name" name="name" size="30"> |
+| SIR   | <input type="text" id="name" name="name" size="30"> |
+| SIRS  | <input type="text" id="name" name="name" size="30"> |
+| SEIR  | <input type="text" id="name" name="name" size="30"> |
+| SEIRS | <input type="text" id="name" name="name" size="30"> |
+
+# **Part 3**: A model for COVID-19 tranmission
+
+## Building a compartmental model: the problem for the week
+We will write a suitable model structure for COVID-19 and search the literature for data to inform parameter values and for model comparison.
+
+Examine the figure below and discuss amongst the group or search trusted sources to assist your answer.
+![](covid_viral_stages.jpg)
+
+1. What is the most suitable structure for a COVID-19 transmission model (SI, SIS, SIR, SIRS, SEIR, SEIRS or other)?
+<textarea name="Text1" cols="127" rows="3"></textarea>
+
+2. Describe of sketch a diagram of the model structure. Include information about the compartments and the flows.
+<textarea name="Text1" cols="127" rows="7"></textarea>
+
+## Model diagram
+
+#### Instructions
+1. You can draw a diagram electronically in a program such as PowerPoint, or you can draw your diagram by hand and take a photo
+2. Save your diagram in one of the following formats: .jpg, .gif, .png
+3. Upload your diagram using the Choose Files button below
+
+#### Upload your image
+<input type="file" id="files" name="files[]" multiple="">
+
+3. It is good practice to start with a simple model, that is, a model with many simplifying assumptions which means it is not very realistic. How would you change the model to make it more realistic?
+<textarea name="Text1" cols="127" rows="7"></textarea>
+
+Refer to the chart of confirmed COVID cases in Thailand superimposed with interventions:
+![](Thailand_First_Wave.png)
+
+4. What questions would a policymaker be asking in this scenario? Comment on if and how a model could be used to answer each policy question.
+<textarea name="Text1" cols="127" rows="7"></textarea>
+
+<input type="button" value="Print this page" onclick="window.print()">
