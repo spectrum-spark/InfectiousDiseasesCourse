@@ -20,3 +20,4 @@ website:
     contents:
       - href: session1_intro_to_mathematical_modelling/session1_intro_to_mathematical_modelling.qmd
       - href: session2_differential_equations_in_r/session2_differential_equations_in_r.qmd
+      - href: session3_writing_a_model_to_suit_the_infectious_agent/session3_writing_a_model_to_suit_the_infectious_agent.qmd

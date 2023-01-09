@@ -1,0 +1,126 @@
+---
+title: "Designing a model to suit the pathogen"
+author:
+    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
+    - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+    - Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
+    - July 2022
+output:
+    html_document:
+        self_contained: yes
+---
+    
+```{r, echo=F}
+knitr::opts_chunk$set(
+    fig.align = "center"
+)
+```
+```{css, echo=F}
+textarea {
+    width: 100%;
+}
+
+.line-block {
+    line-height: 1.5em;
+}
+
+.line-block a {
+    font-style: italic;
+}
+```
+# Practice in building a model
+
+* Separate into groups of about 4 to 6 people
+* With facilitation from a tutor or demonstrator, write a model for HIV, a disease with **lifelong carriage**. The aim is to capture the different disease states and flows between them, like in the last session. You can propose a model question for example: as an infectious disease epidemiologist, you notice a recent spike in HIV notifications. You want to project the number of cases of AIDS and the need for treatment over the next few years. Build a model that may help with the epidemiological projections.
+    * Draw a diagram of a simple compartmental model and define the variables and parameters
+    * Write down the ODEs
+    * What would you do to improve/change this model for the next version? (No need to write the equations for this)
+    * Nominate a rapporteur for each group for presentation in this session
+
+You might find the following diagram helpful:
+![](HIV.png)
+
+Upload your model diagram:
+
+<input type="file" id="files" name="files[]" multiple="">
+
+# Model presentation and discussion
+
+* Each group in turn will present their model diagram and equations
+* While the other group members will troubleshoot the presented model for structural and mathematical errors
+
+## More practice
+
+* Repeat this process for measles, a short-lived disease with **lifelong immunity**.
+
+You might find the following diagram helpful:
+![](measles.png)
+
+Upload your model diagram:
+
+<input type="file" id="files" name="files[]" multiple="">
+
+# Introduction to a Shiny App
+
+* Navigate to the folder `./student_materials/shiny_app_SEIRS_variations.R
+* Click "Run App"
+
+If this doesn't work, you can try the online version: [https://emmamcbryde.shinyapps.io/SEIR_model/](emmamcbryde.shinyapps.io/SEIR_model/). You should see something like this:
+![](shiny_default.png)
+
+## Examine the graphs that plot S, E, I and R over time for the default parameters.
+
+1. What kind of model is it?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+Change the parameter for the basic reproduction number. What impact does this have on:
+
+2. The duration of the epidemic?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+3. The peak of infectious cases?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+4. The final proportion of susceptibles?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+Change the parameter for latency duration. What impact does this have on:
+
+5. The duration of the epidemic?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+6. The peak of infectious cases?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+7. The final proportion of susceptibles?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+Reduce the duration of immunity.
+
+8. What type of model have we now created?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+9. How does this impact on the number of susceptibles after a long time?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+10. How does this impact on the number of infectious after a long time?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+11. Why does the model have waves?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+Examine the phase plane.
+
+12. What is it showing?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+13. Where is time on the phase plane?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+14. What corresponds to the waves in the phase plane?
+<textarea name="Text1" cols="127" rows="2"></textarea>
+
+Continue to change the parameters to try and simulate the different model types such as those pictured below.
+![](structures.png)
+
+<input type="button" value="Print this page" onclick="window.print()">
