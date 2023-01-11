@@ -4058,6 +4058,20 @@ vertical-align: -.125em;
   <li><a href="#code-summary" id="toc-code-summary" class="nav-link" data-scroll-target="#code-summary">Code summary</a></li>
   <li><a href="#set-working-directory" id="toc-set-working-directory" class="nav-link" data-scroll-target="#set-working-directory">Set working directory</a></li>
   <li><a href="#material" id="toc-material" class="nav-link" data-scroll-target="#material">Material</a></li>
+  <li><a href="#part-1-solving-differential-equations" id="toc-part-1-solving-differential-equations" class="nav-link" data-scroll-target="#part-1-solving-differential-equations">Part 1: Solving differential equations</a>
+  <ul class="collapse">
+  <li><a href="#differential-equations" id="toc-differential-equations" class="nav-link" data-scroll-target="#differential-equations">Differential equations</a></li>
+  <li><a href="#simple-example-population-growth" id="toc-simple-example-population-growth" class="nav-link" data-scroll-target="#simple-example-population-growth">Simple example: population growth</a>
+  <ul class="collapse">
+  <li><a href="#library-loading" id="toc-library-loading" class="nav-link" data-scroll-target="#library-loading">Library loading</a></li>
+  <li><a href="#setting-up-the-differential-equation" id="toc-setting-up-the-differential-equation" class="nav-link" data-scroll-target="#setting-up-the-differential-equation">Setting up the differential equation</a></li>
+  <li><a href="#plotting-the-solution" id="toc-plotting-the-solution" class="nav-link" data-scroll-target="#plotting-the-solution">Plotting the solution</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#part-2-multi-dimensional-systems" id="toc-part-2-multi-dimensional-systems" class="nav-link" data-scroll-target="#part-2-multi-dimensional-systems">Part 2: Multi-dimensional systems</a>
+  <ul class="collapse">
+  <li><a href="#exercise-the-sir-epidemic-model" id="toc-exercise-the-sir-epidemic-model" class="nav-link" data-scroll-target="#exercise-the-sir-epidemic-model">Exercise: The SIR epidemic model</a></li>
+  </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   <li><a href="#extension-exercises" id="toc-extension-exercises" class="nav-link" data-scroll-target="#extension-exercises">Extension exercises</a></li>
@@ -4149,19 +4163,18 @@ font-style: italic;
 <li>Solving coupled DEs using <code>deSolve</code></li>
 </ul>
 <p><em>We recommend to save your text at the end of each part by printing the file.</em></p>
-<div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Part 1: Solving differential equations</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Part 2: Multi-dimensional systems</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<section id="differential-equations" class="level3">
-<h3 class="anchored" data-anchor-id="differential-equations">Differential equations</h3>
+</section>
+<section id="part-1-solving-differential-equations" class="level1">
+<h1>Part 1: Solving differential equations</h1>
+<section id="differential-equations" class="level2">
+<h2 class="anchored" data-anchor-id="differential-equations">Differential equations</h2>
 <p>Differential equations are equations that describe the rate of change of some quantity (or quantities) with respect to an independent variable, typically time or space. For example, the rate per unit time at which chemical compounds are formed in chemical reactions, or at which heat dissipates from an object can often be described by systems of differential equations.</p>
 <p>The package <code>deSolve</code> is used to solve systems of initial value problem differential equations within the R programming language. The package is based on previously developed <code>FORTRAN</code> routines and many <code>deSolve</code> functions are wrappers around existing FORTRAN codes.</p>
 <p>As described in the <code>deSolve</code> introductory manual, differential equations are implemented and solved in R through two separate steps: model specification and model application. In the first step, model specification, the user is required to define the model parameters and state variables and implement the derivative function. In the next step, model application, the user specifies a time lattice upon which the solution to the differential equation should be returned and integrates the differential equations using the functions available in the <code>deSolve</code> package.</p>
 <p>In this chapter we will implement several examples of systems of differential equations and use the <code>deSolve</code> package in R to solve them. (See <a href="https://cran.r-project.org/web/packages/deSolve/deSolve.pdf"><code>deSolve</code> manual</a>.)</p>
 </section>
-<section id="simple-example-population-growth" class="level3">
-<h3 class="anchored" data-anchor-id="simple-example-population-growth">Simple example: population growth</h3>
+<section id="simple-example-population-growth" class="level2">
+<h2 class="anchored" data-anchor-id="simple-example-population-growth">Simple example: population growth</h2>
 <p>To guide you through the model specification and application steps described above, we will start with an easy example: modelling population growth. One of the simplest models of population growth is the Malthusian model which assumes that a population of size <span class="math inline">\(N(t)\)</span> grows at a rate proportional to its current size. That is, the growth rate per unit time of the population size obeys the relation</p>
 <p><span class="math display">\[\frac{dN(t)}{dt} \propto N(t)\]</span></p>
 <p>(where the symbol <span class="math inline">\(\propto\)</span> means “is proportional to”). In this case, the larger the current population size <span class="math inline">\(N(t)\)</span>, the faster it grows.</p>
@@ -4174,8 +4187,8 @@ r &amp;= 2 \\
 N_0 &amp;= 1
 \end{align}\]</span></p>
 <p>Given values for the growth rate <span class="math inline">\(r\)</span> and the initial population size <span class="math inline">\(N_0\)</span> we can now integrate (ie solve) our differential equation to determine the population size <span class="math inline">\(N(t)\)</span> at future times <span class="math inline">\(t&gt;0\)</span>.</p>
-<section id="library-loading" class="level4">
-<h4 class="anchored" data-anchor-id="library-loading">Library loading</h4>
+<section id="library-loading" class="level3">
+<h3 class="anchored" data-anchor-id="library-loading">Library loading</h3>
 <p>Before doing anything else, let’s install the <code>deSolve</code> package and then load it into our workspace. We’ll also need the <code>tidyverse</code>, which is a bunch of packages that make working with data a bit easier in R.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(deSolve)</span>
@@ -4183,8 +4196,8 @@ N_0 &amp;= 1
 </div>
 <p>If you get an error while trying to load the package, make sure to install it through RStudio.</p>
 </section>
-<section id="setting-up-the-differential-equation" class="level4">
-<h4 class="anchored" data-anchor-id="setting-up-the-differential-equation">Setting up the differential equation</h4>
+<section id="setting-up-the-differential-equation" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-the-differential-equation">Setting up the differential equation</h3>
 <p>The first step in solving a differential equation in <code>deSolve</code> is to specify our model parameters and initialize our state variables</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model parameters and store values in a labelled vector</span></span>
@@ -4241,8 +4254,8 @@ N_0 &amp;= 1
 </div>
 <p>Here we see that the solution <span class="math inline">\(N(t)\)</span> is given at each time point specified in the time lattice times, ie at intervals of <span class="math inline">\(\Delta t=0.01\)</span> from <span class="math inline">\(t=0\)</span> up to <span class="math inline">\(t=10\)</span>. Notice that the first value of the solution <span class="math inline">\(N\)</span> at time <span class="math inline">\(t=0\)</span> is the initial value we specified above, <code>initN = 1</code>.</p>
 </section>
-<section id="plotting-the-solution" class="level4">
-<h4 class="anchored" data-anchor-id="plotting-the-solution">Plotting the solution</h4>
+<section id="plotting-the-solution" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-solution">Plotting the solution</h3>
 <p><code>ggplot</code> doesn’t know how to deal with <code>deSolve</code> outputs directly, so we have to turn it into a <code>data.frame</code> using <code>as.data.frame</code>. Then, having done that, we can map our x and y axes and plot the solution:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">as.data.frame</span>(out), <span class="fu">aes</span>(<span class="at">x=</span>time, <span class="at">y=</span>N)) <span class="sc">+</span></span>
@@ -4289,10 +4302,11 @@ Repeat your earlier calculation for the time taken for <span class="math inline"
 <p>When exact, or even approximate analytical solutions are not available, another way to validate your numerical solution is by decreasing the time step to see if the solution varies substantially. If the solution is stable, eventually you should notice very little difference in the numerical solution as you continually decrease the time step, ie it should converge. This can be adjusted in the ode function using the rtol and atol parameters which set the relative and absolute error tolerances accepted during the integration routine (see <a href="https://cran.r-project.org/web/packages/deSolve/deSolve.pdf"><code>deSolve</code> manual</a>.)</p>
 </section>
 </section>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<section id="exercise-the-sir-epidemic-model" class="level3">
-<h3 class="anchored" data-anchor-id="exercise-the-sir-epidemic-model">Exercise: The SIR epidemic model</h3>
+</section>
+<section id="part-2-multi-dimensional-systems" class="level1">
+<h1>Part 2: Multi-dimensional systems</h1>
+<section id="exercise-the-sir-epidemic-model" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-the-sir-epidemic-model">Exercise: The SIR epidemic model</h2>
 <p>To model the spread of infectious diseases it is common to split the population up into three disease states: <span class="math inline">\(S\)</span>, susceptible to infection; <span class="math inline">\(I\)</span>, infected and infectious; <span class="math inline">\(R\)</span>, recovered. During an outbreak the rates of change of each of these three populations can be described using the following system of (coupled) differential equations:</p>
 <p><span class="math display">\[\begin{align}
     \frac{dS(t)}{dt}&amp;=-\beta \frac{S(t)}{N}I(t)\\
@@ -4322,9 +4336,6 @@ Repeat your earlier calculation for the time taken for <span class="math inline"
 </div>
 </div>
 </section>
-</div>
-</div>
-</div>
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
@@ -4348,9 +4359,9 @@ Repeat your earlier calculation for the time taken for <span class="math inline"
 <section id="extension-exercises" class="level1">
 <h1>Extension exercises</h1>
 <div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Logistic population growth</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Lotka-Volttera Model</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Logistic population growth</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Lotka-Volttera Model</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>From the figures we have generated so far you might have noticed that the Malthusian growth model is probably not appropriate in most settings (Why? Try solving the model over a longer time horizon to find out). A more realistic model of population growth is given by the logistic growth model where the growth rate <span class="math inline">\(r\)</span> now varies as a function of the population size:</p>
 <p><span class="math display">\[ r \rightarrow r\left(1 - \frac{N(t)}{k}\right)\]</span></p>
 <p>such that the rate of change in population size <span class="math inline">\(dN(t)/dt\)</span> becomes</p>
@@ -4387,7 +4398,7 @@ N_0 &amp;= 1
 </div>
 </section>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Often we are interested in dynamical systems that are described in terms of several state variables <span class="math inline">\((x1(t),x2(t),…,xn(t))\)</span>. For example, in chemical reactions we may want to track the concentrations of several reactants and products through time, or in ecological studies the population sizes of various species. In these cases we expect a system of differential equations, often one for each state variable:</p>
 <p><span class="math display">\[\begin{align}
     \frac{dx_1 (t)}{dt}&amp;=f_1 (x_1,x_2,,…,x_n,t)\\

@@ -94,11 +94,9 @@ Part 2 covers:
 
 *We recommend to save your text at the end of each part by printing the file.*
 
-::: {.panel-tabset}
+# Part 1: Solving differential equations
 
-## Part 1: Solving differential equations
-
-### Differential equations
+## Differential equations
 Differential equations are equations that describe the rate of change of some quantity (or quantities) with respect to an independent variable, typically time or space. For example, the rate per unit time at which chemical compounds are formed in chemical reactions, or at which heat dissipates from an object can often be described by systems of differential equations.
 
 The package `deSolve` is used to solve systems of initial value problem differential equations within the R programming language. The package is based on previously developed `FORTRAN` routines and many `deSolve` functions are wrappers around existing FORTRAN codes.
@@ -108,7 +106,7 @@ As described in the `deSolve` introductory manual, differential equations are im
 In this chapter we will implement several examples of systems of differential equations and use the `deSolve` package in R to solve them. (See [`deSolve` manual](https://cran.r-project.org/web/packages/deSolve/deSolve.pdf).)
 
 
-### Simple example: population growth
+## Simple example: population growth
 
 To guide you through the model specification and application steps described above, we will start with an easy example: modelling population growth. One of the simplest models of population growth is the Malthusian model which assumes that a population of size $N(t)$ grows at a rate proportional to its current size. That is, the growth rate per unit time of the population size obeys the relation
 
@@ -131,7 +129,7 @@ N_0 &= 1
 
 Given values for the growth rate $r$ and the initial population size $N_0$ we can now integrate (ie solve) our differential equation to determine the population size $N(t)$ at future times $t>0$.
 
-#### Library loading
+### Library loading
 Before doing anything else, let's install the `deSolve` package and then load it into our workspace. We'll also need the `tidyverse`, which is a bunch of packages that make working with data a bit easier in R.
 ```{r load-de-solve}
 #| echo: true
@@ -141,7 +139,7 @@ library(tidyverse)
 ```
 If you get an error while trying to load the package, make sure to install it through RStudio.
 
-#### Setting up the differential equation
+### Setting up the differential equation
 The first step in solving a differential equation in `deSolve` is to specify our model parameters and initialize our state variables
 
 ```{r de-specify-parameters}
@@ -202,7 +200,7 @@ head(out)
 
 Here we see that the solution $N(t)$ is given at each time point specified in the time lattice times, ie at intervals of $\Delta t=0.01$ from $t=0$ up to $t=10$. Notice that the first value of the solution $N$ at time $t=0$ is the initial value we specified above, `initN = 1`.
 
-#### Plotting the solution
+### Plotting the solution
 `ggplot` doesn't know how to deal with `deSolve` outputs directly, so we have to turn it into a `data.frame` using `as.data.frame`. Then, having done that, we can map our x and y axes and plot the solution:
 
 ```{r de-growth-visualise}
@@ -246,10 +244,10 @@ When exact, or even approximate analytical solutions are not available, another 
 
 
 
-## Part 2: Multi-dimensional systems
+# Part 2: Multi-dimensional systems
 
 
-### Exercise: The SIR epidemic model
+## Exercise: The SIR epidemic model
 
 To model the spread of infectious diseases it is common to split the population up into three disease states: $S$, susceptible to infection; $I$, infected and infectious; $R$, recovered. During an outbreak the rates of change of each of these three populations can be described using the following system of (coupled) differential equations:
 
@@ -312,8 +310,6 @@ ggplot(data = plot_data, aes(x=time, y=value, colour=state, linetype=state)) +
     geom_point(data = plot_data %>% slice(seq(1, n(), 10)), size = 2) + #Overlay points on the line curves
     ggtitle("SIR Model")
 ```
-
-:::
 
 # Exercises
 
