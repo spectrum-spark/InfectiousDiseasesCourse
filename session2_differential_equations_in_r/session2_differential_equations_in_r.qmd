@@ -254,8 +254,8 @@ When exact, or even approximate analytical solutions are not available, another 
 To model the spread of infectious diseases it is common to split the population up into three disease states: $S$, susceptible to infection; $I$, infected and infectious; $R$, recovered. During an outbreak the rates of change of each of these three populations can be described using the following system of (coupled) differential equations:
 
 \begin{align}
-    \frac{dS(t)}{dt}&=-\beta S(t)I(t)\\
-    \frac{dI(t)}{dt}&=\beta S(t)I(t)-\gamma I(t)\\
+    \frac{dS(t)}{dt}&=-\beta \frac{S(t)}{N}I(t)\\
+    \frac{dI(t)}{dt}&=\beta \frac{S(t)}{N}I(t)-\gamma I(t)\\
     \frac{dR(t)}{dt}&=\gamma I(t).
 \end{align}
 
@@ -264,7 +264,7 @@ This system is known as the SIR model of disease transmission and contains two p
 Taking parameter values
 
 \begin{align}
-    \beta&=0.025\\
+    \beta&=5\\
     \gamma&=1
 \end{align}
 

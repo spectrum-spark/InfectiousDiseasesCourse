@@ -4295,14 +4295,14 @@ Repeat your earlier calculation for the time taken for <span class="math inline"
 <h3 class="anchored" data-anchor-id="exercise-the-sir-epidemic-model">Exercise: The SIR epidemic model</h3>
 <p>To model the spread of infectious diseases it is common to split the population up into three disease states: <span class="math inline">\(S\)</span>, susceptible to infection; <span class="math inline">\(I\)</span>, infected and infectious; <span class="math inline">\(R\)</span>, recovered. During an outbreak the rates of change of each of these three populations can be described using the following system of (coupled) differential equations:</p>
 <p><span class="math display">\[\begin{align}
-    \frac{dS(t)}{dt}&amp;=-\beta S(t)I(t)\\
-    \frac{dI(t)}{dt}&amp;=\beta S(t)I(t)-\gamma I(t)\\
+    \frac{dS(t)}{dt}&amp;=-\beta \frac{S(t)}{N}I(t)\\
+    \frac{dI(t)}{dt}&amp;=\beta \frac{S(t)}{N}I(t)-\gamma I(t)\\
     \frac{dR(t)}{dt}&amp;=\gamma I(t).
 \end{align}\]</span></p>
 <p>This system is known as the SIR model of disease transmission and contains two parameters: the infection transmission rate, <span class="math inline">\(\beta\)</span>; and the recovery rate, <span class="math inline">\(\gamma\)</span>.</p>
 <p>Taking parameter values</p>
 <p><span class="math display">\[\begin{align}
-    \beta&amp;=0.025\\
+    \beta&amp;=5\\
     \gamma&amp;=1
 \end{align}\]</span></p>
 <p>and initial conditions</p>
