@@ -1,13 +1,14 @@
 ---
 title: "Vector-borne disease modelling"
-author: 
-  - Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
-      >Trish Campbell</a> The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
-  - SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023
+author: |
+  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
+      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
+  |
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
 output: 
   html_document:
      self_contained: yes
-     link-external-icon: false
+     link-external-icon: true
      link-external-newwindow: true
 execute:
   echo: false
@@ -77,7 +78,7 @@ There are many different types of vector. While some diseases, such as malaria, 
 
 ```{r echo=FALSE}
 df <- data.frame(
-  Vector = c("Mosquito – Anopheles", "Mosquito – Aedes", "Mosquito – Culex", "Blackflies"),
+  Vector = c("Mosquito - Anopheles", "Mosquito - Aedes", "Mosquito - Culex", "Blackflies"),
   Disease = c("Malaria, Lymphatic filariasis", "Zika, Dengue, Lymphatic filariasis", "West Nile fever, Japanese encephalitis, Lymphatic filariasis", "Onchocerciasis")
 )
 library(kableExtra)

@@ -1,0 +1,1889 @@
+---
+title: "Vector-borne disease models in R"
+author: |
+    |  
+    | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+    | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
+      target="_blank">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute 
+      for Infection and Immunity***
+output: 
+  html_document:
+     self_contained: yes
+     link-external-icon: true
+     link-external-newwindow: true
+execute:
+  echo: false
+  warning: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=F}
+knitr::opts_chunk$set(
+    fig.align = "center"
+)
+```
+
+```{css, echo=F}
+textarea {
+    width: 100%;
+}
+
+.line-block {
+    line-height: 1.5em;
+}
+
+.line-block a {
+    font-style: italic;
+}
+```
+
+# Summary {.tabset .tabset-pills .tabset-fade}
+
+In this practical, we will code the vector-borne disease model developed
+in the previous session, adapt it to include more realism, explore how
+the behaviour of the system changes as some of our assumptions change
+and discuss how interventions might be included in the model.
+
+**Part 1** covers:
+
+-   Coding a model for dengue transmission
+-   Running the model and plotting the results
+-   Comparing the modelled output to published case numbers
+
+**Part 2** covers:
+
+-   Adapting the model to include exposed compartments
+-   Comparing the modelled output to published case numbers
+
+**Part 3** covers:
+
+-   Adapting the model to include seasonality
+-   Comparing the modelled output to published case numbers
+
+**Part 4** covers:
+
+-   Identifying different interventions that could be used for dengue
+    control
+-   Identifying of the various model elements on which an intervention
+    acts
+-   Discuss in groups how the model would need to be adapted
+
+### Setting up your system
+
+Before we begin developing a model, we need to set up our system.
+
+As in previous sessions, we will start by creating a new file and
+writing a short description of your code to summarise its purpose for
+future users. Below is an example of such a description for this
+session. Open R studio, and then open the file `session8.R` in the
+`\student_materials` folder. Copy and paste the code chunk below (or
+write your own!) into your editor to start writing your own code:
+
+```{r, echo=T}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
+#############################################################
+
+# A model for dengue transmission - Part 1
+# Some R code to numerically solve a set of ordinary differential equations
+# for a simple model of dengue. Results are then plotted.
+```
+
+### Save your new file
+
+We recommend saving your file in the `\student_materials` folder as you
+work through the practical session.
+
+### Set working directory
+
+Remember to set your working directory. As in previous sessions, you can
+set the working directory by tabbing: Session/Set Working Directory/To
+Source Location
+
+The better way is to re-use the RStudio Project you've been using so far
+(if you have one of them), and your working directory will be set
+automatically.
+
+### Load required packages
+
+Copy and paste the code below into your file to load the dplyr, deSolve
+and ggplot2 packages:
+
+```{r load_packages, echo=F, eval=T, message=FALSE, warnings = FALSE}
+# Library imports
+# Used this code rather than the code for students in the chunk below, as using the
+# code in the chunk below is re-installing the packages when knitr is used,
+# regardless of whether they are already attached
+required_packages <- (c("dplyr",
+                        "deSolve",
+                        "ggplot2"))
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+      install.packages(pkg)
+      library(pkg, character.only = TRUE)
+  }
+}
+```
+
+```{r load_packages_student, echo=T, eval=F}
+# Library imports
+required_packages <- (c("dplyr",
+                        "deSolve",
+                        "ggplot2"))
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
+```
+
+<p><br></p>
+
+::: panel-tabset
+## **Part 1:** A model for dengue
+
+In the previous session, we developed a model for a mosquito-borne
+disease. Here, we will code that model in R and parameterise it using
+typical values applicable to dengue transmission.
+
+### Define the model parameters and time period for simulations
+
+As we saw in previous sessions, model parameters must be estimated
+either from literature or from a model. In developing this model for
+dengue, we will use parameter values obtained from the following paper:
+
+Ndii, M.Z., Hickson, R.I., Allingham, D. and Mercer, G.N., 2015.
+Modelling the transmission dynamics of dengue in the presence of
+*Wolbachia*. *Mathematical Biosciences*, 262, pp.157--166.
+
+```{r echo=FALSE}
+df <- data.frame(
+  Parameter = c("Number of bites", "Probability of transmission - mosquito to human", "Probability of transmission - human to mosquito", "Duration of infection - humans", "Mosquito birth and death rate"),
+  Name = c("bites", "T_HM", "T_MH", "infectious period", "mu_M"),
+  Value = c(0.63, 0.26, 0.26, 5, "1/14"),
+  Units = c("per mosquito per day", "NA", "NA", "days", "per day")
+)
+library(kableExtra)
+
+kbl(df) %>%
+kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
+```
+
+Using the table of parameter names and values above, copy and paste the
+following code chunk into your editor and complete the code by entering
+the [VALUE, NAME]{style="color: blue"} and
+[DESCRIPTION]{style="color: blue"} where they are missing:
+
+```{r load_parameters, echo=F, eval=T}
+# This code chunk loads the parameters but does not show the completed code to the 
+# students. Students need to complete the chunk named 'load_parameters_student'
+parameters <- c(
+ bites = 0.63, # number of bites per mosquito per day
+ T_HM = 0.26, # probability of transmission - mosquito to human
+ T_MH = 0.26, # probability of transmission - human to mosquito
+ infectious_period = 5, # days
+ mu_M = 1/14 # per day. Mosquito birth and death rate.
+)
+```
+
+```{r load_parameters_student, echo=T, eval=F}
+# Model parameters
+parameters <- c(
+ bites = VALUE, # number of bites per mosquito per day
+ NAME = 0.26, # probability of transmission - mosquito to human
+ T_MH = 0.26, # DESCRIPTION
+ infectious_period = 5, # days
+ mu_M = VALUE # DESCRIPTION
+)
+```
+
+We also need to specify the start time and end time for our simulation,
+as well as the time step to report values. We will use the times
+specified in the Ndii et al. paper. Copy and paste the code chunk below
+into your editor, and complete by specifying the arguments to the
+`seq`function, indicated as [VALUE, VALUE, VALUE]{style="color: blue"}
+using a time step of 1 day:
+
+```{r set_up_times, echo=F, eval=T}
+# This code chunk sets up the times for which to solve the odes but does not show the completed code to the 
+# students. Students need to complete the chunk named 'set_up_times_student'
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+```
+
+```{r set_up_times_student, echo=T, eval=F}
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(VALUE, VALUE, VALUE)
+```
+
+### Set up the initial conditions
+
+The Ndii et al. paper develops a model for dengue transmission in the
+city of Cairns, Australia, which had an approximate human population of
+150,000 in 2008. The carrying capacity for the mosquito population (the
+maximum population that can be supported without environmental
+degradation) is related to the number of available breeding sites, which
+in turn is dependent on the number of humans. The Ndii et al paper sets
+the carrying capacity at three times the human population, and so we
+will assume an initial mosquito population size of 450,000, half of
+which is female. We only model female mosquitoes as they are the only
+ones that transmit infection. Our simulations will commence with 2
+infectious humans and 10 infectious mosquitoes, with all remaining
+humans and mosquitoes susceptible.
+
+Using this information, copy and paste the following code chunk into
+your editor and complete the code by entering
+[VALUE]{style="color: blue"} where it is missing, and calculating the
+population in the human recovered compartment and mosquito infectious
+compartment using the values of other variables (where [EXPRESSION USING
+OTHER VARIABLES]{style="color: blue"} is indicated):
+
+```{r load_initial, echo=F, eval=T}
+# This code chunk loads the initial conditions but does not show the completed code to the 
+# students. Students need to complete the chunk named 'load_initial_student'
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious
+mosquito_population <- 225000 # 3 times human population, divided by 2
+initial_mosquito_susceptible <- 224990
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible
+```
+
+```{r load_initial_student, echo=T, eval=F}
+# Initial conditions
+human_population <- VALUE # population of Cairns in 2008
+initial_human_susceptible <- VALUE
+initial_human_infectious <- 2
+initial_human_recovered <- EXPRESSION USING OTHER VARIABLES
+mosquito_population <- 225000 
+initial_mosquito_susceptible <- VALUE
+initial_mosquito_infectious <- EXPRESSION USING OTHER VARIABLES
+```
+
+### Define the model variables (also known as compartments or states)
+
+We define the compartments of our model, initialise the value of each
+using the initial conditions and then gather them together in a single
+variable. Copy and paste the code chunk below into your editor and
+complete the code by entering [VALUE]{style="color: blue"} where it is
+missing:
+
+```{r states, echo=F, eval=T}
+# This code chunk initialises the compartments but does not show the completed code to the 
+# students. Students need to complete the chunk named 'states_student'
+state <- c(Susceptible_human = initial_human_susceptible,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Infectious_mosquito = initial_mosquito_infectious)
+```
+
+```{r states_student, echo=T, eval=F}
+# Define model compartments, gather into a single variable to capture the state 
+# of the system and set to initial values
+state <- c(Susceptible_human = VALUE,
+           Infectious_human = VALUE,
+           Recovered_human = VALUE,
+           Susceptible_mosquito = VALUE,
+           Infectious_mosquito = VALUE)
+```
+
+### Set up a function to solve the equations
+
+Now that we have defined our parameters, compartments and initial
+conditions, we will write a function to numerically solve our dengue
+model using the model equations developed in the previous session. Copy
+and paste the incomplete code chunk below into your editor and complete
+the code by replacing the text indicated by [EXPRESSION USING OTHER
+VARIABLES]{style="color: blue"}:
+
+```{r model_function, echo=F, eval=T}
+# This code chunk contains the model function but does not show the completed code to the 
+# students. Students need to complete the chunk named 'model_function_student'
+dengue_base <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human 
+    Infectious_human_change <- force_of_infection_on_human * Susceptible_human - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito 
+    Infectious_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+```
+
+```{r model_function_student, echo=T, eval=F}
+# Model function
+dengue_base <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- EXPRESSION USING OTHER VARIABLES
+    Total_mosquito_population <- EXPRESSION USING OTHER VARIABLES
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- EXPRESSION USING OTHER VARIABLES
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- EXPRESSION USING OTHER VARIABLES
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- EXPRESSION USING OTHER VARIABLES 
+    Infectious_human_change <- EXPRESSION USING OTHER VARIABLES
+    Recovered_human_change <- EXPRESSION USING OTHER VARIABLES
+    Susceptible_mosquito_change <- EXPRESSION USING OTHER VARIABLES 
+    Infectious_mosquito_change <- EXPRESSION USING OTHER VARIABLES
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+```
+
+### Run the model and plot the results
+
+We now run the model, using the code you learned in a previous session.
+Copy and paste the code chunk below into your editor, enter
+[VALUE]{style="color: blue"} where it is missing, and then run your
+file:
+
+```{r run_model_student, echo=T, eval=F}
+# Solve model
+out_dengue_base <- ode(y = VALUE, times = as.numeric(times - times[1]), 
+                       func = VALUE, parms = VALUE)
+
+# Plot solution
+plot(out_dengue_base, 
+     main = c("Susceptible humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+Your plot should look this this:
+
+```{r run_model, echo=F, eval=T}
+# This code chunk runs the model and plots the output but does not show the 
+# completed code to the students. Students need to complete the chunk named 
+# 'run_model_student'
+
+out_dengue_base <- ode(y = state, times = as.numeric(times - times[1]), 
+                       func = dengue_base, parms = parameters)
+
+# Plot solution
+plot(out_dengue_base, 
+     main = c("Susceptible humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+### Comparing to published dengue incidence data
+
+The weekly incidence of dengue infections in Cairns over the period we
+ran our model is reported in Ritchie, S.A., Pyke, A.T., Hall-Mendelin,
+S.et al., 2013. An explosive epidemic of DENV-3 in Cairns, Australia.
+*PLoS One*, 8(7), p.e68137.
+
+::: row
+
+
+<center><img src="pone.0068137.g002.png" alt="Dengue confirmed cases in Cairns Nov 2008 to May 2009" style="width:80%"/></center>
+:::
+
+
+
+The data in this published plot represent the weekly number of newly
+confirmed cases, while the model output we have saved reports the daily
+number of infectious people. To compare our data to the published data,
+we need to convert our data into new infections, that is, convert
+*prevalence* data into *incidence* data. It is possible to save and
+report new infections directly within your model function, but here we
+will calculate the number of new infections using the data we have
+already generated. From our model equations, we have:
+
+<ul>
+
+<li>Susceptible human change = - new infections</li>
+
+</ul>
+
+If we can calculate susceptible human change from our model output, we
+will have the number of new infections. Since our model output records
+the number of humans in the S compartment at each of our recorded time
+steps, if we take the difference between these entries, we will have the
+susceptible human change, and we get the new infections by changing its
+sign. Copy and paste the code below into your editor, to convert daily
+prevalence into weekly incidence and plot the results:
+
+```{r new_infections, echo=T, eval=T}
+# Convert ode output to data frame
+dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+ dengue_base_infections <- dengue_base_infections  %>%
+                          mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
+                                 Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
+                          filter(time %% 7 == 0) %>%
+                          select(c("time", "Cumulative_human_infections")) %>%
+                          mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
+
+
+# Plot solution
+plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections")
+```
+
+Comparing this plot to the published data, we can see that while we have
+captured the *shape* of the outbreak reasonably well, our model
+generates orders of magnitude higher new infections than were reported.
+There are numerous potential explanations for this. In the next section,
+we will adapt our model to see whether we can improve the fit.
+
+<p><br></p>
+
+<input type="button" value="Print this page" onclick="window.print()">
+
+## **Part 1:** Solutions
+
+By the end of Part 1, your script should look like this:
+
+```{r part_1_solutions, ECHO=T, eval=F}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
+#############################################################
+
+# A model for dengue transmission - Part 1
+# Some R code to numerically solve a set of ordinary differential equations
+# for a simple model of dengue. Results are then plotted.
+
+# Library imports
+required_packages <- (c("dplyr",
+                        "deSolve",
+                        "ggplot2"))
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Model parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # Probability of transmission - human to mosquito 
+  infectious_period = 5, # days
+  mu_M = 1/14 # Mosquito birth and death rate
+)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious
+mosquito_population <- 225000 
+initial_mosquito_susceptible <- 224990
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+
+# Model function
+dengue_base <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Infectious_human_change <- force_of_infection_on_human * Susceptible_human - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito 
+    Infectious_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_base <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_base, parms = parameters)
+
+# Plot solution
+plot(out_dengue_base, 
+     main = c("Susceptible humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_base_infections <- dengue_base_infections  %>%
+  mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
+
+
+# Plot solution
+plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections")
+```
+
+## **Part 2:** Adapting the model
+
+In this part, we will adapt the model we developed in Part 1 to try to
+better capture the Cairns dengue outbreak dynamics. It is important to
+note that our model in Part 1 mostly used parameter values from Ndii et
+al. Two of those parameters, the probability of transmission from
+mosquito to human (T_HM) and the probability of transmission
+from human to mosquito (T_MH) were **fitted** using the Ndii et
+al. model, which has a different structure to the model we developed in
+Part 1.This highlights the very important point that:
+
+<center>[*Parameter values may not be directly transferable between
+models*]{style="font-size:16pt; color: red"}</center>
+
+### What might be missing from our dengue model?
+
+When we wrote our vector-borne disease model, we made a simplifying
+assumption that both humans and mosquitoes are infectious immediately
+upon being infected. We noted that in reality, it takes time for the
+infectious load to build in a host before they are capable of
+transmitting infection. As you have seen in previous sessions, we refer
+to this as the exposed period --- an individual is infected, but not yet
+infectious. Ndii et al. account for this in their model.
+
+**2.1 Ndii et al. use 10 days as the duration of the exposed period in
+mosquitoes. With mosquitoes living on average for 14 days, what do you
+think are the implications of this exposed period for transmission?**
+
+```{=html}
+<textarea cols="127" rows="4"></textarea>
+```
+<p><br></p>
+
+**2.2 Ndii et al. use 5.5 days as the duration of the exposed period in
+humans. Which exposed period (mosquito or human) do you think would have
+a greater impact on dengue disease dynamics? Why?**
+
+```{=html}
+<textarea cols="127" rows="4"></textarea>
+```
+### Adding another compartment to our model diagram
+
+Before we begin coding a new version of our model, it's a good idea to
+draw the structure of the new model. Redraw the model that you produced
+in the previous session to include exposed compartments for both the
+human and the mosquito populations.
+
+<p>
+
+</p>
+
+<p><strong>Instructions:</strong></p>
+
+<ol style="list-style-type: decimal">
+
+<li>
+
+<p>You can draw a diagram electronically in a program such as
+PowerPoint, or you can draw your diagram by hand and take a photo</p>
+
+</li>
+
+<li>
+
+<p>Make sure you label all compartments as well as the inflows and
+outflows from each compartment.</p>
+
+</li>
+
+<li>
+
+<p>Save your diagram in one of the following formats: .jpg, .gif,
+.png</p>
+
+</li>
+
+<li>
+
+<p>Upload your diagram using the <strong><em>Browse...</em></strong>
+button below</p>
+
+</li>
+
+<li>
+
+<p>If you prefer, you can describe your model in words in the space
+below</p>
+
+</li>
+
+</ol>
+
+<p><strong>NB: You can replace a file by clicking on the file name and
+selecting a file with a different name.</strong></p>
+
+::: {.field align="left"}
+<span>
+
+<h3>Upload your image</h3>
+
+<p><input type="file" id="files" name="files[]" multiple></input>
+</span></p>
+:::
+
+```{=html}
+<style>
+    input[type="file"] {
+
+     display:block;
+    }
+    .imageThumb {
+     max-height: 600px;
+     border: 2px solid;
+     margin: 10px 10px 0 0;
+     padding: 1px;
+     }
+</style>
+```
+```{=html}
+<script type="text/javascript">
+    $(document).ready(function() {
+
+     if(window.File && window.FileList && window.FileReader) {
+        $("#files").on("change",function(e) {
+            var files = e.target.files ,
+            filesLength = files.length ;
+            for (var i = 0; i < filesLength ; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+                fileReader.onload = (function(e) {
+                    var file = e.target;
+                    $("<span class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+            "<br/><span class=\"remove\"><u>Remove image</u></span>" +
+            "</span>").insertAfter("#files");
+          $(".remove").click(function(){
+            $(this).parent(".pip").remove();
+          });
+                });
+               fileReader.readAsDataURL(f);
+           }
+      });
+     } else { alert("Your browser doesn't support to File API") }
+    });
+
+</script>
+```
+### Adding another compartment to our model code
+
+**2.3 To add a new compartment to our model, several aspects need to be
+changed. What is the additional information that needs to be provided?**
+
+```{=html}
+<textarea cols="127" rows="4"></textarea>
+```
+Before beginning, you should add a heading in your file indicating that
+you have started a new model, as the code we write here will overwrite
+the parameters and variables you used in Part 1, other than your final
+results. For example, you could copy and paste the code chunk below into
+your editor to start writing your code for the new model:
+
+```{r, echo=T}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
+#############################################################
+
+# A model for dengue transmission - Part 2
+# Some R code to numerically solve a set of ordinary differential equations
+# for a modified model of dengue. Results are then plotted.
+```
+
+First we need to add new parameters. Copy and paste the code chunk below
+into your editor, enter [VALUE]{style="color: blue"} where it is
+missing, and then run your file:
+
+```{r load_parameters_with_E, echo=F, eval=T}
+# This code chunk loads the parameters for the model with E but does not show the completed code to the 
+# students. Students need to complete the chunk named 'load_parameters_with E_student'
+parameters <- c(
+ bites = 0.63, # number of bites per mosquito per day
+ T_HM = 0.26, # probability of transmission - mosquito to human
+ T_MH = 0.26, # probability of transmission - human to mosquito
+ infectious_period = 5, # days. Duration in infectious compartment
+ mu_M = 1/14, # per day. Mosquito birth and death rate.
+ exposed_period_H = 5.5, # days. Duration in exposed compartment - human
+ exposed_period_M = 10 # days. Duration in exposed compartment - mosquito
+)
+```
+
+```{r load_parameters_with_E_student, echo=T, eval=F}
+# Model parameters
+parameters <- c(
+ bites = 0.63, # number of bites per mosquito per day
+ T_HM = 0.26, # probability of transmission - mosquito to human
+ T_MH = 0.26, # probability of transmission - human to mosquito
+ infectious_period = 5, # days. Duration in infectious compartment
+ mu_M = 1/14, # per day. Mosquito birth and death rate.
+ exposed_period_H = VALUE, # days. Duration in exposed compartment - human
+ exposed_period_M = VALUE # days. Duration in exposed compartment - mosquito
+)
+```
+
+Next we need to add some new initial conditions. Let's start with no
+exposed humans and no exposed mosquitoes. Copy and paste the code chunk
+below into your editor, completing [EXPRESSION USING OTHER
+VARIABLES]{style="color: blue"} where it is missing:
+
+```{r load_initial_with_E, echo=F, eval=T}
+# This code chunk loads the initial conditions for the model with E but does not show the completed code to the 
+# students. Students need to complete the chunk named 'load_initial_with_E_student'
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious - initial_human_exposed
+mosquito_population <- 225000 # 3 times human population, divided by 2
+initial_mosquito_susceptible <- 224990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
+```
+
+```{r load_initial_with_E_student, echo=T, eval=F}
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- EXPRESSION USING OTHER VARIABLES
+mosquito_population <- 225000 # 3 times human population, divided by 2
+initial_mosquito_susceptible <- 224990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- EXPRESSION USING OTHER VARIABLES
+```
+
+As before, we now initialise our model states, using the initial
+conditions we set above. Copy and paste the code chunk below into your
+editor, completing [EXPRESSION USING OTHER
+VARIABLES]{style="color: blue"} where it is missing:
+
+```{r states_with_E, echo=F, eval=T}
+# This code chunk initialises the compartments but does not show the completed code to the 
+# students. Students need to complete the chunk named 'states_student'
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = initial_human_exposed,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = initial_mosquito_exposed,
+           Infectious_mosquito = initial_mosquito_infectious)
+```
+
+```{r states_with_E_student, echo=T, eval=F}
+# Define model compartments, gather into a single variable to capture the 
+# state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = EXPRESSION USING OTHER VARIABLES,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = EXPRESSION USING OTHER VARIABLES,
+           Infectious_mosquito = initial_mosquito_infectious)
+```
+
+We set up times to run the model, here extending the end date (for
+reasons that will become clear). Copy and paste the code chunk below
+into your editor, to continue your code:
+
+```{r set_up_times_with_E, echo=F, eval=T}
+# This code chunk sets up the times for which to solve the odes but does not 
+# show the completed code to the students. Students need to complete the chunk 
+# named 'set_up_times_student'
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2011-05-31")
+times = seq(start_date, end_date, by = 1)
+```
+
+```{r set_up_times_with_E_student, echo=T, eval=F}
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2011-05-31")
+times = seq(start_date, end_date, by = 1)
+```
+
+Next, we adapt our model function to include the changes we have made to
+the model structure.Copy and paste the code chunk below into your editor
+to continue your code:
+
+```{r model_E_function, echo=T, eval=T}
+# Model function
+dengue_with_E <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + 
+      Recovered_human + Exposed_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito + 
+      Exposed_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / 
+      Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / 
+      Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Exposed_human_change <- force_of_infection_on_human * Susceptible_human - 
+      Exposed_human / exposed_period_H
+    Infectious_human_change <- Exposed_human / exposed_period_H - 
+      Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - 
+      (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito
+    Exposed_mosquito_change <- force_of_infection_on_mosquito * 
+      Susceptible_mosquito - Exposed_mosquito * (1 / exposed_period_M + mu_M) 
+    Infectious_mosquito_change <- Exposed_mosquito / exposed_period_M - mu_M * 
+      Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Exposed_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Exposed_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+```
+
+**2.4 Identify the elements of the model function above that have
+changed compared to your model in Part 1**
+
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+We are now ready to run the model and plot the results. Note that we use
+a different name for the output to preserve the results from your model
+in Part 1. Copy and paste the code chunk below into your editor, enter
+[VALUE]{style="color: blue"} where it is missing, and then run the new
+model parts of your file:
+
+```{r run_model_with_E_student, echo=T, eval=F}
+# Solve model
+out_dengue_with_E <- ode(y = VALUE, times = as.numeric(times - times[1]), 
+                         func = VALUE, parms = VALUE)
+
+# Plot solution
+plot(out_dengue_with_E, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", 
+              "Recovered humans",   "Susceptible mosquitoes", 
+              "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+Your plot should look this this:
+
+```{r run_model_with_E, echo=F, eval=T}
+# This code chunk runs the model with E and plots the output but does not show the completed code to the 
+# students. Students need to complete the chunk named 'run_model_with_E_student'
+out_dengue_with_E <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+As we did in Part 1, we want to convert our dengue prevalence data to
+incidence data. In our new model, we have:
+
+<ul>
+
+<li>Susceptible human change = - new infections</li>
+
+<li>Exposed human change = new infections - transitions to
+infectious</li>
+
+<li>Infectious human change = transitions to infectious -
+recoveries</li>
+
+<li>Recovered human change = recoveries</li>
+
+</ul>
+
+As before, we could calculate the difference in our susceptible
+population from our model output to be left with 'new infections' at
+each time step. However, the new infections in this model may not yet
+have come to the attention of the health system. We make the simplifying
+assumption that symptoms occur at the same time that a person becomes
+infectious, and so we count the transitions into the infectious state as
+our new 'cases' and obtain these by adding the infectious human change
+and recovered human change. Copy and paste the code below into your
+editor, to convert daily prevalence into weekly incidence and plot the
+results:
+
+```{r new_infections_with_E, echo=T, eval=T}
+# Convert ode output to data frame
+dengue_with_E_infections <- as.data.frame(
+  out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_with_E_infections <- dengue_with_E_infections  %>%
+                          mutate(Infectious_human_change = 
+                                   c(0, diff(Infectious_human)),
+                                 Recovered_human_change = 
+                                   c(0, diff(Recovered_human)),
+                                 New_human_infections = 
+                                   Infectious_human_change + 
+                                   Recovered_human_change,
+                                 Cumulative_human_infections = 
+                                   cumsum(New_human_infections)) %>%
+                          filter(time %% 7 == 0) %>%
+                          select(c("time", "Cumulative_human_infections")) %>%
+                          mutate(Weekly_human_infections = 
+                                   c(0, diff(Cumulative_human_infections)))
+     
+# Plot solution
+plot(dengue_with_E_infections$time, 
+     dengue_with_E_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections, model with E")
+```
+
+As a reminder, here are the published data from Part 1:
+
+::: row
+
+
+<center><img src="pone.0068137.g002.png" alt="Dengue confirmed cases in Cairns Nov 2008 to May 2009" style="width:80%"/></center>
+:::
+
+
+**2.5 How do the modelled results compare to those for the model in Part
+1? (Hint: Look at the magnitude and the timing of the peak.)**
+
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+<p><br></p>
+
+**2.6 Why do you think the modelled behaviour has changed?**
+
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+<p><br></p>
+
+<input type="button" value="Print this page" onclick="window.print()">
+
+## **Part 2:** Solutions
+
+By the end of Part 2, your script should look like this:
+
+```{r part_2_solutions, ECHO=T, eval=F}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
+#############################################################
+
+# A model for dengue transmission - Part 1
+# Some R code to numerically solve a set of ordinary differential equations
+# for a simple model of dengue. Results are then plotted.
+
+# Library imports
+required_packages <- (c("dplyr",
+                        "deSolve",
+                        "ggplot2"))
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Model parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # Probability of transmission - human to mosquito 
+  infectious_period = 5, # days
+  mu_M = 1/14 # Mosquito birth and death rate
+)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious
+mosquito_population <- 225000 
+initial_mosquito_susceptible <- 224990
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+
+# Model function
+dengue_base <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Infectious_human_change <- force_of_infection_on_human * Susceptible_human - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito 
+    Infectious_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_base <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_base, parms = parameters)
+
+# Plot solution
+plot(out_dengue_base, 
+     main = c("Susceptible humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_base_infections <- dengue_base_infections  %>%
+  mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
+
+
+# Plot solution
+plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections")
+
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
+#############################################################
+
+# A model for dengue transmission - Part 2
+# Some R code to numerically solve a set of ordinary differential equations
+# for a modified model of dengue. Results are then plotted.
+
+# Model parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # probability of transmission - human to mosquito
+  infectious_period = 5, # days. Duration in infectious compartment
+  mu_M = 1/14, # per day. Mosquito birth and death rate.
+  exposed_period_H = 5.5, # days. Duration in exposed compartment - human
+  exposed_period_M = 10 # days. Duration in exposed compartment - mosquito
+)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious - initial_human_exposed
+mosquito_population <- 225000 # 3 times human population, divided by 2
+initial_mosquito_susceptible <- 224990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = initial_human_exposed,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = initial_mosquito_exposed,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2011-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Model function
+dengue_with_E <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human + Exposed_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito + Exposed_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Exposed_human_change <- force_of_infection_on_human * Susceptible_human - Exposed_human / exposed_period_H
+    Infectious_human_change <- Exposed_human / exposed_period_H - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito
+    Exposed_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - Exposed_mosquito * (1 / exposed_period_M + mu_M) 
+    Infectious_mosquito_change <- Exposed_mosquito / exposed_period_M - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Exposed_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Exposed_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_with_E <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_with_E_infections <- as.data.frame(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_with_E_infections <- dengue_with_E_infections  %>%
+  mutate(Infectious_human_change = c(0, diff(Infectious_human)),
+         Recovered_human_change = c(0, diff(Recovered_human)),
+         New_human_infections = Infectious_human_change + Recovered_human_change,
+         Cumulative_human_infections = cumsum(New_human_infections)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
+
+# Plot solution
+plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections, model with E")
+
+
+```
+
+## **Part 3:** The impact of seasonality
+
+### Adding seasonality to the model
+
+Adding an exposed compartment reduced the number of new infections, but
+substantially delayed the timing of the outbreak. There is still a large
+assumption that we have made --- that the mosquito population is
+constant. In tropical areas, mosquito numbers fluctuate substantially
+over the year, with larger numbers typically seen in the wet season,
+which in Cairns develops in December and lasts until March. Ndii et al.
+incorporated such seasonality in the mosquito death rate in their model.
+We apply a seasonal death rate for mosquitoes using the parameters and
+formula applied by Ndii et al:
+
+$$death\text{ }rate(t) = average\text{ }death\text{ }rate\left(1 - amplitude * \text{cos}\left(\frac{2\pi*\left(t + phase\right)}{365}\right)\right)$$
+
+As before, you should add a heading in your file indicating that you
+have started a new model. For example, you could copy and paste the code
+chunk below into your editor to start writing your code for the new
+model:
+
+```{r, echo=T}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 3##
+#############################################################
+
+# A model for dengue transmission - Part 3
+# Some R code to numerically solve a set of ordinary differential equations
+# for a model of dengue with an exposed period and seasonality. 
+# Results are then plotted.
+```
+
+First we need to define the new seasonality parameters. Copy and paste
+the code chunk below into your editor to continue writing your code:
+
+```{r add_seasonality, echo=T, eval=T}
+# Add seasonality parameters
+parameters <- c(
+ bites = 0.63, # number of bites per mosquito per day
+ T_HM = 0.26, # probability of transmission - mosquito to human
+ T_MH = 0.26, # probability of transmission - human to mosquito
+ infectious_period = 5, # days. Duration in infectious compartment
+ mu_M = 1/14, # per day. Mosquito birth and death rate.
+ exposed_period_H = 5.5, # days. Duration in exposed compartment - human
+ exposed_period_M = 10, # days. Duration in exposed compartment - mosquito
+ death_amplitude = 0.6228, # from Ndii et al.
+ death_phase = 20.61 # days, from Ndii et al.
+)
+```
+
+**3.1 What effect do you expect a seasonal death rate to have on the
+size of the mosquito population?**
+
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+As well as the parameters, we also need to change our initial population
+numbers to reflect that when our model starts in November, the mosquito
+population is not at its maximum value. Copy and paste the code chunk
+below into your editor to define the new initial conditions and
+initialise the compartments:
+
+```{r load_initial_with_E_seasonal, echo=T, eval=T}
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious - initial_human_exposed
+mosquito_population <- 110000 # around half the maximum
+initial_mosquito_susceptible <- 109990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = initial_human_exposed,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = initial_mosquito_exposed,
+           Infectious_mosquito = initial_mosquito_infectious)
+```
+
+We set up times to run the model, returning to our original dates. Copy
+and paste the code chunk below into your editor, to continue your code:
+
+```{r set_up_times_with_E_seasonal, echo=F, eval=T}
+# This code chunk sets up the times for which to solve the odes but does not show the completed code to the 
+# students. Students need to complete the chunk named 'set_up_times_student'
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+```
+
+```{r set_up_times_with_E_seasonal_student, echo=T, eval=F}
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+```
+
+Next, we adapt our model function to add seasonality to the mosquito
+death rate.Copy and paste the code chunk below into your editor to
+continue your code:
+
+```{r model_E_season_function, echo=T, eval=T}
+# Model function with seasonality
+dengue_with_E_seasonal <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human + Exposed_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito + Exposed_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the current seasonal death rate
+    mu_M_seasonal <- mu_M * (1 - death_amplitude * cos(2 * pi * (t + death_phase) / 365))
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Exposed_human_change <- force_of_infection_on_human * Susceptible_human - Exposed_human / exposed_period_H
+    Infectious_human_change <- Exposed_human / exposed_period_H - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - force_of_infection_on_mosquito * Susceptible_mosquito - mu_M_seasonal * Susceptible_mosquito
+    Exposed_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - Exposed_mosquito / exposed_period_M - mu_M_seasonal * Exposed_mosquito 
+    Infectious_mosquito_change <- Exposed_mosquito / exposed_period_M - mu_M_seasonal * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Exposed_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Exposed_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+```
+
+We are now ready to run the model and plot the results. Again we use a
+different name for the output to preserve the results from your model in
+Parts 1 and 2. Copy and paste the code chunk below into your editor and
+then run the new model parts of your file:
+
+```{r run_model_with_E_seasonal_student, echo=T, eval=F}
+# Solve model
+out_dengue_with_E_seasonal <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E_seasonal, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E_seasonal, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+Your plot should look this this:
+
+```{r run_model_with_E_seasonal, echo=F, eval=T}
+# This code chunk runs the model with E and plots the output but does not show the completed code to the 
+# students. Students need to complete the chunk named 'run_model_with_E_student'
+out_dengue_with_E_seasonal <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E_seasonal, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E_seasonal, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+```
+
+Copy and paste the code below into your editor, to convert daily
+prevalence into weekly incidence and plot the results:
+
+```{r new_infections_with_E_seasonal_infectious, echo=T, eval=T}
+# Convert ode output to data frame
+dengue_with_E_seasonal_infections <- as.data.frame(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  %>%
+                          mutate(Infectious_human_change = c(0, diff(Infectious_human)),
+                                 Recovered_human_change = c(0, diff(Recovered_human)),
+                                 New_human_infections = Infectious_human_change + Recovered_human_change,
+                                 Cumulative_human_infections = cumsum(New_human_infections)) %>%
+                          filter(time %% 7 == 0) %>%
+                          select(c("time", "Cumulative_human_infections")) %>%
+                          mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
+     
+# Plot solution
+plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections, model with E and seasonality")
+```
+
+As a reminder, here are the published data from Part 1:
+
+::: row
+
+
+<center><img src="pone.0068137.g002.png" alt="Dengue confirmed cases in Cairns Nov 2008 to May 2009" style="width:80%"/></center>
+:::
+<p><br></p>
+
+**3.2 How do the results compare to the case data in Part 1? What might
+be the explanation for any differences?**
+
+```{=html}
+<textarea cols="127" rows="6"></textarea>
+```
+<p><br></p>
+
+<input type="button" value="Print this page" onclick="window.print()">
+
+## **Part 3:** Solutions
+
+By the end of Part 3, your script should look like this:
+
+```{r part_3_solutions, ECHO=T, eval=F}
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
+#############################################################
+
+# A model for dengue transmission - Part 1
+# Some R code to numerically solve a set of ordinary differential equations
+# for a simple model of dengue. Results are then plotted.
+
+# Library imports
+required_packages <- (c("dplyr",
+                        "deSolve",
+                        "ggplot2"))
+for (pkg in required_packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Model parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # Probability of transmission - human to mosquito 
+  infectious_period = 5, # days
+  mu_M = 1/14 # Mosquito birth and death rate
+)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious
+mosquito_population <- 225000 
+initial_mosquito_susceptible <- 224990
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+
+# Model function
+dengue_base <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Infectious_human_change <- force_of_infection_on_human * Susceptible_human - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito 
+    Infectious_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_base <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_base, parms = parameters)
+
+# Plot solution
+plot(out_dengue_base, 
+     main = c("Susceptible humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_base_infections <- dengue_base_infections  %>%
+  mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
+
+
+# Plot solution
+plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections")
+
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
+#############################################################
+
+# A model for dengue transmission - Part 2
+# Some R code to numerically solve a set of ordinary differential equations
+# for a modified model of dengue. Results are then plotted.
+
+# Model parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # probability of transmission - human to mosquito
+  infectious_period = 5, # days. Duration in infectious compartment
+  mu_M = 1/14, # per day. Mosquito birth and death rate.
+  exposed_period_H = 5.5, # days. Duration in exposed compartment - human
+  exposed_period_M = 10 # days. Duration in exposed compartment - mosquito
+)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious - initial_human_exposed
+mosquito_population <- 225000 # 3 times human population, divided by 2
+initial_mosquito_susceptible <- 224990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = initial_human_exposed,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = initial_mosquito_exposed,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2011-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Model function
+dengue_with_E <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human + Exposed_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito + Exposed_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Exposed_human_change <- force_of_infection_on_human * Susceptible_human - Exposed_human / exposed_period_H
+    Infectious_human_change <- Exposed_human / exposed_period_H - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - (force_of_infection_on_mosquito + mu_M) * Susceptible_mosquito
+    Exposed_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - Exposed_mosquito * (1 / exposed_period_M + mu_M) 
+    Infectious_mosquito_change <- Exposed_mosquito / exposed_period_M - mu_M * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Exposed_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Exposed_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_with_E <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_with_E_infections <- as.data.frame(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_with_E_infections <- dengue_with_E_infections  %>%
+  mutate(Infectious_human_change = c(0, diff(Infectious_human)),
+         Recovered_human_change = c(0, diff(Recovered_human)),
+         New_human_infections = Infectious_human_change + Recovered_human_change,
+         Cumulative_human_infections = cumsum(New_human_infections)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
+
+# Plot solution
+plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections, model with E")
+
+#############################################################
+## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 3##
+#############################################################
+
+# A model for dengue transmission - Part 3
+# Some R code to numerically solve a set of ordinary differential equations
+# for a model of dengue with an exposed period and seasonality. 
+# Results are then plotted.
+
+# Add seasonality parameters
+parameters <- c(
+  bites = 0.63, # number of bites per mosquito per day
+  T_HM = 0.26, # probability of transmission - mosquito to human
+  T_MH = 0.26, # probability of transmission - human to mosquito
+  infectious_period = 5, # days. Duration in infectious compartment
+  mu_M = 1/14, # per day. Mosquito birth and death rate.
+  exposed_period_H = 5.5, # days. Duration in exposed compartment - human
+  exposed_period_M = 10, # days. Duration in exposed compartment - mosquito
+  death_amplitude = 0.6228, # from Ndii et al.
+  death_phase = 20.61 # days, from Ndii et al.
+)
+
+# Initial conditions
+human_population <- 150000 # population of Cairns in 2008
+initial_human_susceptible <- 149998
+initial_human_exposed <- 0
+initial_human_infectious <- 2
+initial_human_recovered <- human_population - initial_human_susceptible - initial_human_infectious - initial_human_exposed
+mosquito_population <- 110000 # around half the maximum
+initial_mosquito_susceptible <- 109990
+initial_mosquito_exposed <- 0
+initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
+
+# Define model compartments, gather into a single variable to capture the state of the system and set to initial values
+state <- c(Susceptible_human = initial_human_susceptible,
+           Exposed_human = initial_human_exposed,
+           Infectious_human = initial_human_infectious,
+           Recovered_human = initial_human_recovered,
+           Susceptible_mosquito = initial_mosquito_susceptible,
+           Exposed_mosquito = initial_mosquito_exposed,
+           Infectious_mosquito = initial_mosquito_infectious)
+
+# Time window
+start_date = as.Date("2008-11-02")
+end_date = as.Date("2009-05-31")
+times = seq(start_date, end_date, by = 1)
+
+# Model function with seasonality
+dengue_with_E_seasonal <- function(t, state, parameters){
+  with(as.list(c(state, parameters)), {
+    # Calculate the total population sizes
+    Total_human_population <- Susceptible_human + Infectious_human + Recovered_human + Exposed_human
+    Total_mosquito_population <- Susceptible_mosquito + Infectious_mosquito + Exposed_mosquito
+    
+    # Calculate the average force of infection imposed on each susceptible human
+    force_of_infection_on_human <- bites * T_HM * Infectious_mosquito / Total_human_population
+    
+    # Calculate the average force of infection imposed on each susceptible mosquito
+    force_of_infection_on_mosquito <- bites * T_MH * Infectious_human / Total_human_population
+    
+    # Calculate the current seasonal death rate
+    mu_M_seasonal <- mu_M * (1 - death_amplitude * cos(2 * pi * (t + death_phase) / 365))
+    
+    # Calculate the (net) instantaneous change in each compartment
+    Susceptible_human_change <- -force_of_infection_on_human * Susceptible_human
+    Exposed_human_change <- force_of_infection_on_human * Susceptible_human - Exposed_human / exposed_period_H
+    Infectious_human_change <- Exposed_human / exposed_period_H - Infectious_human / infectious_period
+    Recovered_human_change <- Infectious_human / infectious_period
+    Susceptible_mosquito_change <- mu_M * Total_mosquito_population - force_of_infection_on_mosquito * Susceptible_mosquito - mu_M_seasonal * Susceptible_mosquito
+    Exposed_mosquito_change <- force_of_infection_on_mosquito * Susceptible_mosquito - Exposed_mosquito / exposed_period_M - mu_M_seasonal * Exposed_mosquito 
+    Infectious_mosquito_change <- Exposed_mosquito / exposed_period_M - mu_M_seasonal * Infectious_mosquito
+    
+    # Return net changes as list
+    return(list(
+      c(
+        Susceptible_human_change,
+        Exposed_human_change,
+        Infectious_human_change,
+        Recovered_human_change,
+        Susceptible_mosquito_change,
+        Exposed_mosquito_change,
+        Infectious_mosquito_change
+      )
+    ))
+  })
+}
+
+# Solve model
+out_dengue_with_E_seasonal <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E_seasonal, parms = parameters)
+
+# Plot solution
+plot(out_dengue_with_E_seasonal, 
+     main = c("Susceptible humans", "Exposed humans", "Infectious humans", "Recovered humans",
+              "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
+     xlab = "Time", ylab = c("population size"))
+
+# Convert ode output to data frame
+dengue_with_E_seasonal_infections <- as.data.frame(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
+
+# Create columns for new infections and cumulative new infections, 
+# Select every 7th row and calculate the difference
+dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  %>%
+  mutate(Infectious_human_change = c(0, diff(Infectious_human)),
+         Recovered_human_change = c(0, diff(Recovered_human)),
+         New_human_infections = Infectious_human_change + Recovered_human_change,
+         Cumulative_human_infections = cumsum(New_human_infections)) %>%
+  filter(time %% 7 == 0) %>%
+  select(c("time", "Cumulative_human_infections")) %>%
+  mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
+
+# Plot solution
+plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$Weekly_human_infections, 
+     xlab = "Time", ylab = c("number of infections"),
+     main = "Weekly human new infections, model with E and seasonality")
+
+```
+
+## **Part 4:** Interventions
+
+### Interventions to control dengue
+
+Interventions against vector-borne diseases can take a number of
+different forms, because they can target the host (humans in the dengue
+model we have considered here) or the vector (mosquitoes in our dengue
+model). Interventions can also act at different stages of the vector
+life-cycle, for example, spraying to kill mosquito eggs before they
+hatch.
+
+In groups of 4--6, identify interventions that could be implemented to
+control dengue transmission and for each of them, consider what action
+that intervention would have (for example, does it reduce human
+susceptibility to infection?). Then discuss how the model we have
+developed would need to be adapted to include the intervention.
+
+For those wanting an extension activity, adapt the model developed in Part 3 to 
+include these interventions, one at a time, and plot the results.
+
+**4.1 Intervention 1: note the type of intervention, how it acts and how
+our model could be adapted to include it.**
+
+```{=html}
+<textarea cols="127" rows="8"></textarea>
+```
+<p><br></p>
+
+**4.2 Intervention 2: note the type of intervention, how it acts and how
+our model could be adapted to include it.**
+
+```{=html}
+<textarea cols="127" rows="8"></textarea>
+```
+<p><br></p>
+
+**4.3 Intervention 3: note the type of intervention, how it acts and how
+our model could be adapted to include it.**
+
+```{=html}
+<textarea cols="127" rows="8"></textarea>
+```
+<p><br></p>
+
+<input type="button" value="Print this page" onclick="window.print()">
+:::
