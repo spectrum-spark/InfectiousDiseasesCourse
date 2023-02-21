@@ -22,4 +22,5 @@ website:
       - href: session2_differential_equations_in_r/session2_differential_equations_in_r.qmd
       - href: session3_writing_a_model_to_suit_the_infectious_agent/session3_writing_a_model_to_suit_the_infectious_agent.qmd
       - href: session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.qmd
+      - href: session5_fitting_models_in_r/session5_fitting_models_in_r.qmd
       - href: session7_vector_borne_modelling/session7_vector_borne_modelling.qmd

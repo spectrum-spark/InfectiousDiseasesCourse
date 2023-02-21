@@ -51,7 +51,7 @@ Upload your model diagram:
 
 ## More practice
 
-* Repeat this process for measles, a short-lived disease with **lifelong immunity**.
+* Repeat this process for measles, a short-live`d disease with **lifelong immunity**.
 
 You might find the following diagram helpful:
 ![](measles.png)
