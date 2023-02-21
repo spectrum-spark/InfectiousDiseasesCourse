@@ -7,6 +7,11 @@ author:
 output: 
   html_document:
      self_contained: yes
+     link-external-icon: false
+     link-external-newwindow: true
+execute:
+  echo: false
+  warning: false
 ---
 
 ```{r, echo=F, warnings=F}
@@ -14,6 +19,7 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
+
 ```{css, echo=F}
 textarea {
     width: 100%;
@@ -36,44 +42,38 @@ This session is divided into three parts:
 
 **Part 1** covers:
 
-* Motivation for vector-borne disease models
-* Examples of vector-borne diseases
-* Different transmission cycles
+-   Motivation for vector-borne disease models
+-   Examples of vector-borne diseases
+-   Different transmission cycles
 
 **Part 2** covers:
 
-* The mechanics of vector-borne disease transmission
-* Force of infection for vector-borne diseases
-* Other vector-borne disease modelling considerations
+-   The mechanics of vector-borne disease transmission
+-   Force of infection for vector-borne diseases
+-   Other vector-borne disease modelling considerations
 
 **Part 3** covers:
 
-* Drawing a model schematic
-* Writing the differential equations
-* Calculating the basic reproduction number
+-   Drawing a model schematic
+-   Writing the differential equations
+-   Calculating the basic reproduction number
 
 *We recommend saving your text at the end of each part by printing the file.*
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ## **Part 1:** Motivation and examples
 
 ### What are vector-borne diseases?
 
-Unlike diseases that spread directly from person to person, vector-borne diseases are those diseases in which the spread of an infectious pathogen occurs via a vector &mdash; a living organism such as a mosquito. Examples of vectors include (left to right) mosquitoes, ticks, blackflies and fleas: 
+Unlike diseases that spread directly from person to person, vector-borne diseases are those diseases in which the spread of an infectious pathogen occurs via a vector --- a living organism such as a mosquito. Examples of vectors include (left to right) mosquitoes, ticks, blackflies and fleas:
 
-<div class="row">
- &emsp;
-      <img src="mosquito.jpg" alt="Mosquito biting" style="width:25%">
-      <img src="tick.jpg" alt="Tick" style="width:25.6%">
-      <img src="Simulium_Blackfly.jpg" alt="Blackfly" style="width:21.4%">
-      <img src="flea.jpg" alt="Flea" style="width:12%">
-</div>
+::: row
+  <img src="mosquito.jpg" alt="Mosquito biting" style="width:25%"/> <img src="tick.jpg" alt="Tick" style="width:25.6%"/> <img src="Simulium_Blackfly.jpg" alt="Blackfly" style="width:21.4%"/> <img src="flea.jpg" alt="Flea" style="width:12%"/>
+:::
 
 ### Examples of vector-borne diseases and vectors that spread them
 
-There are many different types of vector. While some diseases, such as malaria, are exclusively spread by a single vector genus, others, such as lymphatic filariasis, can be transmitted by multiple species. Similarly, some vectors are able to spread multiple diseases. 
-
+There are many different types of vector. While some diseases, such as malaria, are exclusively spread by a single vector genus, others, such as lymphatic filariasis, can be transmitted by multiple species. Similarly, some vectors are able to spread multiple diseases.
 
 ```{r echo=FALSE}
 df <- data.frame(
@@ -85,58 +85,86 @@ library(kableExtra)
 kbl(df) %>%
 kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
 ```
-Source: <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases"> https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases  </a>
-<p></p>
 
+Source: <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases"> https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases </a>
+
+<p>
+
+</p>
 
 **1.1 Do you know which of these vector-borne diseases is important to your country? Are there any others?**
+
+```{=html}
 <textarea cols="127" rows="3"></textarea>
+```
 <p><br></p>
 
 ### How do vector-borne diseases spread?
-Below are diagrams showing the transmission cycles for two vector-borne diseases: Onchocerciasis (top) and West Nile fever, caused by infection with West Nile virus (bottom).
-<p></p>
 
-<div class="row">
- &emsp;
-      <center><img src="onchocerciasis.tif" alt="Onchocerciasis transmission cycle" style="width:80%"></center>	  
-</div>       
-<center>Source: <a href="https://www.cdc.gov/dpdx/onchocerciasis/index.html">     https://www.cdc.gov/dpdx/onchocerciasis/index.html</a></center>
+Below are diagrams showing the transmission cycles for two vector-borne diseases: Onchocerciasis (top) and West Nile fever, caused by infection with West Nile virus (bottom).
+
+<p>
+
+</p>
+
+::: row
+ 
+
+<center><img src="onchocerciasis.tif" alt="Onchocerciasis transmission cycle" style="width:80%"/></center>
+:::
+
+<center>Source: <a href="https://www.cdc.gov/dpdx/onchocerciasis/index.html"> https://www.cdc.gov/dpdx/onchocerciasis/index.html</a></center>
+
 <p><br><br></p>
 
-<div class="row">
- &emsp;
-	  <center><img src="west_nile.jpg" alt="West Nile fever transmission cycle" style="width:80%"></center>
-</div>	  
+::: row
+ 
+
+<center><img src="west_nile.jpg" alt="West Nile fever transmission cycle" style="width:80%"/></center>
+:::
+
 <center>Source: <a href="https://www.cdc.gov/westnile/transmission/index.html"> https://www.cdc.gov/westnile/transmission/index.html </a></center>
 
 <p><br></p>
 
 **1.2 What type of vector is responsible for the spread of onchocerciasis?**
+
+```{=html}
 <textarea cols="127" rows="3"></textarea>
+```
 <p><br></p>
 
 **1.3 What type of vector is responsible for the spread of West Nile virus?**
+
+```{=html}
 <textarea cols="127" rows="3"></textarea>
+```
 <p><br></p>
 
 **1.4 What is the main difference you notice between these two transmission cycles?**
+
+```{=html}
 <textarea cols="127" rows="3"></textarea>
+```
 <p><br></p>
 
-We can divide vector-borne diseases into two categories, those that spread by a human-vector-human cycle (e.g. malaria, dengue, zika, onchocerciasis) and those that involve a non-human host (e.g. West Nile virus, Japanese encephalitis). In this session, we will only be working with diseases that spread by a human-vector-human cycle. 
+We can divide vector-borne diseases into two categories, those that spread by a human-vector-human cycle (e.g. malaria, dengue, zika, onchocerciasis) and those that involve a non-human host (e.g. West Nile virus, Japanese encephalitis). In this session, we will only be working with diseases that spread by a human-vector-human cycle.
 
 ### Burden of disease
 
-Diseases spread by vectors account for almost one-fifth of all infectious diseases and are responsible for more than 700,000 deaths annually. Much of this disease burden is due to malaria and dengue infections, estimated to cause more than 440,000 deaths per year. The map below displays the distribution of deaths due to vector-borne diseases, estimated by the World Health Organization in 2002. While Africa has the highest burden, there is substantial burden in the Asia Pacific region. As global temperatures increase, the global distribution of vectors is changing, which may allow the spread of vector-borne diseases into new areas. 
+Diseases spread by vectors account for almost one-fifth of all infectious diseases and are responsible for more than 700,000 deaths annually. Much of this disease burden is due to malaria and dengue infections, estimated to cause more than 440,000 deaths per year. The map below displays the distribution of deaths due to vector-borne diseases, estimated by the World Health Organization in 2002. While Africa has the highest burden, there is substantial burden in the Asia Pacific region. As global temperatures increase, the global distribution of vectors is changing, which may allow the spread of vector-borne diseases into new areas.
 
-<p><img src="vector_borne_deaths.jpg" width = "80%" /></p>
+<p><img src="vector_borne_deaths.jpg" width="80%"/></p>
+
 Source: <a href="https://doi.org/10.1016/B978-0-12-384890-1.00015-7"> https://doi.org/10.1016/B978-0-12-384890-1.00015-7 </a>
 
 ### How can modelling help?
 
 **1.5 What are some ways that modelling might be used to help reduce the burden of vector-borne infectious diseases?**
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
@@ -145,138 +173,170 @@ Source: <a href="https://doi.org/10.1016/B978-0-12-384890-1.00015-7"> https://do
 
 ### Purpose
 
-In this part of the session, we will consider the mechanistic process by which vector-borne diseases spread and consider the other elements that are needed in vector-borne disease models. 
+In this part of the session, we will consider the mechanistic process by which vector-borne diseases spread and consider the other elements that are needed in vector-borne disease models.
 
 ### Simplified spread of a mosquito-borne disease
 
 While there are many different types of vectors, in this and the following part we will cover modelling of diseases that are spread by mosquitoes. Female mosquitoes bite humans to obtain protein from blood for their developing eggs. These bites can transmit infection from mosquito to human or from human to mosquito. The following diagram outlines a simple transmission cycle of a mosquito-borne disease:
 
-<div class="row">
- &emsp;
-      <center><img src="vector_borne_cycle_simple.png" alt="Simplified spread of a mosquito-borne disease" style="width:50%"></center>
-</div>
+::: row
+ 
+
+<center><img src="vector_borne_cycle_simple.png" alt="Simplified spread of a mosquito-borne disease" style="width:50%"/></center>
+:::
+
 <p><br></p>
 
 The steps involved in transmission, as indicated on the diagram above are:
 
-1. A susceptible mosquito bites an infectious human.
-2. Infection is successfully transmitted to the mosquito. The pathogen multiplies within the mosquito. The mosquito is now infectious, and capable of transmitting disease.
-3. The infectious mosquito bites a susceptible human.
-4. Infection is successfully transmitted to the human. The pathogen multiplies within the human. The human is now infectious, and capable of transmitting disease.
+1.  A susceptible mosquito bites an infectious human.
+2.  Infection is successfully transmitted to the mosquito. The pathogen multiplies within the mosquito. The mosquito is now infectious, and capable of transmitting disease.
+3.  The infectious mosquito bites a susceptible human.
+4.  Infection is successfully transmitted to the human. The pathogen multiplies within the human. The human is now infectious, and capable of transmitting disease.
 
-You might notice that in our diagram above both humans and mosquitoes are infectious immediately upon being infected. In reality, it takes time for the infectious load to build in a host before they are capable of transmitting infection. We make this assumption here to simplify the explanation of the transmission process. 
+You might notice that in our diagram above both humans and mosquitoes are infectious immediately upon being infected. In reality, it takes time for the infectious load to build in a host before they are capable of transmitting infection. We make this assumption here to simplify the explanation of the transmission process.
 
 ### Recovery from infection
+
 For the model that we are building in this session, we will assume that:
 
-* Infectious humans recover at a rate that is the reciprocal of their infectious period.
-* Once an infectious human recovers, they are immune for the remainder of their life.
-* Mosquitoes, once infected, remain infectious for the rest of their life.
+-   Infectious humans recover at a rate that is the reciprocal of their infectious period.
+-   Once an infectious human recovers, they are immune for the remainder of their life.
+-   Mosquitoes, once infected, remain infectious for the rest of their life.
 
 <p><br></p>
 
 **2.1 Based on the diagram and assumptions above, what compartments would be required to model the human population? Use the subscript H to indicate that these are human compartments.**
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 **2.2 Based on the diagram and assumptions above, what compartments would be required to model the mosquito population? Use the subscript M to indicate that these are mosquito compartments.**
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
-### Human and mosquito populations interact through <span style="color: red">bites</span>
+### Human and mosquito populations interact through [bites]{style="color: red"}
 
-The feature that makes vector-borne disease models different to models for diseases spread by direct contact is that the human and mosquito populations interact through bites. We start with the assumption that each mosquito makes a fixed number of bites per unit time, and we define this as $b$. We further assume that those bites are uniformly spread across the human population, $N_H$. It follows that the rate at which a specific human is bitten by a specific mosquito, which we define as $r$, can be calculated as:  
+The feature that makes vector-borne disease models different to models for diseases spread by direct contact is that the human and mosquito populations interact through bites. We start with the assumption that each mosquito makes a fixed number of bites per unit time, and we define this as $b$. We further assume that those bites are uniformly spread across the human population, $N_H$. It follows that the rate at which a specific human is bitten by a specific mosquito, which we define as $r$, can be calculated as:
 
 $$r=\frac{b}{N_H}$$
 
+This is the number of bites a single human receives from a single mosquito per unit time, and is analogous to 'contact' in directly-transmitted disease models.
 
-This is the number of bites a single human receives from a single mosquito per unit time, and is analogous to 'contact' in directly-transmitted disease models.  
+**2.3 What happens to the rate** $r$ as the human population increases? What do you think might be the implication for transmission?
 
-**2.3 What happens to the rate $r$ as the human population increases? What do you think might be the implication for transmission?**
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 ### Probability of successful transmission
 
 Similar to contacts in the case of directly transmitted (human to human) infections, not all mosquito bites will be of sufficient intensity to transmit infection. For each bite, we assign a probability that the bite is of sufficient intensity to transmit infection (if one host is susceptible and the other infectious), using the following notation:
 
+-   $T_{HM}$ is the probability that an infectious mosquito biting a human transmits infection to the human
+-   $T_{MH}$ is the probability that an infectious human being bitten by a susceptible mosquito transmits infection to the mosquito
 
-* $T_{HM}$ is the probability that an infectious mosquito biting a human transmits infection to the human
-* $T_{MH}$ is the probability that an infectious human being bitten by a susceptible mosquito transmits infection to the mosquito
-
-We refer to this as the probability of successful transmission. 
+We refer to this as the probability of successful transmission.
 
 **2.4 Write the expression for the number of bites a single human receives from a single mosquito per unit time that are capable of transmitting infection from mosquito to human.**
+
+```{=html}
 <textarea cols="127" rows="2"></textarea>
+```
 <p><br></p>
 
 **2.5 Write the expression for the number of bites a single human receives from a single mosquito per unit time that are capable of transmitting infection from human to mosquito.**
+
+```{=html}
 <textarea cols="127" rows="2"></textarea>
+```
 <p><br></p>
 
 ### Force of infection — on humans $(λ_H)$ and on mosquitoes $(λ_M)$
 
-The expressions in 2.4 and 2.5 are for the rate of 'successful' bites between a single susceptible human and a single infectious mosquito. The *force of infection on humans*, $λ_H$, is the rate at which a susceptible human acquires infection, noting that infection can be acquired from any infectious mosquito. 
+The expressions in 2.4 and 2.5 are for the rate of 'successful' bites between a single susceptible human and a single infectious mosquito. The *force of infection on humans*, $λ_H$, is the rate at which a susceptible human acquires infection, noting that infection can be acquired from any infectious mosquito.
 
-**2.6 Write the expression for the force of infection on humans, $λ_H$.**
+**2.6 Write the expression for the force of infection on humans,** $λ_H$.
+
+```{=html}
 <textarea cols="127" rows="2"></textarea>
+```
 <p><br></p>
 
 Similarly the *force of infection on mosquitoes*, $λ_M$, is the rate at which a susceptible mosquito acquires infection. A mosquito can acquire infection from any infectious human.
 
-**2.7 Write the expression for the force of infection on mosquitoes, $λ_M$.**
+**2.7 Write the expression for the force of infection on mosquitoes,** $λ_M$.
+
+```{=html}
 <textarea cols="127" rows="2"></textarea>
+```
 <p><br></p>
 
 ### New infections per unit time
 
 The force of infection (on humans or mosquitoes) is the rate at which infection is acquired in a single susceptible host. To calculate the rate that new infections occur in the whole human or mosquito population, we have to multiply the force of infection by the population at risk of being infected.
 
-**2.8 Using the equation for the force of infection on humans, $λ_H$, write the expression for the total number of human infections per unit time.**
+**2.8 Using the equation for the force of infection on humans,** $λ_H$, write the expression for the total number of human infections per unit time.
+
+```{=html}
 <textarea cols="127" rows="2"></textarea>
+```
 <p><br></p>
 
-**2.9 Using the equation for the force of infection on mosquitoes, $λ_M$, write the expression for the total number of mosquito infections per unit time.**
-<textarea cols="127" rows="2"></textarea>
-<p><br></p>
+**2.9 Using the equation for the force of infection on mosquitoes,** $λ_M$, write the expression for the total number of mosquito infections per unit time.
 
+```{=html}
+<textarea cols="127" rows="2"></textarea>
+```
+<p><br></p>
 
 ### Births and deaths
-* Typically the demographic processes of mosquitoes (births, deaths) occur on a much shorter time scale than the same processes for humans &mdash; mosquitoes may live a few weeks whereas humans live for decades.
-* Depending on the time over which the model will be run to answer the research question, it is common for mosquito births and deaths to be included in a model while human births and deaths are omitted.
-* To maintain a constant population in a model, we set the birth rates and the death rates to be equal.
-* In the model we are building in this session, we will ignore human births and deaths and maintain a constant mosquito population.
-* In the model we are building in this session, all new members of the population are born susceptible to the modelled disease.
+
+-   Typically the demographic processes of mosquitoes (births, deaths) occur on a much shorter time scale than the same processes for humans --- mosquitoes may live a few weeks whereas humans live for decades.
+-   Depending on the time over which the model will be run to answer the research question, it is common for mosquito births and deaths to be included in a model while human births and deaths are omitted.
+-   To maintain a constant population in a model, we set the birth rates and the death rates to be equal.
+-   In the model we are building in this session, we will ignore human births and deaths and maintain a constant mosquito population.
+-   In the model we are building in this session, all new members of the population are born susceptible to the modelled disease.
 
 ### Other modelling considerations
-* Many of the processes affecting the life cycle of mosquitoes are highly climate dependent and so vary seasonally. For the purposes of illustration, we will not include seasonality in our model.
-* As we saw when we compared the transmission cycle for onchocerciasis with the transmission cycle of West Nile virus, for some vector-borne diseases vertebrate hosts other than humans are involved. As this adds substantial complexity to the model, in this session we consider only diseases that spread human-vector-human.
-* While we have assumed a constant probability across the whole population that a bite will result in transmission, in reality this may not be the case due to population heterogeneity. Comparing the force of infection measured in humans to the measured entomological inoculation rate (EIR), which is the average number of infectious bites per human per unit time, can help calibrate models to real data.
+
+-   Many of the processes affecting the life cycle of mosquitoes are highly climate dependent and so vary seasonally. For the purposes of illustration, we will not include seasonality in our model.
+-   As we saw when we compared the transmission cycle for onchocerciasis with the transmission cycle of West Nile virus, for some vector-borne diseases vertebrate hosts other than humans are involved. As this adds substantial complexity to the model, in this session we consider only diseases that spread human-vector-human.
+-   While we have assumed a constant probability across the whole population that a bite will result in transmission, in reality this may not be the case due to population heterogeneity. Comparing the force of infection measured in humans to the measured entomological inoculation rate (EIR), which is the average number of infectious bites per human per unit time, can help calibrate models to real data.
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
 
 ## **Part 3:** Writing the model
 
 ### Model Diagram
-Now that we have explored how the human and mosquito populations interact in a vector-borne disease model and made some assumptions around what to include in our first model, we will design an appropriate model structure. Using the model compartments you identified in Part 2, and the inflows and outflows from each compartment required based on the assumptions discussed in Part 2, draw your proposed model structure. 
+
+Now that we have explored how the human and mosquito populations interact in a vector-borne disease model and made some assumptions around what to include in our first model, we will design an appropriate model structure. Using the model compartments you identified in Part 2, and the inflows and outflows from each compartment required based on the assumptions discussed in Part 2, draw your proposed model structure.
 
 **Instructions:**
 
-1. You can draw a diagram electronically in a program such as PowerPoint, or you can draw your diagram by hand and take a photo
+1.  You can draw a diagram electronically in a program such as PowerPoint, or you can draw your diagram by hand and take a photo
 
-2. Make sure you label all compartments as well as the inflows and outflows from each compartment.
+2.  Make sure you label all compartments as well as the inflows and outflows from each compartment.
 
-3. Save your diagram in one of the following formats: .jpg, .gif, .png
+3.  Save your diagram in one of the following formats: .jpg, .gif, .png
 
-4. Upload your diagram using the Browse... button below
+4.  Upload your diagram using the Browse... button below
 
-5. If you prefer, you can describe your model in words in the space below
+5.  If you prefer, you can describe your model in words in the space below
 
 **NB: You can replace a file by clicking on the file name and selecting a file with a different name.**
 
-### Upload your image 
+### Upload your image
+
 <p><input type="file" id="files" name="files[]" multiple></input> </span></p>
 
+```{=html}
 <style>
     input[type="file"] {
 
@@ -289,6 +349,8 @@ Now that we have explored how the human and mosquito populations interact in a v
      padding: 1px;
      }
 </style>
+```
+```{=html}
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -316,68 +378,88 @@ Now that we have explored how the human and mosquito populations interact in a v
     });
 
 </script>
-
+```
 ### Alternatively, describe your model structure here
+
+```{=html}
 <textarea cols="127" rows="6"></textarea>
+```
 <p><br></p>
 
 ### Model equations
 
 **3.1 For your model, write in words the inflows and outflows from each compartment.**
+
+```{=html}
 <textarea cols="127" rows="10"></textarea>
+```
 <p><br></p>
 
 **3.2 Convert your description of the model inflows and outflows into the differential equations for your model.**
+
+```{=html}
 <textarea cols="127" rows="10"></textarea>
+```
 <p><br></p>
 
 **3.3 Write the equations for the size of each population in your model.**
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 ### Basic reproduction number
+
 The basic reproduction number, $R_0$, for a vector-borne disease is the number of secondary infections of the same type (i.e. vector or human) generated by a single infectious vector or human in a totally susceptible population. Let's start with a single infectious mosquito.
 
+We firstly start with the expected number of humans (in a totally susceptible population) infected by this mosquito over the duration of their infectious period.
 
-We firstly start with the expected number of humans (in a totally susceptible population) infected by this mosquito over the duration of their infectious period. 
+**3.4 Write down this expression using the information you have developed in Parts 2 and 3 (i.e. number of new infections and the duration of the infectious period). We will denote this as** $R_{HM}$.
 
-**3.4 Write down this expression using the information you have developed in Parts 2 and 3 (i.e. number of new infections and the duration of the infectious period). We will denote this as $R_{HM}$.**
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
-Next we consider the expected number of mosquitoes (in a totally susceptible population) infected by a single human over the duration of their infectious period. 
+Next we consider the expected number of mosquitoes (in a totally susceptible population) infected by a single human over the duration of their infectious period.
 
-**3.5 Write down this expression using the information you have developed in Parts 2 and 3 (i.e. number of new infections and the duration of the infectious period). We will denote this as $R_{MH}$.**
+**3.5 Write down this expression using the information you have developed in Parts 2 and 3 (i.e. number of new infections and the duration of the infectious period). We will denote this as** $R_{MH}$.
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 Since a single mosquito infects $R_{HM}$ humans, and each of these humans infects $R_{MH}$ mosquitoes, the number of secondary infections a mosquito generates in mosquitoes is the product of $R_{HM}$ and $R_{MH}$.
 
 **3.6 Write down this expression, cancelling terms where possible to simplify the expression.**
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
-**3.7 What happens to $R_0$ as the number of mosquitoes increases? Why?**
+**3.7 What happens to** $R_0$ as the number of mosquitoes increases? Why?
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
-**3.8 What happens to $R_0$ as the number of humans increases? Why?**
+**3.8 What happens to** $R_0$ as the number of humans increases? Why?
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
-**3.9 Depending on the season, mosquitoes may have a reduced life expectancy. What happens to $R_0$ as the life expectancy of mosquitoes reduces? Why?**
+**3.9 Depending on the season, mosquitoes may have a reduced life expectancy. What happens to** $R_0$ as the life expectancy of mosquitoes reduces? Why?
+
+```{=html}
 <textarea cols="127" rows="4"></textarea>
+```
 <p><br></p>
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
-
 :::
-
-
-
-
-
-
-
-
-
