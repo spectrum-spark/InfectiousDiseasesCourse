@@ -142,8 +142,11 @@ for (pkg in required_packages) {
 
 <p><br></p>
 
-::: panel-tabset
-## **Part 1:** A model for dengue
+# **Part 1:** A model for dengue
+
+::: {.panel-tabset}
+
+## Problem description
 
 In the previous session, we developed a model for a mosquito-borne
 disease. Here, we will code that model in R and parameterise it using
@@ -483,7 +486,8 @@ we will adapt our model to see whether we can improve the fit.
 
 By the end of Part 1, your script should look like this:
 
-```{r part_1_solutions, ECHO=T, eval=F}
+```{r part_1_solutions, echo=TRUE, eval=FALSE}
+
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
@@ -594,8 +598,9 @@ plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections
      xlab = "Time", ylab = c("number of infections"),
      main = "Weekly human new infections")
 ```
+:::
 
-## **Part 2:** Adapting the model
+# **Part 2:** Adapting the model
 
 In this part, we will adapt the model we developed in Part 1 to try to
 better capture the Cairns dengue outbreak dynamics. It is important to
@@ -1056,7 +1061,7 @@ As a reminder, here are the published data from Part 1:
 
 By the end of Part 2, your script should look like this:
 
-```{r part_2_solutions, ECHO=T, eval=F}
+```{r part_2_solutions, echo=T, eval=F}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
@@ -1504,7 +1509,7 @@ be the explanation for any differences?**
 
 By the end of Part 3, your script should look like this:
 
-```{r part_3_solutions, ECHO=T, eval=F}
+```{r part_3_solutions, echo=T, eval=F}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
