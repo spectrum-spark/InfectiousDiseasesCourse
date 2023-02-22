@@ -1,10 +1,10 @@
 ---
 title: "Vector-borne disease modelling"
 author: |
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  |
   | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
       >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
-  |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
 output: 
   html_document:
      self_contained: yes
@@ -61,7 +61,6 @@ This session is divided into three parts:
 
 *We recommend saving your text at the end of each part by printing the file.*
 
-::: panel-tabset
 ## **Part 1:** Motivation and examples
 
 ### What are vector-borne diseases?
@@ -463,4 +462,4 @@ Since a single mosquito infects $R_{HM}$ humans, and each of these humans infect
 <p><br></p>
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
-:::
+

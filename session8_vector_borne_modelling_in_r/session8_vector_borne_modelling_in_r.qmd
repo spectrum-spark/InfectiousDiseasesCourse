@@ -1,11 +1,10 @@
 ---
 title: "Vector-borne disease models in R"
 author: |
-    |  
-    | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-    | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
-      target="_blank">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute 
-      for Infection and Immunity***
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  |
+  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
+      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
 output: 
   html_document:
      self_contained: yes
@@ -146,7 +145,9 @@ for (pkg in required_packages) {
 
 ::: {.panel-tabset}
 
-## Problem description
+## **Part 1:** A model for dengue
+
+### Problem description
 
 In the previous session, we developed a model for a mosquito-borne
 disease. Here, we will code that model in R and parameterise it using
@@ -601,6 +602,10 @@ plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections
 :::
 
 # **Part 2:** Adapting the model
+
+::: {.panel-tabset}
+
+## **Part 2:** Adapting the model
 
 In this part, we will adapt the model we developed in Part 1 to try to
 better capture the Cairns dengue outbreak dynamics. It is important to
@@ -1283,8 +1288,13 @@ plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infect
 
 
 ```
+:::
 
-## **Part 3:** The impact of seasonality
+# **Part 3:** The impact of seasonality
+
+::: {.panel-tabset}
+
+## **Part 3:** The impact of seasonality 
 
 ### Adding seasonality to the model
 
@@ -1845,8 +1855,9 @@ plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$W
      main = "Weekly human new infections, model with E and seasonality")
 
 ```
+:::
 
-## **Part 4:** Interventions
+# **Part 4:** Interventions
 
 ### Interventions to control dengue
 
@@ -1891,4 +1902,4 @@ our model could be adapted to include it.**
 <p><br></p>
 
 <input type="button" value="Print this page" onclick="window.print()">
-:::
+
