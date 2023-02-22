@@ -80,6 +80,9 @@ We'll need three libraries for this session:
 
 
 ```{r load-libraries}
+#| message: false
+#| warning: false
+
 library(dplyr)
 library(deSolve)
 library(ggplot2)
