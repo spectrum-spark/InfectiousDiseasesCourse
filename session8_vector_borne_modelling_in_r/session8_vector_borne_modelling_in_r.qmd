@@ -139,9 +139,8 @@ for (pkg in required_packages) {
 }
 ```
 
-<p><br></p>
 
-# **Part 1:** A model for dengue
+## **Part 1:** A model for dengue
 
 ::: {.panel-tabset}
 
@@ -601,7 +600,7 @@ plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections
 ```
 :::
 
-# **Part 2:** Adapting the model
+## **Part 2:** Adapting the model
 
 ::: {.panel-tabset}
 
@@ -1290,7 +1289,7 @@ plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infect
 ```
 :::
 
-# **Part 3:** The impact of seasonality
+## **Part 3:** The impact of seasonality
 
 ::: {.panel-tabset}
 
@@ -1857,7 +1856,7 @@ plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$W
 ```
 :::
 
-# **Part 4:** Interventions
+## **Part 4:** Interventions
 
 ### Interventions to control dengue
 
