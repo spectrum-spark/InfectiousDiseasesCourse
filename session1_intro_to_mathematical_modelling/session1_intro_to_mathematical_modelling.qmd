@@ -264,11 +264,13 @@ $$HIT = 1-x^* \Rightarrow HIT = 1 - \frac{1}{R_0}$$
 ## Building models
 
 To design your own mathematical model you must understand
+
 * The research question
 * The natural history of the infection
 * What data are available
 
 You will learn to
+
 * Write the model in the form of ordinary differential equations (ODEs)
 * Run the model using suitable software
 
