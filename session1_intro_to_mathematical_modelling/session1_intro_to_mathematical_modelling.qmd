@@ -1,13 +1,20 @@
 ---
 title: "Introduction to Mathematical Modelling"
-author:
-    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-    - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-    - Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
-    - July 2022
-output:
-    html_document:
-        self_contained: yes
+author: |
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  |
+  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
+  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
+  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
+output: 
+  html_document:
+     self_contained: yes
+     link-external-icon: true
+     link-external-newwindow: true
+execute:
+  echo: false
+  warning: false
 ---
     
 ```{r, echo=F}
@@ -53,10 +60,10 @@ This session is divided into three parts:
 
 _We recommend to save your text at the end of each part by printing the file._
 
-# Intro Notes
+# Introduction
 
 ## What is a model?
-* A simplified descritpion of a system or process used to aid understanding
+* A simplified description of a system or process used to aid understanding
 ![](real_world.png)
 * A model is useful if it provides relevant (and correct) information for a particular purpose/question
 * A model is efficient if it will do this with minimal inputs and without providing superfluous information
@@ -70,12 +77,12 @@ _We recommend to save your text at the end of each part by printing the file._
 * Mechanistic models
     * Describe the biological mechanism in mathematical language
     * Can reproduce previous trends and also predict future impacts of interventions
-* Economic models
-    * Focus on the cost specific disease burden and control
-    * Assess the cost-effectiveness of competing interventions
 
 **Not covered in this course**:
 
+* Economic models
+    * Focus on the cost specific disease burden and control
+    * Assess the cost-effectiveness of competing interventions
 * Bioinformatics
     * Mainly for the analysis and interpretation of genetic data
 * Statistical models
@@ -239,7 +246,7 @@ Not all contacts are with susceptible individuals:
 ![](saturation.png)
 
 ### Some theory
-* The effective reproduction number Rt is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
+* The effective reproduction number $R_t$ is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
 * $R_t=R_0 x^∗$ varies over time depending on the fraction of the population susceptible, $x^∗=\left(\frac{S}{pop}\right)$
 * Incidence of infections increases when $R_t>1$ and declines when $R_t<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for R_t=1:
 $$R_t=1\Rightarrow R_0x^∗=1 \Rightarrow x^∗=\frac{1}{R_0}$$
@@ -308,7 +315,7 @@ $$\text{incidence} = \lambda(t)S(t)$$
 10. What does this mean?
 <textarea name="Text1" cols="127" rows="3"></textarea>
 
-* Homogenous mixing
+* Homogeneous mixing
 
 11. What does this mean?
 <textarea name="Text1" cols="127" rows="3"></textarea>
@@ -372,7 +379,7 @@ Examine the figure below and discuss amongst the group or search trusted sources
 Refer to the chart of confirmed COVID cases in Thailand superimposed with interventions:
 ![](Thailand_First_Wave.png)
 
-4. What questions would a policymaker be asking in this scenario? Comment on if and how a model could be used to answer each policy question.
+4. What questions would a policy-maker be asking in this scenario? Comment on if and how a model could be used to answer each policy question.
 <textarea name="Text1" cols="127" rows="7"></textarea>
 
 <input type="button" value="Print this page" onclick="window.print()">
