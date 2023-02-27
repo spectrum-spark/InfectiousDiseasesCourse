@@ -248,7 +248,7 @@ Not all contacts are with susceptible individuals:
 ### Some theory
 * The effective reproduction number $R_t$ is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
 * $R_t=R_0 x^∗$ varies over time depending on the fraction of the population susceptible, $x^∗=\left(\frac{S}{pop}\right)$
-* Incidence of infections increases when $R_t>1$ and declines when $R_t<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for R_t=1:
+* Incidence of infections increases when $R_t>1$ and declines when $R_t<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for $R_t=1$:
 $$R_t=1\Rightarrow R_0x^∗=1 \Rightarrow x^∗=\frac{1}{R_0}$$
 
 ## Implications for vaccination
@@ -351,7 +351,7 @@ Think special rates
 | SEIR  | <input type="text" id="name" name="name" size="30"> |
 | SEIRS | <input type="text" id="name" name="name" size="30"> |
 
-# **Part 3**: A model for COVID-19 tranmission
+# **Part 3**: A model for COVID-19 transmission
 
 ## Building a compartmental model: the problem for the week
 We will write a suitable model structure for COVID-19 and search the literature for data to inform parameter values and for model comparison.
