@@ -144,12 +144,12 @@ This is a practical session in which, individually or as part of a group, you wi
 
 3. The infectious bean can infect susceptible neighbours so replace any susceptible neighbours with infectious beans. The infectious period is one week, so keep track of the original infected bean and replace it with a recovered bean. Record the numbers of susceptible, infectious and recovered individuals in the table above for week 2.
 
-4. Once the status of the individuals has been updated, place the beans in the cup. Then pour them out again. Replace all susceptible neighbours of infectious beans with new infectious beans (recovered beans are immune and cannot be infected). Don’t forget to replace the original infected beans with recovered beans. Record the numbers of susceptible, infectious and recovered individuals in the table above for week 3.
+4. Once the status of the individuals has been updated, place the beans in the cup. Then pour them out again. Replace all susceptible neighbours of infectious beans with new infectious beans (recovered beans are immune and cannot be infected). Don't forget to replace the original infected beans with recovered beans. Record the numbers of susceptible, infectious and recovered individuals in the table above for week 3.
 
 5. Repeat until you reach 10 weeks.
 
 ## Recording results in R
-Here is some code to record and plot your results in R. Open RStudio, open from your folder "lesson1_introduction_beans.R" using the Session tab, Set Working Directory / To Source File Location. Copy and paste the code chunk below into your editor. Then replace the default results with your own.
+Here is some code to record and plot your results in R. Open RStudio, open from your student files folder "session1_introduction_beans.R". Using the Session tab, Set Working Directory / To Source File Location. Copy and paste the code chunk below into your editor. Then replace the default results with your own.
 
 ```{r bean-plot, echo=T, eval=T}
 # Mathematical Modelling of Infectious Diseases
@@ -215,7 +215,7 @@ This will be an interactive lecture session to familiarise you with some of the 
 ## The basic reproduction number, $R_0$
 $R_0$ is defined as the average number of new infections that result from a single infection introduced into a totally susceptible population. This will depend on:
 
-* The number of contacts per unit time (e.g. week$^{−1}$), $c$
+* The number of contacts per unit time (e.g. week$^{-1}$), $c$
 * The probability of infection given a contact between an infectious and a susceptible individual, $p$
 * The duration of infection, $D$
 
@@ -311,7 +311,7 @@ $$\text{incidence} = \lambda(t)S(t)$$
 ### Model assumptions
 * All models have assumptions, so what does the example SIRS model assume?
 * **Deterministic** dynamics
-    * No role for chance, model is ‘predetermined’
+    * No role for chance, model is 'predetermined'
 * Population is stratified in broad groups (i.e. compartments). Within each compartment, individuals are homogeneous
 
 10. What does this mean?
