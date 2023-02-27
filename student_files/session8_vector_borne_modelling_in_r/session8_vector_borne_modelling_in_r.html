@@ -4302,9 +4302,29 @@ border: 0;
   <li><a href="#save-your-new-file" id="toc-save-your-new-file" class="nav-link" data-scroll-target="#save-your-new-file">Save your new file</a></li>
   <li><a href="#set-working-directory" id="toc-set-working-directory" class="nav-link" data-scroll-target="#set-working-directory">Set working directory</a></li>
   <li><a href="#load-required-packages" id="toc-load-required-packages" class="nav-link" data-scroll-target="#load-required-packages">Load required packages</a></li>
-  <li><a href="#part-1-a-model-for-dengue" id="toc-part-1-a-model-for-dengue" class="nav-link" data-scroll-target="#part-1-a-model-for-dengue"><strong>Part 1:</strong> A model for dengue</a></li>
-  <li><a href="#part-2-adapting-the-model" id="toc-part-2-adapting-the-model" class="nav-link" data-scroll-target="#part-2-adapting-the-model"><strong>Part 2:</strong> Adapting the model</a></li>
-  <li><a href="#part-3-the-impact-of-seasonality" id="toc-part-3-the-impact-of-seasonality" class="nav-link" data-scroll-target="#part-3-the-impact-of-seasonality"><strong>Part 3:</strong> The impact of seasonality</a></li>
+  <li><a href="#part-1-a-model-for-dengue" id="toc-part-1-a-model-for-dengue" class="nav-link" data-scroll-target="#part-1-a-model-for-dengue"><strong>Part 1:</strong> A model for dengue</a>
+  <ul class="collapse">
+  <li><a href="#problem-description" id="toc-problem-description" class="nav-link" data-scroll-target="#problem-description">Problem description</a></li>
+  <li><a href="#define-the-model-parameters-and-time-period-for-simulations" id="toc-define-the-model-parameters-and-time-period-for-simulations" class="nav-link" data-scroll-target="#define-the-model-parameters-and-time-period-for-simulations">Define the model parameters and time period for simulations</a></li>
+  <li><a href="#set-up-the-initial-conditions" id="toc-set-up-the-initial-conditions" class="nav-link" data-scroll-target="#set-up-the-initial-conditions">Set up the initial conditions</a></li>
+  <li><a href="#define-the-model-variables-also-known-as-compartments-or-states" id="toc-define-the-model-variables-also-known-as-compartments-or-states" class="nav-link" data-scroll-target="#define-the-model-variables-also-known-as-compartments-or-states">Define the model variables (also known as compartments or states)</a></li>
+  <li><a href="#set-up-a-function-to-solve-the-equations" id="toc-set-up-a-function-to-solve-the-equations" class="nav-link" data-scroll-target="#set-up-a-function-to-solve-the-equations">Set up a function to solve the equations</a></li>
+  <li><a href="#run-the-model-and-plot-the-results" id="toc-run-the-model-and-plot-the-results" class="nav-link" data-scroll-target="#run-the-model-and-plot-the-results">Run the model and plot the results</a></li>
+  <li><a href="#comparing-to-published-dengue-incidence-data" id="toc-comparing-to-published-dengue-incidence-data" class="nav-link" data-scroll-target="#comparing-to-published-dengue-incidence-data">Comparing to published dengue incidence data</a></li>
+  </ul></li>
+  <li><a href="#part-1-solutions" id="toc-part-1-solutions" class="nav-link" data-scroll-target="#part-1-solutions"><strong>Part 1:</strong> Solutions</a></li>
+  <li><a href="#part-2-adapting-the-model" id="toc-part-2-adapting-the-model" class="nav-link" data-scroll-target="#part-2-adapting-the-model"><strong>Part 2:</strong> Adapting the model</a>
+  <ul class="collapse">
+  <li><a href="#what-might-be-missing-from-our-dengue-model" id="toc-what-might-be-missing-from-our-dengue-model" class="nav-link" data-scroll-target="#what-might-be-missing-from-our-dengue-model">What might be missing from our dengue model?</a></li>
+  <li><a href="#adding-another-compartment-to-our-model-diagram" id="toc-adding-another-compartment-to-our-model-diagram" class="nav-link" data-scroll-target="#adding-another-compartment-to-our-model-diagram">Adding another compartment to our model diagram</a></li>
+  <li><a href="#adding-another-compartment-to-our-model-code" id="toc-adding-another-compartment-to-our-model-code" class="nav-link" data-scroll-target="#adding-another-compartment-to-our-model-code">Adding another compartment to our model code</a></li>
+  </ul></li>
+  <li><a href="#part-2-solutions" id="toc-part-2-solutions" class="nav-link" data-scroll-target="#part-2-solutions"><strong>Part 2:</strong> Solutions</a></li>
+  <li><a href="#part-3-the-impact-of-seasonality" id="toc-part-3-the-impact-of-seasonality" class="nav-link" data-scroll-target="#part-3-the-impact-of-seasonality"><strong>Part 3:</strong> The impact of seasonality</a>
+  <ul class="collapse">
+  <li><a href="#adding-seasonality-to-the-model" id="toc-adding-seasonality-to-the-model" class="nav-link" data-scroll-target="#adding-seasonality-to-the-model">Adding seasonality to the model</a></li>
+  </ul></li>
+  <li><a href="#part-3-solutions" id="toc-part-3-solutions" class="nav-link" data-scroll-target="#part-3-solutions"><strong>Part 3:</strong> Solutions</a></li>
   <li><a href="#part-4-interventions" id="toc-part-4-interventions" class="nav-link" data-scroll-target="#part-4-interventions"><strong>Part 4:</strong> Interventions</a>
   <ul class="collapse">
   <li><a href="#interventions-to-control-dengue" id="toc-interventions-to-control-dengue" class="nav-link" data-scroll-target="#interventions-to-control-dengue">Interventions to control dengue</a></li>
@@ -4409,10 +4429,6 @@ font-style: italic;
 </section>
 <section id="part-1-a-model-for-dengue" class="level2">
 <h2 class="anchored" data-anchor-id="part-1-a-model-for-dengue"><strong>Part 1:</strong> A model for dengue</h2>
-<div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true"><strong>Part 1:</strong> A model for dengue</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false"><strong>Part 1:</strong> Solutions</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <section id="problem-description" class="level3">
 <h3 class="anchored" data-anchor-id="problem-description">Problem description</h3>
 <p>In the previous session, we developed a model for a mosquito-borne disease. Here, we will code that model in R and parameterise it using typical values applicable to dengue transmission.</p>
@@ -4641,6 +4657,14 @@ Susceptible human change = - new infections
 </p>
 <p><input type="button" value="Print this page" onclick="window.print()"></p>
 </section>
+</section>
+<section id="part-1-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-solutions"><strong>Part 1:</strong> Solutions</h2>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true"><strong>Part 1:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false"><strong>Part 1:</strong> Solutions for Part 1</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>The solutions tab contains the complete code for Part 1. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>By the end of Part 1, your script should look like this:</p>
@@ -4761,10 +4785,6 @@ Susceptible human change = - new infections
 </section>
 <section id="part-2-adapting-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="part-2-adapting-the-model"><strong>Part 2:</strong> Adapting the model</h2>
-<div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><strong>Part 2:</strong> Adapting the model</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><strong>Part 2:</strong> Solutions</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>In this part, we will adapt the model we developed in Part 1 to try to better capture the Cairns dengue outbreak dynamics. It is important to note that our model in Part 1 mostly used parameter values from Ndii et al. Two of those parameters, the probability of transmission from mosquito to human (T_HM) and the probability of transmission from human to mosquito (T_MH) were <strong>fitted</strong> using the Ndii et al. model, which has a different structure to the model we developed in Part 1.This highlights the very important point that:</p>
 <center>
 <span style="font-size:16pt; color: red"><em>Parameter values may not be directly transferable between models</em></span>
@@ -5079,6 +5099,14 @@ Recovered human change = recoveries
 </p>
 <p><input type="button" value="Print this page" onclick="window.print()"></p>
 </section>
+</section>
+<section id="part-2-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-solutions"><strong>Part 2:</strong> Solutions</h2>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><strong>Part 2:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><strong>Part 2:</strong> Solutions for Part 2</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>The solutions tab contains the complete code for Parts 1 and 2. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <p>By the end of Part 2, your script should look like this:</p>
@@ -5308,10 +5336,6 @@ Recovered human change = recoveries
 </section>
 <section id="part-3-the-impact-of-seasonality" class="level2">
 <h2 class="anchored" data-anchor-id="part-3-the-impact-of-seasonality"><strong>Part 3:</strong> The impact of seasonality</h2>
-<div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true"><strong>Part 3:</strong> The impact of seasonality</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false"><strong>Part 3:</strong> Solutions</a></li></ul>
-<div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <section id="adding-seasonality-to-the-model" class="level3">
 <h3 class="anchored" data-anchor-id="adding-seasonality-to-the-model">Adding seasonality to the model</h3>
 <p>Adding an exposed compartment reduced the number of new infections, but substantially delayed the timing of the outbreak. There is still a large assumption that we have made — that the mosquito population is constant. In tropical areas, mosquito numbers fluctuate substantially over the year, with larger numbers typically seen in the wet season, which in Cairns develops in December and lasts until March. Ndii et al. incorporated such seasonality in the mosquito death rate in their model. We apply a seasonal death rate for mosquitoes using the parameters and formula applied by Ndii et al:</p>
@@ -5483,6 +5507,14 @@ Recovered human change = recoveries
 </p>
 <p><input type="button" value="Print this page" onclick="window.print()"></p>
 </section>
+</section>
+<section id="part-3-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-solutions"><strong>Part 3:</strong> Solutions</h2>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true"><strong>Part 3:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false"><strong>Part 3:</strong> Solutions for Part 3</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>The solutions tab contains the complete code for Parts 1, 2 and 3. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <p>By the end of Part 3, your script should look like this:</p>

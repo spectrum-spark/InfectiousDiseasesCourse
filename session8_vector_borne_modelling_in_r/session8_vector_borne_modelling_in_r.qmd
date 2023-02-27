@@ -142,10 +142,6 @@ for (pkg in required_packages) {
 
 ## **Part 1:** A model for dengue
 
-::: {.panel-tabset}
-
-## **Part 1:** A model for dengue
-
 ### Problem description
 
 In the previous session, we developed a model for a mosquito-borne
@@ -484,6 +480,15 @@ we will adapt our model to see whether we can improve the fit.
 
 ## **Part 1:** Solutions
 
+::: {.panel-tabset}
+
+## **Part 1:** Spoiler alert
+
+The solutions tab contains the complete code for Part 1. **Only click on it if
+you have tried to complete the exercises yourself and need some help**
+
+## **Part 1:** Solutions for Part 1
+
 By the end of Part 1, your script should look like this:
 
 ```{r part_1_solutions, echo=TRUE, eval=FALSE}
@@ -599,10 +604,6 @@ plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections
      main = "Weekly human new infections")
 ```
 :::
-
-## **Part 2:** Adapting the model
-
-::: {.panel-tabset}
 
 ## **Part 2:** Adapting the model
 
@@ -1063,6 +1064,15 @@ As a reminder, here are the published data from Part 1:
 
 ## **Part 2:** Solutions
 
+::: {.panel-tabset}
+
+## **Part 2:** Spoiler alert
+
+The solutions tab contains the complete code for Parts 1 and 2. **Only click on 
+it if you have tried to complete the exercises yourself and need some help**
+
+## **Part 2:** Solutions for Part 2
+
 By the end of Part 2, your script should look like this:
 
 ```{r part_2_solutions, echo=T, eval=F}
@@ -1289,10 +1299,6 @@ plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infect
 ```
 :::
 
-## **Part 3:** The impact of seasonality
-
-::: {.panel-tabset}
-
 ## **Part 3:** The impact of seasonality 
 
 ### Adding seasonality to the model
@@ -1515,6 +1521,15 @@ be the explanation for any differences?**
 <input type="button" value="Print this page" onclick="window.print()">
 
 ## **Part 3:** Solutions
+
+::: {.panel-tabset}
+
+## **Part 3:** Spoiler alert
+
+The solutions tab contains the complete code for Parts 1, 2 and 3. **Only click on 
+it if you have tried to complete the exercises yourself and need some help**
+
+## **Part 3:** Solutions for Part 3
 
 By the end of Part 3, your script should look like this:
 
