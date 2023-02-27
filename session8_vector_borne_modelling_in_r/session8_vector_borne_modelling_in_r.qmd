@@ -76,8 +76,8 @@ Before we begin developing a model, we need to set up our system.
 As in previous sessions, we will start by creating a new file and
 writing a short description of your code to summarise its purpose for
 future users. Below is an example of such a description for this
-session. Open R studio, and then open the file `session8.R` in the
-`\student_materials` folder. Copy and paste the code chunk below (or
+session. Open R studio, and then open the file `session8_vector_model.R` in the
+`\student_files` folder. Copy and paste the code chunk below (or
 write your own!) into your editor to start writing your own code:
 
 ```{r, echo=T}
