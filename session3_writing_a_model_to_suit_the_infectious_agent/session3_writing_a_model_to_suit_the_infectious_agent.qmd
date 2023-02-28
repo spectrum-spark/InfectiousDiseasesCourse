@@ -1,13 +1,19 @@
 ---
 title: "Designing a model to suit the pathogen"
-author:
-    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-    - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-    - Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
-    - July 2022
-output:
-    html_document:
-        self_contained: yes
+author: |
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
+  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
+  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
+output: 
+  html_document:
+     self_contained: yes
+     link-external-icon: true
+     link-external-newwindow: true
+execute:
+  echo: false
+  warning: false
 ---
     
 ```{r, echo=F}
@@ -51,7 +57,7 @@ Upload your model diagram:
 
 ## More practice
 
-* Repeat this process for measles, a short-live`d disease with **lifelong immunity**.
+* Repeat this process for measles, a short-lived disease with **lifelong immunity**.
 
 You might find the following diagram helpful:
 ![](measles.png)
@@ -62,10 +68,10 @@ Upload your model diagram:
 
 # Introduction to a Shiny App
 
-* Navigate to the folder `./student_materials/shiny_app_SEIRS_variations.R
+* Navigate to the folder `./student_materials/shiny_app_SEIRS_variations.R`
 * Click "Run App"
 
-If this doesn't work, you can try the online version: [https://emmamcbryde.shinyapps.io/SEIR_model/](emmamcbryde.shinyapps.io/SEIR_model/). You should see something like this:
+If this doesn't work, you can try the online version: [https://emmamcbryde.shinyapps.io/SEIR_model/](https://emmamcbryde.shinyapps.io/SEIR_model/). You should see something like this:
 ![](shiny_default.png)
 
 ## Examine the graphs that plot S, E, I and R over time for the default parameters.
