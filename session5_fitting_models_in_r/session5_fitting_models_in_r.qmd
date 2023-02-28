@@ -61,6 +61,51 @@ Can you think of a simple algorithm for searching over all the parameters and fi
 In the example we have been minimizing the sum of squares of the residuals. What would be the effect if we decided to minimize the sums of the absolute values of the residuals? Would you expect to get the same answer?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
+# Likelihood Functions
+```{r}
+#| label: Likelihood
+#| fig-cap: "The likelihood assigns the probability of observing data given your underlying model and model parameters."
+#| echo: false
+#| message: false
+set.seed(1)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
+    rowwise() %>%
+    mutate(rand_y = rpois(1, y))
+sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
+    rowwise() %>%
+    mutate(rand_y = rnbinom(1, mu = y, size = 5))
+# # SIR contains the answer
+sir <- tibble(t = 0:110, y = exp(0.05 * t))
+# Construct the fun figure
+distribution_data <- tibble()
+times <- c(25, 50, 75, 100)
+for (time in times) {
+    distribution_data <- distribution_data %>% bind_rows(., tibble(t = time, height = 0:300, width = dpois(height, (sir %>% filter(t == time))$y), width2 = dnbinom(height, mu = (sir %>% filter(t == time))$y, size = 10)))
+}
+
+ggplot() +
+    geom_ribbon(
+        data = distribution_data %>% filter(width >= 1e-10),
+        aes(xmin = t, xmax = t - 90 * width, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
+        outline.type = "full", alpha = 0.4
+    ) +
+    geom_point(
+        data = sir_data,
+        aes(x = t, y = rand_y, color = "Data", fill = "Data")
+    ) +
+    geom_line(data = sir, aes(y = y, x = t)) +
+    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
+    scale_x_continuous("Day") +
+    ggtitle("Visualisation of the Likelihood") +
+    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
+    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
+    theme(legend.position = "bottom")
+
+```
+
 # Distance Functions
 In part 2 we consider different ways of measuring how far our model results are from the data. We use the model developed in the last session and the initial data in March 2020. We are going to briefly touch on sum of squares and then use likelihood functions to assess model fit to data.
 
