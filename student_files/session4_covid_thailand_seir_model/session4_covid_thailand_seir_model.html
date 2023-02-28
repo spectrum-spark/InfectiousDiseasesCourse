@@ -329,10 +329,10 @@ textarea {
 <p>Complete the following table using information about the natural history of COVID-19 infection:</p>
 <table class="table">
 <colgroup>
-<col style="width: 31%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 17%">
+<col style="width: 29%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 23%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -369,9 +369,9 @@ textarea {
 </tr>
 </tbody>
 </table>
-Type <code>parameters</code> in your console. What do you see?
+<p>Type <code>parameters</code> in your console. What do you see?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
-Type `parameters[“R0”] into your console. What does this value mean?
+<p>Type `parameters[“R0”] into your console. What does this value mean?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
 </section>
 <section id="set-up-the-initial-conditions-and-model-variables" class="level2">
@@ -432,15 +432,15 @@ Type `parameters[“R0”] into your console. What does this value mean?
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    })</span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-What is the name of our function and what are the inputs and outputs?
+<p>What is the name of our function and what are the inputs and outputs?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
-What is the rate of movement out of state <code>E</code>?
+<p>What is the rate of movement out of state <code>E</code>?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-What is the rate of movement out of state <code>I</code>?
+<p>What is the rate of movement out of state <code>I</code>?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-What is the formula for <span class="math inline">\(\lambda\)</span>, known as the <em>force of infection</em>?
+<p>What is the formula for <span class="math inline">\(\lambda\)</span>, known as the <em>force of infection</em>?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-Explain the different components of the force of infection.
+<p>Explain the different components of the force of infection.</p>
 <textarea name="Text1" cols="127" rows="5"></textarea>
 </section>
 <section id="run-and-plot-hte-model" class="level2">
@@ -460,9 +460,9 @@ Explain the different components of the force of infection.
 </div>
 </div>
 </div>
-Explain how each of the variables <code>S</code>, <code>E</code>, <code>I</code> and <code>R</code> can be measured in the field.
+<p>Explain how each of the variables <code>S</code>, <code>E</code>, <code>I</code> and <code>R</code> can be measured in the field.</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
-Define incidence and prevalence, and discuss the differences between them.
+<p>Define incidence and prevalence, and discuss the differences between them.</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
 </section>
 </section>
@@ -485,11 +485,11 @@ Define incidence and prevalence, and discuss the differences between them.
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>tidied_output <span class="ot">&lt;-</span> <span class="fu">tidy_base_model</span>(out, times, parameters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-What is the formula for incidence?
+<p>What is the formula for incidence?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-Write down an equation for prevalence and the corresponding R code.
+<p>Write down an equation for prevalence and the corresponding R code.</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
-Why do we choose to plot incidence?
+<p>Why do we choose to plot incidence?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
 </section>
 <section id="plot-the-total-population-size-and-predicted-incidence" class="level2">
@@ -522,9 +522,9 @@ Why do we choose to plot incidence?
 </div>
 </div>
 </div>
-What is the sum of all the differential equations for the COVID-19 model?
+<p>What is the sum of all the differential equations for the COVID-19 model?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-Why do we choose to plot the population size over time?
+<p>Why do we choose to plot the population size over time?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
 </section>
 <section id="compare-the-model-with-the-data" class="level2">
@@ -562,11 +562,11 @@ Why do we choose to plot the population size over time?
 </div>
 </div>
 </div>
-Vary the value of <span class="math inline">\(R_0\)</span> and re-run the modeol. What value of <span class="math inline">\(R_0\)</span> do you think is most realistic?
+<p>Vary the value of <span class="math inline">\(R_0\)</span> and re-run the modeol. What value of <span class="math inline">\(R_0\)</span> do you think is most realistic?</p>
 <textarea name="Text1" cols="127" rows="1"></textarea>
-Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for <span class="math inline">\(R_0\)</span>?
+<p>Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for <span class="math inline">\(R_0\)</span>?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
-What is the difference between the first and second graphs, and why should we plot these?
+<p>What is the difference between the first and second graphs, and why should we plot these?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
 <p>Try changing the end times and re-running the model:</p>
 <div class="cell" data-layout-align="center">
@@ -577,7 +577,7 @@ What is the difference between the first and second graphs, and why should we pl
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>long_out <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">y =</span> state, <span class="at">times =</span> <span class="fu">as.numeric</span>(times_long <span class="sc">-</span> times_long[<span class="dv">1</span>]), <span class="at">func =</span> COVID.base, <span class="at">parms =</span> parameters)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>tidied_long <span class="ot">&lt;-</span> <span class="fu">tidy_base_model</span>(long_out, times_long, parameters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-Why would we do this?
+<p>Why would we do this?</p>
 <textarea name="Text1" cols="127" rows="3"></textarea>
 <p><input type="button" value="Print this page" onclick="window.print()"></p>
 

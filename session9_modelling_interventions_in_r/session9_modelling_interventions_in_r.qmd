@@ -1,0 +1,464 @@
+---
+title: "Modelling interventions in R"
+author: |
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  |
+  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
+      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
+output: 
+  html_document:
+     self_contained: yes
+     link-external-icon: true
+     link-external-newwindow: true
+execute:
+  echo: true
+  warning: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=F}
+knitr::opts_chunk$set(
+    fig.align = "center"
+)
+```
+
+```{css, echo=F}
+textarea {
+    width: 100%;
+}
+
+.line-block {
+    line-height: 1.5em;
+}
+
+.line-block a {
+    font-style: italic;
+}
+```
+
+# Summary
+
+One of the most useful aspects of a mathematical model for infectious disease transmission is its capability to explore future intervention scenarios: what *could* be.
+
+We will explore some R code for the 1st wave of COVID-19 in Thailand in 2020. This will involve the following parts:
+
+1. A whiteboard discussion of how to include interventions in a model
+2. Coding a model to capture the 1st wave interventions (emergency stage and curfew stage)
+3. Estimating the effectiveness of the 1st wave interventions
+4. Exploring counterfactuals
+5. Practice building models to explicitly incorporate interventions of your choice in breakout groups
+
+# Modelling Interventions
+
+As always, we should set up a new script with a good header:
+
+```{r}
+#| eval: false
+
+# SPARK Modelling Short course
+# 2023 Infectious Diseases Modelling
+
+##################################
+## MODELLING INTERVENTIONS IN R ##
+##################################
+```
+Save this file somewhere in your `student_materials` folder with a meaningful name, like `session_seir_ode_covid`.
+
+We also have to set the working directory. We can do this by pressing "To Source Location", or using the `setwd()` command like we've done previously.
+
+Now, let's load some packages.
+
+```{r loadpackages}
+library(dplyr)
+library(deSolve)
+library(ggplot2)
+```
+
+We'll be making use of the first wave Thailand data. Here is a reminder of what the first wave in Thailand looked like:
+
+![](Thailand_First_Wave.png)
+
+Let's load back in the data, and have a look at a plot:
+
+```{r load-data}
+first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
+first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
+
+ggplot(first_wave, aes(x = Date, y = Cases)) +
+    geom_col(fill = "blue") +
+    ylab("Daily cases") +
+    xlab("") +
+    ggtitle("Thailand's First Wave, Jan-Jun 2020") +
+    theme_bw()
+```
+
+# Coding Interventions
+We're going to model two interventions: the emergency declaration, which was made on February 26, and the start of curfew, which was on March 4th.
+
+```{r key-dates}
+fitting_start_date <- as.Date("2020-03-07") # start of fitting window
+emergency_start_date <- as.Date("2020-03-26") # Start of Emergency declaration
+curfew_start_date <- as.Date("2020-04-03") # Start of Curfew
+fitting_end_date <- as.Date("2020-05-13") # end of fitting window
+```
+
+We should filter down our data to the time period we want to fit to.
+
+```{r filter-data}
+outbreak <- first_wave %>%
+    filter(Date >= fitting_start_date, Date <= fitting_end_date)
+```
+
+One of the most important things when you're doing an optimisation is a decent initial guess at your parameter values. Luckily, in a previous session, we got a good estimate of R0, and we know a few things about how effective the various interventions might be.
+
+```{r initial-guesses}
+parameters <- c(
+    R0 = 3.970588, # from the NM fitting session
+    incubation_period = 5, # Rounded from Trauer et al
+    infectious_period = 6, # Rounded from Trauer et al
+    emergency_efficacy = 0.70, # guess
+    curfew_efficacy = 0.80 # guess
+)
+```
+
+Since we're using the same model from Session 5, we also need the same initial conditions, state variables and time window.
+
+```{r initial-conditions}
+# Initial conditions
+Total_population <- 6.6e7 # Roughly population of Thailand
+Initial_exposed <- 0 # Simplifying assumption
+Initial_infectious <- 30.356868 # from the NM fitting session
+Initial_recovered <- 0 # simplifying assumption
+Initial_susceptible <- Total_population - Initial_exposed - Initial_infectious - Initial_recovered
+
+
+# State variables
+state <- c(
+    Susceptible = Initial_susceptible,
+    Exposed = Initial_exposed,
+    Infectious = Initial_infectious,
+    Recovered = Initial_recovered
+)
+
+# Time window
+times <- seq(fitting_start_date, fitting_end_date, by = 1)
+```
+
+We're going to use a slightly different implementation of the SEIR model from the previous session. See if you can spot the differences.
+
+```{r ode-model}
+COVID.intervention <- function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
+
+        # Calculate the total population size
+        Total_population <- Susceptible + Exposed + Infectious + Recovered
+
+        # Calculate intervention efficacy
+        if (t < as.numeric(emergency_start_date - fitting_start_date)) {
+            intervention_efficacy <- 0
+        } else if (t >= as.numeric(emergency_start_date - fitting_start_date) &&
+            t < as.numeric(curfew_start_date - fitting_start_date)) {
+            intervention_efficacy <- emergency_efficacy
+        } else {
+            intervention_efficacy <- curfew_efficacy
+        }
+
+
+        # Calculate the effective reproduction number in the presence of interventions
+        Reff <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
+
+        # Calculate the average force of infection imposed on each susceptible individual
+        force_of_infection <- Reff * Infectious / (Total_population * infectious_period)
+
+        # Calculate the net (instantaneous) change in each state variable
+        Susceptible_change <- -force_of_infection * Susceptible
+        Exposed_change <- force_of_infection * Susceptible - Exposed / incubation_period
+        Infectious_change <- Exposed / incubation_period - Infectious / infectious_period
+        Recovered_change <- Infectious / infectious_period
+
+        # Return net changes as list
+        return(list(
+            c(
+                Susceptible_change,
+                Exposed_change,
+                Infectious_change,
+                Recovered_change
+            )
+        ))
+    })
+}
+```
+
+What is different for this implementation compared to the implementation in session 6? Why?
+<textarea name='Text1' cols='127' rows='4'></textarea>
+
+Now, we wrap this function in a call to `ode` to solve our model, and give us the outputs we are interested in.
+
+```{r wrapper-function}
+# Wrapper function to solve model and tidy up output
+solve.intervention.model <- function(y_ = state,
+                                     times_ = times,
+                                     func. = COVID.intervention,
+                                     parms_ = parameters) {
+    out <- ode(
+        y = y_,
+        times = as.numeric(times_ - times_[1]),
+        func = func.,
+        parms = parms_
+    )
+
+
+    # Calculate the prevalence, incidence and cumulative incidence (for comparison with data)
+    out <- as.data.frame(out) %>%
+        mutate(
+            Prevalence = Exposed + Infectious,
+            Incidence = Exposed / parms_["incubation_period"],
+            Cumulative_incidence = cumsum(Incidence) + Incidence[1],
+            Population = Susceptible + Exposed + Infectious + Recovered,
+            Date = times_
+        )
+
+    return(as.data.frame(out))
+}
+```
+
+We can solve this for our initial guess parameters, and see how it looks
+
+```{r solve-initial-guess}
+# Run the model for out initial set of parameters
+out_init <- solve.intervention.model()
+
+
+# Make sure to add observational uncertainty
+out_init <- out_init %>%
+    mutate(
+        lower50 = qpois(p = 0.25, lambda = Incidence), # 50% confidence interval (i.e., 25 - 75th centiles)
+        upper50 = qpois(p = 0.75, lambda = Incidence),
+        lower95 = qpois(p = 0.025, lambda = Incidence), # 95% confidence interval (i.e., 2.5 - 97.5th centiles)
+        upper95 = qpois(p = 0.975, lambda = Incidence)
+    )
+
+# Plot initial estimate
+ggplot(outbreak) +
+    geom_col(aes(x = Date, y = Cases), width = 1, fill = "dodgerblue2", colour = "blue") +
+    geom_ribbon(
+        data = out_init[-1, ], aes(x = Date, ymin = lower50, ymax = upper50),
+        fill = "firebrick2", colour = "firebrick2", alpha = 0.8
+    ) +
+    geom_ribbon(
+        data = out_init[-1, ], aes(x = Date, ymin = lower95, ymax = upper95),
+        fill = "firebrick2", colour = "firebrick2", alpha = 0.5
+    ) +
+    ylab("Daily cases") +
+    xlab("") +
+    ggtitle("Thailand's First Wave, 2020") +
+    theme_bw()
+```
+
+Not bad! What do you observe? Why do you think this might be, and how can the fit be improved?
+<textarea name='Text1' cols='127' rows='4'></textarea>
+
+# Model calibration
+So we have written code that can solve our model for a given set of parameters. Now, just like we did last time, we can use maximum likelihood estimation to determine the optimal parameters for our model.
+
+::: {.callout-note}
+## Parameter scaling
+Optimisation algorithms rely on parameters being able to take on **any** value (i.e. $(-\infty, \infty)$)
+:::
+
+Our effectiveness parameters are defined as "reductions in transmission", which means they are bounded between 0 and 1. To put them in the form the optimiser is expecting, we'll use the _logit_ transform.
+
+```{r logit-transforms}
+logit <- function(x) {
+    return(log(x / (1 - x)))
+}
+
+# And its inverse
+inverse.logit <- function(x) {
+    return(exp(x) / (1 + exp(x)))
+}
+```
+
+And now we're ready to write our negative log likelihood function.
+
+```{r negative-log-likelihood}
+negative.log.likelihood <- function(transformed_parameters, # assumes logit form of parameters -- per Wednesday arvo session
+                                    data = outbreak$Cases[-1],
+                                    state_ = state,
+                                    times_ = times,
+                                    func. = COVID.intervention, # note this is our ode solver
+                                    parms_base = parameters) {
+
+    # Back-transform model parameters (inverse logit)
+    parms_base[c("emergency_efficacy", "curfew_efficacy")] <-
+        inverse.logit(transformed_parameters[c("emergency_efficacy", "curfew_efficacy")])
+
+    # Solve model with updated parameters
+    out <- solve.intervention.model(
+        state_,
+        times_,
+        func.,
+        parms_base
+    )
+
+    return(-sum(dpois(
+        x = data,
+        lambda = out$Incidence[-1],
+        log = TRUE
+    ))) # Poisson observation model
+}
+```
+
+The complicated part of this is transforming back and forth between the logit-transformed parameters, and the "actual" parameters that we care about. We have to make sure to transform before we start.
+
+```{r function-check}
+init_parameters <- c(logit(parameters[c(
+    "emergency_efficacy",
+    "curfew_efficacy"
+)]))
+
+# Calculate initial negative log-likelihood
+negative.log.likelihood(init_parameters)
+negative_log_likelihood_initial <- -sum(dpois(
+    x = outbreak$Cases[-1],
+    lambda = out_init$Incidence[-1], # This is from the previous section!
+    log = TRUE
+))
+negative_log_likelihood_initial
+```
+
+Now we're in a place to use `optim` again, just like we've done previously.
+
+```{r using-optim}
+optim_NM <- optim(
+    par = init_parameters,
+    fn = negative.log.likelihood,
+    method = "Nelder-Mead",
+    hessian = TRUE
+)
+
+# Check for convergence
+optim_NM$convergence # 0 - converged; 1 - failed
+
+# Back-transform parameters
+c(inverse.logit(optim_NM$par[c(
+    "emergency_efficacy",
+    "curfew_efficacy"
+)]))
+
+# Inspect the optimal negative log-likelihood
+optim_NM$value
+```
+This looks pretty good, and so we can be reasonably happy we've reached an optimal solution. Now that we have a solution, let's plot it.
+
+```{r optimal-plot}
+optimal_parameters <- parameters
+optimal_parameters[c(
+    "emergency_efficacy",
+    "curfew_efficacy"
+)] <- inverse.logit(optim_NM$par[c(
+    "emergency_efficacy",
+    "curfew_efficacy"
+)])
+
+
+
+# Solve the model given the optimal parameters and initial conditions
+optimal_solution <- solve.intervention.model(
+    y_ = state,
+    times_ = times,
+    func. = COVID.intervention,
+    parms = optimal_parameters
+)
+
+
+# Calculate the observational confidence intervals
+optimal_solution <- optimal_solution %>%
+    mutate(
+        lower50 = qpois(p = 0.25, lambda = Incidence), # 50% confidence interval (i.e., 25 - 75th centiles)
+        upper50 = qpois(p = 0.75, lambda = Incidence),
+        lower95 = qpois(p = 0.025, lambda = Incidence), # 95% confidence interval (i.e., 2.5 - 97.5th centiles)
+        upper95 = qpois(p = 0.975, lambda = Incidence)
+    )
+
+ggplot(outbreak) +
+    geom_col(
+        aes(x = Date, y = Cases),
+        width = 1.0,
+        fill = "dodgerblue2",
+        colour = "blue"
+    ) +
+    geom_ribbon(
+        data = optimal_solution[-1, ],
+        aes(x = Date, ymin = lower50, ymax = upper50),
+        fill = "firebrick2", colour = "firebrick2", alpha = 0.8
+    ) +
+    geom_ribbon(
+        data = optimal_solution[-1, ],
+        aes(x = Date, ymin = lower95, ymax = upper95),
+        fill = "firebrick2", colour = "firebrick2", alpha = 0.5
+    ) +
+    ylab("Daily cases") +
+    xlab("") +
+    ggtitle("Intervention model fit (optimized)") +
+    geom_vline(
+        aes(xintercept = emergency_start_date),
+        linetype = "dashed"
+    ) +
+    geom_vline(
+        aes(xintercept = curfew_start_date),
+        linetype = "dashed"
+    ) +
+    annotate(
+        geom = "text",
+        label = c("lockdown", "Curfew"),
+        x = c(emergency_start_date, curfew_start_date),
+        y = c(175, 175),
+        angle = 90,
+        vjust = 1.5
+    ) +
+    theme_bw()
+```
+
+Great! The fit looks reasonable, at least visually. To report on parameter uncertainty, we use the same tricks as last time, with the square root of the diagonals of the hessian matrix.
+
+```{r report-uncertainty}
+covar_matrix <- solve(optim_NM$hessian)
+std_errors <- sqrt(diag(covar_matrix))
+estimates_transformed <- data.frame(
+    estimate = optim_NM$par,
+    std_error = std_errors
+) %>%
+    dplyr::mutate(
+        lower95CI = estimate - 1.96 * std_error,
+        upper95CI = estimate + 1.96 * std_error
+    )
+estimates_transformed
+
+# Back-transform estimates and confidence intervals
+estimates <- inverse.logit(estimates_transformed[, -2])
+estimates
+```
+
+What do you see in these plots and estimates?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+Which type of uncertainty does this capture? What other types of uncertainty should we consider?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+# Exploring counterfactuals
+Now we have a model for the COVID-19 transmission in Thailand, and we have estimates of how effective the tw os tages of interventions were (emergency and curfew), we can now explore what *could* have happened, or the **counterfactuals**.
+
+What could have happened if no intervention was applied?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+What could have happened if we started the emergency stage earlier?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+What other interesting counterfactual scenarios could we explore?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+Which of the scenarios you suggested previously might be of interested to the general public and why? Woudl the scenarios of interest to decision makers be different? If so, how and why?
+<textarea name='Text1' cols='127' rows='2'></textarea>

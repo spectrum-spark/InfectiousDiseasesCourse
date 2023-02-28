@@ -2,6 +2,7 @@ project:
   title: "Modelling Infectious Diseases"
   output-dir: student_files
   type: website
+  resources: ['session1_introduction_beans.R', 'session8_vector_model.R']
 toc: true
 format:
   html:
@@ -11,6 +12,8 @@ format:
     link-external-icon: true
     link-external-newwindow: true
     code-copy: true
+
+  
 
 execute:
   freeze: auto
