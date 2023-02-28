@@ -74,6 +74,9 @@ The likelihood is a function that describes how **likely** your observed data is
 
 :::
 
+There is still the question left of *how do we determine what our likelihood function should be?*
+
+This is not easy to answer in general, but what we can teach is easy ways to construct likelihood functions. 
 ```{r}
 #| label: Likelihood
 #| fig-cap: "The likelihood assigns the probability of observing data given your underlying model and model parameters."
@@ -118,6 +121,30 @@ ggplot() +
 
 ```
 
+```{r}
+#| label: NegativeBinomialLikelihood
+#| fig-cap: "Changing the assumed distribution that the data is from will change the likelihood. We can see that by assuming that each data point is negative binomial we get more variance in our distribution."
+#| echo: false
+#| message: false
+ggplot() +
+    geom_ribbon(
+        data = distribution_data %>% filter(width >= 1e-10),
+        aes(xmin = t, xmax = t - 90 * width2, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
+        outline.type = "full", alpha = 0.4
+    ) +
+    geom_point(
+        data = sir_data,
+        aes(x = t, y = rand_y, color = "Data", fill = "Data")
+    ) +
+    geom_line(data = sir, aes(y = y, x = t)) +
+    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
+    scale_x_continuous("Day") +
+    ggtitle("Visualisation of the Likelihood (Negative Binomial)") +
+    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
+    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
+    theme(legend.position = "bottom")
+
+```
 # Distance Functions
 In part 2 we consider different ways of measuring how far our model results are from the data. We use the model developed in the last session and the initial data in March 2020. We are going to briefly touch on sum of squares and then use likelihood functions to assess model fit to data.
 
