@@ -9,12 +9,13 @@ output:
     html_document:
         self_contained: yes
 ---
-    
+
 ```{r, echo=F}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
+
 ```{css, echo=F}
 textarea {
     width: 100%;
@@ -28,6 +29,7 @@ textarea {
     font-style: italic;
 }
 ```
+
 # Summary
 
 A practical session where the students use a worked example to learn how a compartmental SEIRS model is written in the R programming language. Meaningful model output will be derived and plotted. We will use a COVID-19 outbreak in Thailand as an example.
@@ -36,24 +38,24 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 **Part 1** covers:
 
-* Code summary
-* Set working directory
-* Keep track of dependencies
-* Set the start and end time for the model simulation
-* Examine the dataset
+-   Code summary
+-   Set working directory
+-   Keep track of dependencies
+-   Set the start and end time for the model simulation
+-   Examine the dataset
 
 **Part 2** covers:
 
-* Define the model parameters
-* Set up the initial conditions
-* Define the model variables (also known as the compartments or states)
-* Set up a function to solve the equations
-* Run and plot the model
+-   Define the model parameters
+-   Set up the initial conditions
+-   Define the model variables (also known as the compartments or states)
+-   Set up a function to solve the equations
+-   Run and plot the model
 
 **Part 3** covers:
 
-* Post-process the model output to predict standard epidemiological metrics
-* Plot useful outputs
+-   Post-process the model output to predict standard epidemiological metrics
+-   Plot useful outputs
 
 *We recommend to save your text at the end of each part by printing the file.*
 
@@ -63,7 +65,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
-```
+```         
 # SPARK Modelling Short course
 # 2023 Infectious Diseases Modelling
 
@@ -78,7 +80,6 @@ Save this file in your `student_materials` folder, and give it a meaningful name
 
 We'll need three libraries for this session:
 
-
 ```{r load-libraries}
 #| message: false
 #| warning: false
@@ -89,6 +90,7 @@ library(ggplot2)
 ```
 
 and some data
+
 ```{r load-data}
 first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
 # Convert dates
@@ -115,20 +117,25 @@ The parameters for the model are frequently estimated either from literature or 
 
 Complete the following table using information about the natural history of COVID-19 infection:
 
-| Parameter | Flow transformation | Value/Range | Units |
-|----------:|:-------:|:-------:|:----:|
-| Basic reproduction number     | <input type="text" id="name" name="name" size="15"> |<input type="text" id="name" name="name" size="10"> |<input type="text" id="name" name="name" size="10"> |
-| Incubation period    | <input type="text" id="name" name="name" size="15"> |<input type="text" id="name" name="name" size="10"> |<input type="text" id="name" name="name" size="10"> |
-| Duration of infection     | <input type="text" id="name" name="name" size="15"> |<input type="text" id="name" name="name" size="10"> |<input type="text" id="name" name="name" size="10"> |
-| Duration of immunity  | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+|                 Parameter |                 Flow transformation                 |                     Value/Range                     |                        Units                        |
+|--------------------:|:---------------:|:---------------:|:---------------:|
+| Basic reproduction number | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+|         Incubation period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+|     Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+|      Duration of immunity | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 
 Type `parameters` in your console. What do you see?
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
-Type `parameters["R0"] into your console. What does this value mean?
+```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
+```
+Type \`parameters\["R0"\] into your console. What does this value mean?
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 ## Set up the initial conditions and model variables
+
 Copy and paste the chunk below into your script to continue model development:
 
 ```{r initial-condition}
@@ -159,7 +166,7 @@ times <- seq(start_date, end_date, by = 1)
 
 ## Setting up the function to solve equations
 
-Just as we did for session 2, we can write _functions_ to evaluate our system of equations, which we will need to use for the ODE solver. The SEIR model we're going to use here is more complicated than we've seen, but work through it slowly and make sure it all makes sense.
+Just as we did for session 2, we can write *functions* to evaluate our system of equations, which we will need to use for the ODE solver. The SEIR model we're going to use here is more complicated than we've seen, but work through it slowly and make sure it all makes sense.
 
 ```{r seir-model}
 # Model function
@@ -191,21 +198,32 @@ COVID.base <- function(t, state, parameters) {
 ```
 
 What is the name of our function and what are the inputs and outputs?
+
+```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
-
+```
 What is the rate of movement out of state `E`?
-<textarea name="Text1" cols="127" rows="1"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="1"></textarea>
+```
 What is the rate of movement out of state `I`?
-<textarea name="Text1" cols="127" rows="1"></textarea>
 
-What is the formula for $\lambda$, known as the _force of infection_?
+```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
+```
+What is the formula for $\lambda$, known as the *force of infection*?
 
+```{=html}
+<textarea name="Text1" cols="127" rows="1"></textarea>
+```
 Explain the different components of the force of infection.
-<textarea name="Text1" cols="127" rows="5"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="5"></textarea>
+```
 ## Run and plot hte model
+
 Copy the following chunk into your script to solve the ODE
 
 ```{r solve-ode-initial}
@@ -217,11 +235,15 @@ plot(out)
 ```
 
 Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the field.
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 Define incidence and prevalence, and discuss the differences between them.
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 # Data processing and plotting
 
 ## Post-process the model output to predict standard epidemiological metrics
@@ -244,15 +266,22 @@ tidied_output <- tidy_base_model(out, times, parameters)
 ```
 
 What is the formula for incidence?
+
+```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
-
+```
 Write down an equation for prevalence and the corresponding R code.
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 Why do we choose to plot incidence?
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 ## Plot the total population size and predicted incidence
+
 It's time to plot our solution, and make sure we haven't made any silly mistakes.
 
 ```{r compare-histogram}
@@ -271,11 +300,15 @@ ggplot() +
 ```
 
 What is the sum of all the differential equations for the COVID-19 model?
-<textarea name="Text1" cols="127" rows="1"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="1"></textarea>
+```
 Why do we choose to plot the population size over time?
-<textarea name="Text1" cols="127" rows="1"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="1"></textarea>
+```
 ## Compare the model with the data
 
 ```{r compare-data}
@@ -301,14 +334,20 @@ ggplot(first_wave) +
 ```
 
 Vary the value of $R_0$ and re-run the modeol. What value of $R_0$ do you think is most realistic?
+
+```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
-
+```
 Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for $R_0$?
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 What is the difference between the first and second graphs, and why should we plot these?
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 Try changing the end times and re-running the model:
 
 ```{r new-end-times}
@@ -321,6 +360,8 @@ tidied_long <- tidy_base_model(long_out, times_long, parameters)
 ```
 
 Why would we do this?
-<textarea name="Text1" cols="127" rows="3"></textarea>
 
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 <input type="button" value="Print this page" onclick="window.print()">
