@@ -1,10 +1,10 @@
 ---
 title: "Modelling interventions in R"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  |
-  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
-      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
+author: 
+  - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University,
+  - <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University and
+  - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+  - Presented by <a href="https://research.monash.edu/en/persons/michael-lydeamore>Michael Lydeamore</a>, Department of Econometrics and Business Statistics, Monash University
 output: 
   html_document:
      self_contained: yes
@@ -449,7 +449,7 @@ Which type of uncertainty does this capture? What other types of uncertainty sho
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
 # Exploring counterfactuals
-Now we have a model for the COVID-19 transmission in Thailand, and we have estimates of how effective the tw os tages of interventions were (emergency and curfew), we can now explore what *could* have happened, or the **counterfactuals**.
+Now we have a model for the COVID-19 transmission in Thailand, and we have estimates of how effective the two stages of interventions were (emergency and curfew), we can now explore what *could* have happened, or the **counterfactuals**.
 
 What could have happened if no intervention was applied?
 <textarea name='Text1' cols='127' rows='2'></textarea>
@@ -460,5 +460,5 @@ What could have happened if we started the emergency stage earlier?
 What other interesting counterfactual scenarios could we explore?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
-Which of the scenarios you suggested previously might be of interested to the general public and why? Woudl the scenarios of interest to decision makers be different? If so, how and why?
+Which of the scenarios you suggested previously might be of interest to the general public and why? Would the scenarios of interest to decision makers be different? If so, how and why?
 <textarea name='Text1' cols='127' rows='2'></textarea>

@@ -1,6 +1,6 @@
 project:
   title: "Modelling Infectious Diseases"
-  output-dir: student_files
+  output-dir: student_materials
   type: website
   resources: ['session1_introduction_beans.R', 'session8_vector_model.R']
 toc: true
@@ -28,4 +28,5 @@ website:
       - href: session5_fitting_models_in_r/session5_fitting_models_in_r.qmd
       - href: session7_vector_borne_modelling/session7_vector_borne_modelling.qmd
       - href: session8_vector_borne_modelling_in_r/session8_vector_borne_modelling_in_r.qmd
+      - href: session9_modelling_interventions_in_r/session9_modelling_interventions_in_r.qmd
       
