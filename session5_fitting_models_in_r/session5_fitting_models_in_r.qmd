@@ -62,6 +62,18 @@ In the example we have been minimizing the sum of squares of the residuals. What
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
 # Likelihood Functions
+In the previous section you learnt of one way to measure how far the model results are from data. When you minimise SSQ, you are performing a [Least Squares Fit](https://en.wikipedia.org/wiki/Least_squares). This is drawing the line of best fit through all of your data points (obviously you might minimise your SSQ further by changing your choice of line, but then we run into overfitting problems).
+
+In the literature, a much more common way to fit parameters is to find the [maximum likelihood](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation). But what is the likelihood?
+
+::: {.callout-note appearance="simple"}
+
+## Definition: Likelihood function
+
+The likelihood is a function that describes how **likely** your observed data is given your model and its parameters. 
+
+:::
+
 ```{r}
 #| label: Likelihood
 #| fig-cap: "The likelihood assigns the probability of observing data given your underlying model and model parameters."
