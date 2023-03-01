@@ -630,6 +630,7 @@ If we chose a different distribution, could we get a different answer?
 Copy and paste this code to perform a grid search - getting the negative log likelihood across a sequence of each parameter value.
 ```{r grid-search}
 #| cache: TRUE
+#| warning: false
 # Specify search grid
 R0_vec <- seq(from = 0.1, to = 10, by = 0.1)
 initial_infectious_vec <- seq(from = 1, to = 50, by = 1)
