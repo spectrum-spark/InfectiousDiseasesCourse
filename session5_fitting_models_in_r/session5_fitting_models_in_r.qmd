@@ -470,7 +470,6 @@ ggplot() +
 
 ## Negative Binomial
 ```{r}
-
 #| label: NegativeBinomialLikelihood
 #| fig-cap: "Changing the assumed distribution that the data is from will change the likelihood. We can see that by assuming that each data point is negative binomial we get more variance in our distribution."
 #| echo: false
