@@ -387,7 +387,9 @@ ggplot(first_wave) +
     theme_bw()
 ```
 
-Bonus code: copy and paste this code to perform a grid search -getting the negative log likelihood across a sequence of each parameter value.
+How does this fit compare to the observed data?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
 ```{r grid-search}
 #| cache: TRUE
 # Specify search grid
