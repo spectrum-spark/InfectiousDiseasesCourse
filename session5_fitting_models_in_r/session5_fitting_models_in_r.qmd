@@ -406,7 +406,7 @@ The likelihood is a function that describes how **likely** your observed data is
 
 Why would we want to use the likelihood over SSQ?
 
-You might have noticed that the model fit in the last section was not... very good. It appears to just go through the middle of the data and not describe any one point very well. This is because our model wanted to minimise the sum of squared error! In reality, it makes more sense to consider that each data point may arise because of a statistical distribution.
+You might have noticed that the model fit in the last section was not... very good. It appears to just go through the middle of the data and not describe any one point very well. This is because our model wanted to minimise the sum of squared error! In reality, it makes more sense to consider that each data point is an observation around which there is uncertainty that can be represented by a statistical distribution.
 
 So now the question is *how do we determine what our likelihood function should be?*
 
