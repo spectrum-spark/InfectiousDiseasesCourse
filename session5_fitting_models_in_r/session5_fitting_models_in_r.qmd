@@ -61,92 +61,8 @@ Can you think of a simple algorithm for searching over all the parameters and fi
 In the example we have been minimizing the sum of squares of the residuals. What would be the effect if we decided to minimize the sums of the absolute values of the residuals? Would you expect to get the same answer?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
-# Likelihood Functions
-In the previous section you learnt of one way to measure how far the model results are from data. When you minimise SSQ, you are performing a [Least Squares Fit](https://en.wikipedia.org/wiki/Least_squares). This is drawing the line of best fit through all of your data points (obviously you might minimise your SSQ further by changing your choice of line, but then we run into overfitting problems).
-
-In the literature, a much more common way to fit parameters is to find the [maximum likelihood](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation). But what is the likelihood?
-
-::: {.callout-note appearance="simple"}
-
-## Definition: Likelihood function
-
-The likelihood is a function that describes how **likely** your observed data is given your model and its parameters. 
-
-:::
-
-There is still the question left of *how do we determine what our likelihood function should be?*
-
-This is not easy to answer in general, but what we can teach is easy ways to construct likelihood functions. 
-```{r}
-#| label: Likelihood
-#| fig-cap: "The likelihood assigns the probability of observing data given your underlying model and model parameters."
-#| echo: false
-#| message: false
-set.seed(1)
-library(magrittr)
-library(dplyr)
-library(ggplot2)
-sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
-    rowwise() %>%
-    mutate(rand_y = rpois(1, y))
-sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
-    rowwise() %>%
-    mutate(rand_y = rnbinom(1, mu = y, size = 5))
-# # SIR contains the answer
-sir <- tibble(t = 0:110, y = exp(0.05 * t))
-# Construct the fun figure
-distribution_data <- tibble()
-times <- c(25, 50, 75, 100)
-for (time in times) {
-    distribution_data <- distribution_data %>% bind_rows(., tibble(t = time, height = 0:300, width = dpois(height, (sir %>% filter(t == time))$y), width2 = dnbinom(height, mu = (sir %>% filter(t == time))$y, size = 10)))
-}
-
-ggplot() +
-    geom_ribbon(
-        data = distribution_data %>% filter(width >= 1e-10),
-        aes(xmin = t, xmax = t - 90 * width, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
-        outline.type = "full", alpha = 0.4
-    ) +
-    geom_point(
-        data = sir_data,
-        aes(x = t, y = rand_y, color = "Data", fill = "Data")
-    ) +
-    geom_line(data = sir, aes(y = y, x = t)) +
-    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
-    scale_x_continuous("Day") +
-    ggtitle("Visualisation of the Likelihood") +
-    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
-    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
-    theme(legend.position = "bottom")
-
-```
-
-```{r}
-#| label: NegativeBinomialLikelihood
-#| fig-cap: "Changing the assumed distribution that the data is from will change the likelihood. We can see that by assuming that each data point is negative binomial we get more variance in our distribution."
-#| echo: false
-#| message: false
-ggplot() +
-    geom_ribbon(
-        data = distribution_data %>% filter(width >= 1e-10),
-        aes(xmin = t, xmax = t - 90 * width2, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
-        outline.type = "full", alpha = 0.4
-    ) +
-    geom_point(
-        data = sir_data,
-        aes(x = t, y = rand_y, color = "Data", fill = "Data")
-    ) +
-    geom_line(data = sir, aes(y = y, x = t)) +
-    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
-    scale_x_continuous("Day") +
-    ggtitle("Visualisation of the Likelihood (Negative Binomial)") +
-    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
-    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
-    theme(legend.position = "bottom")
-
-```
-# Distance Functions
-In part 2 we consider different ways of measuring how far our model results are from the data. We use the model developed in the last session and the initial data in March 2020. We are going to briefly touch on sum of squares and then use likelihood functions to assess model fit to data.
+# Distance Function
+In this section we will use the sum of squares distance to see how far our model results are from the data. To do so, we will use the model developed in the last session and the initial data in March 2020. To determine our parameters of interest we will minimise our sum of squares and assess model fit to data.
 
 In this practical we are going to estimate some of the parameters of our base SEIR COVID-19 model by fitting it to our incidence data.
 What are the free parameters of our base model?
@@ -158,6 +74,7 @@ In this exercise let us assume a known latent period and infectious period and u
 To begin, create a new R script, save the file as `fitting_models.R` into your working directory, and copy the code chunk below:
 
 ```{r load-libraries}
+#| message: false
 # SPARK Modelling Short course
 
 #########################
@@ -300,7 +217,7 @@ ggplot(uncontrolled_period) +
 ```
   
 ##   Calculating "distance" between the model and data
- We  can use the model output, stored in out_init to assess model fit. We can use sum of squares of the difference between the data and the model.
+We  can use the model output, stored in `out_init` to assess model fit. We can use sum of squares of the difference between the data and the model.
   
 ```{r ssq-calc}
 # find the sum of the residuals squared for day 2 until day 24
@@ -308,28 +225,22 @@ SSQ_initial <- sum((uncontrolled_period$Cases[-1] - out_init$Incidence[-1])^2)
 SSQ_initial
 ```
 
-Alternatively, we can use the output from our last function call to calculate the *likelihood* of our observed data given our COVID model (which of course is specific to the current parameter values that we have used). To do this, a common practice is to assume that the observed daily incidence (stored in the dataframe `uncontrolled_period`) is a Poisson-distributed random variable with mean given by our model-predicted incidence (stored in the dataframe `out_init`). Under this model the (log-)likelihood of each daily observation can be calculated using the dpois() function; and the total (log-)likelihood for all of the observations is simply the sum of all these:
-```{r log-likelihood}
-# Calculate the negative log-likelihood for our initial parameter values, assuming a Poisson residual distribution
-poisson_negative_log_likelihood_initial <- -sum(dpois(uncontrolled_period$Cases[-1],
-    out_init$Incidence[-1],
-    log = TRUE
-))
-poisson_negative_log_likelihood_initial
-```
-  
- Th ere are many possible distributions that can be used to develop some measure of distance between the data and the model expectation. You may wish to investigate some of the density distributions available in R, which you can do by typing `?distributions` in your console.
-
-Another distribution, which allows us to account for high variability in the data is the negative binomial distribution. We could use the output from our last function call to calculate the likelihood of our observed data given our COVID model using `dnbinom()` function in much the same way as the Poisson distribution. Those with a particular interest in statistics and probability distributions may wish to experiment and to consider the pros and cons of different choices. For the remainder of this exercise, however, we will continue with the Poisson distribution which has the attribute of having only one parameter to estimate, the mean.
+If we were to minimise `SSQ_initial`, given our parameters $R_0$ and $I(t=0)$ we can argue that we have found our parameters of interest. 
 
 ## Transforming the parameters
-Before launching into a likelihood-based search across all parameter space for the values of $R_0$ and $I(t=0)$ that minimize our negative log-likelihood (which is equivalent to maximizing the positive log-likelihood), it would behoove us to pause and plan our search carefully. We will use the optim() function to minimize the log-likelihood, but we should be cogniscent of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$)).
+Before launching into a minimsation of our SSQ function across all parameter space for the values of $R_0$ and $I(t=0)$, it would behoove us to pause and plan our search carefully. We will use the `optim()` function to minimize our function, but we should be cogniscent of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$).
 
 What are the feasible ranges of values for our two parameters: $R_0$ and $I(t=0)$?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
+With this in mind, it would be sensible to restrict our search to only those values of parameters that are feasible. Not only should this increase the speed of the algorithm (hopefully leading to the desired answer more quickly) but may also help us avoid any computational errors that might arise which will kill our search prematurely. For this purpose, we introduce a set of transformed parameters, that is parameters that exist in the full interval $-\infty$ to $\infty$, but can be mapped back to our feasible regions for our parameters.
 
-With this in mind, it would be sensible to restrict our search to only those values of parameters that are feasible. Not only should this increase the speed of the algorithm (hopefully leading to the desired answer more quickly) but may also help us avoid any computational errors that might arise which will kill our search prematurely (for instance, `dpois()` and `dnbinom()` may have a difficult time calculating the probability density for negative observations!). For this purpose, we introduce a set of transformed parameters, that is parameters that exist in the full interval $-\infty$ to $\infty$, but can be mapped back to our feasible regions for our parameters.
+::: {.callout-note appearance="simple"}
+## Transforming variables
+`optim()` is going to pass parameter values into our function on the interval $(-\infty,\infty)$. Is there a function that will take those parameter values and put them on the interval $[0,\infty)$?
+
+If $x \in (-\infty,\infty)$, then $\exp(x) \in [0,\infty)$. Therefore if we know $R_0$ and $I(t=0)$, we would use $\log$ to transform back into the `optim()` space. If we want the opposite we can use $\exp$.
+:::
 
 ```{r transform-params}
 # transform the parameters
@@ -346,22 +257,22 @@ initial_transformed_parameters <- log(c(
 ))
 ```
 
-So now we are equipped to fit our first maximum likelihood optimisation, using code like below:
+So now we are in a position to define our function that we wish to optimise. The code is below:
 
-```{r fit-function}
+```{r fit-SSQ-function}
 #### Fitting routine ####
 
 # We have selected R0 and I(0) as our free parameters
 # We need a function that accepts R0 and I(0) as arguments,
 # solves the model using these inputs, and calculates the
-# negative log-likelihood of the data given these parameters
+# sum of squares of the data given these parameters
 
-negative_log_likelihood <- function(transformed_parameters,
-                                    data = uncontrolled_period$Cases[-1],
-                                    state_base = state,
-                                    times_ = times,
-                                    func. = COVID.base,
-                                    parms_base = parameters) {
+SSQ_function <- function(transformed_parameters,
+                         data = uncontrolled_period$Cases[-1],
+                         state_base = state,
+                         times_ = times,
+                         func. = COVID.base,
+                         parms_base = parameters) {
 
     # Untransform parameters
     R0 <- exp(transformed_parameters["R0"])
@@ -382,28 +293,26 @@ negative_log_likelihood <- function(transformed_parameters,
         func.,
         parms_base
     )
-
-    return(-sum(dpois(
-        x = data,
-        lambda = out$Incidence[-1],
-        log = TRUE
-    )))
+    return(
+        sum((uncontrolled_period$Cases[-1] - out$Incidence[-1])^2)
+    )
 }
 ```    
     
 We can check it works as intended:
-```{r fit-check}
-poisson_negative_log_likelihood_initial_from_function <- negative_log_likelihood(initial_transformed_parameters)
-poisson_negative_log_likelihood_initial_from_function
-poisson_negative_log_likelihood_initial
+```{r fit-SSQ-check}
+SSQ_initial_from_function <- SSQ_function(initial_transformed_parameters)
+SSQ_initial_from_function
+SSQ_initial
 ```
 
-# Parameter estimation with maximum likelihood
-With our likelihood function now set up, we can use the `optim` function to determine the optimal parameters, that is the parameter values that minimize the negative log-likelihood.
+Yay, we are getting the same result.
+
+With our `SSQ_function` now set up, we can use the `optim` function to determine the optimal parameters, that is the parameter values that minimize the sum of squares.
 
 We will use the Nelder-Mead search algorithm. This is a search algorithm that allows rapid exploration of the parameter space for the optimal parameters.
 
-```{r fit-nm}
+```{r ssq-fit-optim}
 #### Optimal parameters ####
 
 # Use the optim function to determine the parameters that
@@ -412,7 +321,7 @@ We will use the Nelder-Mead search algorithm. This is a search algorithm that al
 # We will use the Nelder-Mead optimization solver
 optim_NM <- optim(
     par = initial_transformed_parameters,
-    fn = negative_log_likelihood,
+    fn = SSQ_function,
     control = list(maxit = 500),
     method = "Nelder-Mead",
     hessian = TRUE
@@ -420,7 +329,7 @@ optim_NM <- optim(
 ```
 Once the search is complete, inspect the solution:
 
-```{r check-fit}
+```{r SSQ-check-fit}
 # Check for convergence (always code 0 for NM)
 optim_NM$convergence # 0 - converged; 1 - failed to converge
 
@@ -431,24 +340,24 @@ What are the initial values of the two fitted parameters?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
 The results are a little surprising. However, remember that our search was conducted with reference to the transformed parameters; in order to retrieve the true optimal parameter values we must invert the transformation:
-```{r back-transform}
+```{r SSQ-back-transform}
 # Back-transform parameters
 optimum_parameters <- exp(optim_NM$par)
 optimum_parameters
 ```
 
-But have we improved our likelihood from the initial guess we had?
-```{r check-likelihood}
+But have we improved our SSQ from the initial guess we had?
+```{r SSQ-check}
 # Inspect the optimal negative log-likelihood
 optimum_NLL <- optim_NM$value
 optimum_NLL
 ```
-How does the likelihood score at the optimal value compare with our initial likelihood score (`poisson_negative_log_likelihood_initial`)?
+How does the SSQ score at the optimal value compare with our initial SSQ score (`SSQ_initial`)?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
 Satisfied that we have found the optimal solution, let's now solve the model using these parameter values and compare the solution with our observed data:
 
-```{r optimal-fit-with-data}
+```{r SSQ-optimal-fit-with-data}
 #### Optimal model solution ####
 
 # Create the optimal parameter and state vectors
