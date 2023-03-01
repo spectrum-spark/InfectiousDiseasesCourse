@@ -390,6 +390,245 @@ ggplot(first_wave) +
 How does this fit compare to the observed data?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
+# Likelihood Functions
+
+In the previous section you learnt of one way to measure how far the model results are from data. When you minimise SSQ, you are performing a [Least Squares Fit](https://en.wikipedia.org/wiki/Least_squares). This is drawing the line of best fit through all of your data points (obviously you might minimise your SSQ further by changing your choice of line, but then we run into overfitting problems). 
+
+In the literature, a much more common way to fit parameters is to find the [maximum likelihood](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation). But what is the likelihood?
+
+::: {.callout-note appearance="simple"}
+
+## Definition: Likelihood function
+
+The likelihood is a function that describes how **likely** your observed data is given your model and its parameters. 
+
+:::
+
+Why would we want to use the likelihood over SSQ?
+
+You might have noticed that the model fit in the last section was not... very good. It appears to just go through the middle of the data and not describe any one point very well. This is because our model wanted to minimise the sum of squared error! In reality, it makes more sense to consider that each data point may arise because of a statistical distribution.
+
+So now the question is *how do we determine what our likelihood function should be?*
+
+This is not easy to answer in general, but what we can teach is easy ways to construct likelihood functions.
+
+As the likelihood is the probability of data given your parameters, it is typically defined as,
+$$
+p(\vec{D}|\vec{\theta})
+$$
+where $\vec{D}$ is the vector of all data points and $\vec{\theta}$ is a vector containing the model parameters. In words, we could say that the probability of observing our data given our parameters is the same as observing the first data point and the second data point and the third data point... so on given our parameters. So let us express our likelihood as,
+$$
+p(\vec{D}|\vec{\theta}) = \Pi_{i=1}^N p(D_i|\vec{\theta}),
+$$
+where $D_i$ is the $i$th data point in the vector of data. Let us look at the figure below for a visualisation of the likelihood.
+
+::: {.panel-tabset}
+## Poisson Distribution
+```{r}
+#| label: Likelihood
+#| fig-cap: "The likelihood assigns the probability of observing data given your underlying model and model parameters."
+#| echo: false
+#| message: false
+set.seed(1)
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
+    rowwise() %>%
+    mutate(rand_y = rpois(1, y))
+sir_data <- tibble(t = c(25, 50, 75, 100), y = exp(0.05 * t)) %>%
+    rowwise() %>%
+    mutate(rand_y = rnbinom(1, mu = y, size = 5))
+# # SIR contains the answer
+sir <- tibble(t = 0:110, y = exp(0.05 * t))
+# Construct the fun figure
+distribution_data <- tibble()
+times_gg <- c(25, 50, 75, 100)
+for (time in times_gg) {
+    distribution_data <- distribution_data %>% bind_rows(., tibble(t = time, height = 0:300, width = dpois(height, (sir %>% filter(t == time))$y), width2 = dnbinom(height, mu = (sir %>% filter(t == time))$y, size = 10)))
+}
+
+ggplot() +
+    geom_ribbon(
+        data = distribution_data %>% filter(width >= 1e-10),
+        aes(xmin = t, xmax = t - 90 * width, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
+        outline.type = "full", alpha = 0.4
+    ) +
+    geom_point(
+        data = sir_data,
+        aes(x = t, y = rand_y, color = "Data", fill = "Data")
+    ) +
+    geom_line(data = sir, aes(y = y, x = t)) +
+    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
+    scale_x_continuous("Day") +
+    ggtitle("Visualisation of the Likelihood") +
+    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
+    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
+    theme(legend.position = "bottom")
+
+```
+
+## Negative Binomial
+```{r}
+
+#| label: NegativeBinomialLikelihood
+#| fig-cap: "Changing the assumed distribution that the data is from will change the likelihood. We can see that by assuming that each data point is negative binomial we get more variance in our distribution."
+#| echo: false
+#| message: false
+ggplot() +
+    geom_ribbon(
+        data = distribution_data %>% filter(width >= 1e-10),
+        aes(xmin = t, xmax = t - 90 * width2, y = height, group = t, fill = "Model Fit", color = "Model Fit"),
+        outline.type = "full", alpha = 0.4
+    ) +
+    geom_point(
+        data = sir_data,
+        aes(x = t, y = rand_y, color = "Data", fill = "Data")
+    ) +
+    geom_line(data = sir, aes(y = y, x = t)) +
+    scale_y_continuous("Daily Cases", limits = c(NA, 300)) +
+    scale_x_continuous("Day") +
+    ggtitle("Visualisation of the Likelihood") +
+    scale_fill_manual(name = "Legend", values = c("Model Fit" = "blue", "Data" = "red")) +
+    scale_color_manual(name = "Legend", values = c("Data" = "red", "Model Fit" = "black")) +
+    theme(legend.position = "bottom")
+
+```
+:::
+
+When using the likelihood, it is much more common for people to work with log-likelihood. The reason for this, is that with a large number of data points you very quickly run out of computational precision (each probability will be less than one and computers cannot store super small numbers well). From now on we will work with a log-likelihood, which means all products will become sums. That is, 
+$$
+\log p(\vec{D}|\vec{\theta}) = \sum_{i=1}^N \log p(D_i|\vec{\theta}),
+$$
+
+## Covid-19 Likelihood function
+Let us calculate the *likelihood* of our observed data given our COVID model (which of course is specific to the current parameter values that we have used). To do this, a common practice is to assume that the observed daily incidence (stored in the dataframe `uncontrolled_period`) is a Poisson-distributed random variable with mean given by our model-predicted incidence (stored in the dataframe `out_init`). Under this model the (log-)likelihood of each daily observation can be calculated using the dpois() function; and the total (log-)likelihood for all of the observations is simply the sum of all these:
+$$
+\log p(\text{Cases}|\vec{\theta}) = \sum_{i=1}^N \log \text{Poisson}(c_i|\mu = \text{Model}(\theta,i)),
+$$
+where Cases is the vector containing our case data, $c_i$ is the number of cases on the $i$th day and Model$(\theta,i)$ is the model output given our parameters on day $i$.
+
+
+<!-- ```{r log-likelihood}
+# Calculate the negative log-likelihood for our initial parameter values, assuming a Poisson residual distribution
+poisson_negative_log_likelihood_initial <- -sum(dpois(uncontrolled_period$Cases[-1],
+    out_init$Incidence[-1],
+    log = TRUE
+))
+poisson_negative_log_likelihood_initial
+``` -->
+  
+There are many possible distributions that can be used to develop the likelihood. You may wish to investigate some of the density distributions available in R, which you can do by typing `?distributions` in your console.
+
+Another distribution, which allows us to account for high variability in the data is the negative binomial distribution. We could use the output from our last function call to calculate the likelihood of our observed data given our COVID model using `dnbinom()` function in much the same way as the Poisson distribution. Those with a particular interest in statistics and probability distributions may wish to experiment and to consider the pros and cons of different choices. For the remainder of this exercise, however, we will continue with the Poisson distribution which has the attribute of having only one parameter to estimate, the mean.
+
+:::{.callout-tip}
+## Changing distributions
+The decision on what distribution to use within your likelihood function is a *Model Choice*. Sometimes, multiple distributions may suit your need. Be aware that each distribution has different assumptions. 
+:::
+
+# Parameter estimation with maximum likelihood
+With our likelihood function defined mathematically, let us now start thinking about how to set it up in R. We again want to use the `optim` function to determine the optimal parameters, however, `optim()` will solve for the minimum as opposed to the maximum (we want the maximum likelihood). Because of this, we shall put a minus sign in front of our likelihood, that way finding the minimum of the new function will actually calculate the maximum that we want!
+
+So now we are equipped to fit our likelihood function, using code like below:
+
+```{r fit-function-NLL}
+#### Fitting routine ####
+
+# We have selected R0 and I(0) as our free parameters
+# We need a function that accepts R0 and I(0) as arguments,
+# solves the model using these inputs, and calculates the
+# negative log-likelihood of the data given these parameters
+
+
+negative_log_likelihood <- function(transformed_parameters,
+                                    data = uncontrolled_period$Cases[-1],
+                                    state_base = state,
+                                    times_ = times,
+                                    func. = COVID.base,
+                                    parms_base = parameters) {
+
+    # Untransform parameters
+    R0 <- exp(transformed_parameters["R0"])
+    Initial_infectious <- exp(transformed_parameters["Initial_infectious"])
+    # Calculate updated susceptible population
+    Initial_susceptible <- state_base["Susceptible"] + state_base["Infectious"] - Initial_infectious
+
+    # Overwrite baseline parameters with proposed parameters
+    parms_base["R0"] <- R0
+    state_base["Susceptible"] <- Initial_susceptible
+    state_base["Infectious"] <- Initial_infectious
+
+    # Solve model with updated parameters
+    out <- solve.base.model(
+        state_base,
+        times_,
+        func.,
+        parms_base
+    )
+
+    return(-sum(dpois(
+        x = data,
+        lambda = out$Incidence[-1],
+        log = TRUE
+    )))
+}
+```    
+
+<!-- Lets check it works as intended again : -->
+<!-- ```{r fit-NLL-check}
+negative_log_likelihood_from_function <- negative_log_likelihood(initial_transformed_parameters)
+negative_log_likelihood_from_function
+poisson_negative_log_likelihood_initial
+print(initial_transformed_parameters)
+``` -->
+
+Let us now calculate our optimal parameters!
+
+```{r fit-nm}
+#### Optimal parameters ####
+
+# Use the optim function to determine the parameters that
+# minimize the negative log-likelihood (i.e., maximize
+# the likelihood)
+# We will use the Nelder-Mead optimization solver
+optim_NM <- optim(
+    par = initial_transformed_parameters,
+    fn = negative_log_likelihood,
+    control = list(maxit = 500),
+    method = "Nelder-Mead",
+    hessian = TRUE
+)
+```
+Once the search is complete, inspect the solution:
+
+```{r check-fit}
+# Check for convergence (always code 0 for NM)
+optim_NM$convergence # 0 - converged; 1 - failed to converge
+
+# Inspect solution
+optim_NM$par
+```
+What are the initial values of the two fitted parameters?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+The results are a little surprising. However, remember that our search was conducted with reference to the transformed parameters; in order to retrieve the true optimal parameter values we must invert the transformation:
+```{r back-transform}
+# Back-transform parameters
+optimum_parameters <- exp(optim_NM$par)
+optimum_parameters
+```
+
+Are there any differences between these results and the fitted parameters in the previous section?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+Why might this be?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+If we chose a different distribution, could we get a different answer?
+<textarea name='Text1' cols='127' rows='2'></textarea>
+
+
+## Bonus code 
+Copy and paste this code to perform a grid search - getting the negative log likelihood across a sequence of each parameter value.
 ```{r grid-search}
 #| cache: TRUE
 # Specify search grid
@@ -466,7 +705,7 @@ Why might a grid search not be the best option for finding optimum parameter val
 <textarea name='Text1' cols='127' rows='4'></textarea>
 
 # Calculating confidence intervals
-Firstly we are going to put some confidence intervals around the data. This is commonly done but has some problems that relate to model assumptions. For example, if we use the Poisson distribution for estimating parameters, it assumes the spread of the data has a variance equal to the mean. The Negative Binomial distribution allows for greater data variance, but we have one extra parameter to estimate -the variance of the negative binomial distribution itself. Below is some code to examine the confidence intervals around your data with the caveats given above.
+We are now going to put some confidence intervals around the data. This is commonly done but has some problems that relate to model assumptions. For example, if we use the Poisson distribution for estimating parameters, it assumes the spread of the data has a variance equal to the mean. The Negative Binomial distribution allows for greater data variance, but we have one extra parameter to estimate - the variance of the negative binomial distribution itself. Below is some code to examine the confidence intervals around your data with the caveats given above.
 
 Firstly, calculate the Poisson distribution centred on the optimised model solution. Find the inter-quartile range and 95% confidence interval of this distribution.
 
