@@ -2,3 +2,4 @@ base
 dplyr
 deSolve
 ggplot2
+magrittr
