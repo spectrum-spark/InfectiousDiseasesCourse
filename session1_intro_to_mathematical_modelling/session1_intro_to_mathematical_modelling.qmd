@@ -178,7 +178,7 @@ result[,4]<-c(0,  1,  3,  7, 11, 15, 18, 19, 19, 19) # R
 6. Write a line of R code to calculate the sum `S+I+R` for each week and assign this to column 5 of the results matrix.
 <textarea name="Text1" cols="127" rows="1"></textarea>
 
-7. Type `results[, 5]` in your console. What do you see and why?
+7. Type `result[, 5]` in your console. What do you see and why?
 <textarea name="Text1" cols="127" rows="1"></textarea>
 
 ## Plotting results in R
