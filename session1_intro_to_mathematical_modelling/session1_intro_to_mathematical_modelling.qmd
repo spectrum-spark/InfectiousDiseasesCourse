@@ -293,7 +293,7 @@ You will use your model, for example to predict the effect of interventions
 ![](SIR_flow.png)
 
 ### Some definitions
-A parameter is a constant value used in the model which usually has some biological significance. For example the duration of infection is a parameter
+A parameter is a constant value used in the model which usually has some biological significance. For example 1/(the duration of infection) is a parameter ($\nu$)
 
 7. What is the name of another model parameter and it's meaning?
 <textarea name="Text1" cols="127" rows="3"></textarea>
