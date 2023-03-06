@@ -67,6 +67,7 @@ _We recommend to save your text at the end of each part by printing the file._
 ![](real_world.png)
 * A model is useful if it provides relevant (and correct) information for a particular purpose/question
 * A model is efficient if it will do this with minimal inputs and without providing superfluous information
+* Map example: https://www.thetruesize.com/
 
 ## Why use mathematical models?
 ![](why_use_models.png)
@@ -199,6 +200,8 @@ ggplot() +
 9. Why would we expect a different result if we did the bean counting experiment again?
 <textarea name="Text1" cols="127" rows="5"></textarea>
 
+https://robmoss.github.io/sir-demo/
+
 # **Part 2**: Compartmental Models
 
 ## Summary
@@ -286,7 +289,7 @@ You will use your model, for example to predict the effect of interventions
 
 * Has three states so has three equations
 * The rate at which susceptible individuals become infected is **special** because it depends on the proportion of the population that is infected at each time $I(t)$
-* We define the force of infection, $\lambda(t) = \beta I(t)$.
+* We define the force of infection, $\lambda(t) = \beta I(t)/N$, where $N=S(t)+I(t)+R(t)$ is the total population size.
 ![](SIR_flow.png)
 
 ### Some definitions
@@ -375,7 +378,7 @@ Examine the figure below and discuss amongst the group or search trusted sources
 #### Upload your image
 <input type="file" id="files" name="files[]" multiple="">
 
-3. It is good practice to start with a simple model, that is, a model with many simplifying assumptions which means it is not very realistic. How would you change the model to make it more realistic?
+3. It is good practice to start with a simple model, that is, a model with many simplifying assumptions which means it is not very realistic. How would you change the model to make it more realistic? i.e. Is this the simplest model possible to understand the time course of an outbreak? Is this sufficiently complex to capture the key features needed to answer the question(s)?
 <textarea name="Text1" cols="127" rows="7"></textarea>
 
 Refer to the chart of confirmed COVID cases in Thailand superimposed with interventions:
@@ -385,3 +388,17 @@ Refer to the chart of confirmed COVID cases in Thailand superimposed with interv
 <textarea name="Text1" cols="127" rows="7"></textarea>
 
 <input type="button" value="Print this page" onclick="window.print()">
+
+Good things to think about when modelling:
+
+* How sensitive are the outputs of interest to the model parameters?
+
+    -- Use sensitivity analyses, such as partial rank correlation coefficient
+
+* What are the parameter values and ranges for the data? How well do we know them?
+
+    -- Bayesian inference; or if want quick and not-as-good calibration, can use a least squared error approach
+
+* What are the resulting dynamics of the model? 
+
+   -- Plots, summary statistics, phase plane analysis, stability analysis, bifurcation analysis, etc.
