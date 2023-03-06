@@ -322,7 +322,7 @@ ggplot(data = plot_data, aes(x=time, y=value, colour=state, linetype=state)) +
 3. By considering a range of values for the transmission rate $\beta$, describe how the epidemic trajectory varies as a function of $R_0$. In particular, what happens when $R_0<1$?
 <textarea cols="127" rows="2"></textarea>
 
-4. The quantity $R_e(t) = \beta S(t)/\gamma$ is called the effective reproduction number and it accounts for the depletion of susceptibles as the infection sweeps through the population. Review your previous results and record the value of $S(t_{peak})$ where $t_{peak}$ is the time at which the infectious population reaches its maximum, ie the epidemic peak. Using these values of $S(t_{peak})$ calculate $R_e(t_{peak})$ and report any patterns that you observe.
+4. The quantity $R_e(t) = \beta S(t)/(\gamma N)$ is called the effective reproduction number and it accounts for the depletion of susceptibles as the infection sweeps through the population. Review your previous results and record the value of $S(t_{peak})$ where $t_{peak}$ is the time at which the infectious population reaches its maximum, ie the epidemic peak. Using these values of $S(t_{peak})$ calculate $R_e(t_{peak})$ and report any patterns that you observe.
 <textarea cols="127" rows="2"></textarea>
 
 5. If the reproduction number gives the multiplicative growth rate in the number of infectious individuals can you explain your observations from the previous two questions.
