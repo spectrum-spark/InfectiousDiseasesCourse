@@ -8,6 +8,7 @@ author:
 output:
     html_document:
         self_contained: yes
+  autocomplete: false
 ---
 
 ```{r, echo=F}
@@ -222,7 +223,7 @@ Explain the different components of the force of infection.
 ```{=html}
 <textarea name="Text1" cols="127" rows="5"></textarea>
 ```
-## Run and plot hte model
+## Run and plot the model
 
 Copy the following chunk into your script to solve the ODE
 
@@ -248,7 +249,7 @@ Define incidence and prevalence, and discuss the differences between them.
 
 ## Post-process the model output to predict standard epidemiological metrics
 
-This is great, but as we've seen before, the output from `ode` can be a bit unwieldly. Let's write a function that can clean it up for us.
+This is great, but as we've seen before, the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
 
 ```{r clean-ode-function}
 tidy_base_model <- function(ode_output, times, parameters) {
@@ -333,7 +334,7 @@ ggplot(first_wave) +
   theme_bw()		
 ```
 
-Vary the value of $R_0$ and re-run the modeol. What value of $R_0$ do you think is most realistic?
+Vary the value of $R_0$ and re-run the model. What value of $R_0$ do you think is most realistic?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
