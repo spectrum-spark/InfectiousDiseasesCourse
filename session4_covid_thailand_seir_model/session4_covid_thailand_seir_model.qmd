@@ -8,7 +8,7 @@ author:
 output:
     html_document:
         self_contained: yes
-  autocomplete: false
+autocomplete: false
 ---
 
 ```{r, echo=F}

@@ -13,7 +13,7 @@ output:
 execute:
   echo: true
   warning: false
-  autocomplete: false
+autocomplete: false
 editor: 
   markdown: 
     wrap: 72
