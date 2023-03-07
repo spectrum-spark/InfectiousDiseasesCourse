@@ -281,7 +281,7 @@ Why do we choose to plot incidence?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-## Plot the total population size and predicted incidence
+## Plot the total population size, and predicted prevalence and incidence
 
 It's time to plot our solution, and make sure we haven't made any silly mistakes.
 
