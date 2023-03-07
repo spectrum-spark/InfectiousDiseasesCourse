@@ -108,7 +108,7 @@ All our parameters have to go in a single structure, either a vector or a list. 
 ```{r setup-params}
 parameters <- c(
     R0 = 4,
-    incubation_period = 5,
+    latent_period = 5,
     infectious_period = 6
 )
 ```
@@ -120,7 +120,7 @@ Complete the following table using information about the natural history of COVI
 |                 Parameter |                 Flow transformation                 |                     Value/Range                     |                        Units                        |
 |--------------------:|:---------------:|:---------------:|:---------------:|
 | Basic reproduction number | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
-|         Incubation period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+|         Latent period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 |     Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 |      Duration of immunity | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 
@@ -180,8 +180,8 @@ COVID.base <- function(t, state, parameters) {
 
         # Calculate the net (instantaneous) change in each state variable
         Susceptible_change <- -force_of_infection * Susceptible
-        Exposed_change <- force_of_infection * Susceptible - Exposed / incubation_period
-        Infectious_change <- Exposed / incubation_period - Infectious / infectious_period
+        Exposed_change <- force_of_infection * Susceptible - Exposed / latent_period
+        Infectious_change <- Exposed / latent_period - Infectious / infectious_period
         Recovered_change <- Infectious / infectious_period
 
         # Return net changes as list
@@ -255,7 +255,7 @@ tidy_base_model <- function(ode_output, times, parameters) {
     as.data.frame(ode_output) %>%
         mutate(
             Prevalence = Exposed + Infectious,
-            Incidence = Exposed / parameters["incubation_period"],
+            Incidence = Exposed / parameters["latent_period"],
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
             Date = times
