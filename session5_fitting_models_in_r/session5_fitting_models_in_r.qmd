@@ -9,6 +9,7 @@ date-format: MMMM YYYY
 output:
     html_document:
         self_contained: yes
+    autocomplete: false
 ---
     
 ```{r, echo=F}
@@ -86,7 +87,7 @@ library(ggplot2)
 ```
 
 ## Filtering the data
-When calibrating each of these parameters, one thing we must be careful of is to account for the introduction of various interventions as these will likely have a significant impact on the parameter values (the reproduction number in particular). Therefore, in the code provided below I first isolate the "pre-intervention" era (which we defined in the last session as the first wave betweeen 7th and 26th March 2020. We will use this truncated dataset to estimate the parameters, $R_0$ and `initial_infected_population`. The code below should let you view the data we are using to fit the model.
+When calibrating each of these parameters, one thing we must be careful of is to account for the introduction of various interventions as these will likely have a significant impact on the parameter values (the reproduction number in particular). Therefore, in the code provided below I first isolate the "pre-intervention" era (which we defined in the last session as the first wave between 7th and 26th March 2020. We will use this truncated dataset to estimate the parameters, $R_0$ and `initial_infected_population`. The code below should let you view the data we are using to fit the model.
 
 ```{r load-data}
 # Data imports and filtering
@@ -228,7 +229,7 @@ SSQ_initial
 If we were to minimise `SSQ_initial`, given our parameters $R_0$ and $I(t=0)$ we can argue that we have found our parameters of interest. 
 
 ## Transforming the parameters
-Before launching into a minimsation of our SSQ function across all parameter space for the values of $R_0$ and $I(t=0)$, it would behoove us to pause and plan our search carefully. We will use the `optim()` function to minimize our function, but we should be cogniscent of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$).
+Before launching into a minimisation of our SSQ function across all parameter space for the values of $R_0$ and $I(t=0)$, it would behoove us to pause and plan our search carefully. We will use the `optim()` function to minimize our function, but we should be cognisant of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$).
 
 What are the feasible ranges of values for our two parameters: $R_0$ and $I(t=0)$?
 <textarea name='Text1' cols='127' rows='2'></textarea>
