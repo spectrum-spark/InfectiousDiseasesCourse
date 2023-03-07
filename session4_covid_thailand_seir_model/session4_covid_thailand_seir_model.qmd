@@ -257,7 +257,7 @@ tidy_base_model <- function(ode_output, times, parameters) {
         mutate(
             Prevalence = Exposed + Infectious,
             Incidence = Exposed / parameters["latent_period"],
-            Cumulative_incidence = cumsum(Incidence) + Incidence[1],
+            Cumulative_incidence = cumsum(Incidence),
             Population = Susceptible + Exposed + Infectious + Recovered,
             Date = times
         )
