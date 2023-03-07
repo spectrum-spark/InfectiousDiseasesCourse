@@ -2,7 +2,7 @@ project:
   title: "Modelling Infectious Diseases"
   output-dir: student_materials
   type: website
-  resources: ['session1_introduction_beans.R', 'session8_vector_model.R', 'shiny_app_SEIRS_variations.R']
+  resources: ['session1_introduction_beans.R', 'session8_vector_model.R', 'shiny_app_SEIRS_variations.R', 'first_wave_TH.csv']
 toc: true
 format:
   html:
