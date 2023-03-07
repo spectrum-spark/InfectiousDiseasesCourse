@@ -116,7 +116,7 @@ One of the most important things when you're doing an optimisation is a decent i
 ```{r initial-guesses}
 parameters <- c(
     R0 = 3.970588, # from the NM fitting session
-    incubation_period = 5, # Rounded from Trauer et al
+    latent_period = 5, # Rounded from Trauer et al
     infectious_period = 6, # Rounded from Trauer et al
     emergency_efficacy = 0.70, # guess
     curfew_efficacy = 0.80 # guess
@@ -174,8 +174,8 @@ COVID.intervention <- function(t, state, parameters) {
 
         # Calculate the net (instantaneous) change in each state variable
         Susceptible_change <- -force_of_infection * Susceptible
-        Exposed_change <- force_of_infection * Susceptible - Exposed / incubation_period
-        Infectious_change <- Exposed / incubation_period - Infectious / infectious_period
+        Exposed_change <- force_of_infection * Susceptible - Exposed / latent_period
+        Infectious_change <- Exposed / latent_period - Infectious / infectious_period
         Recovered_change <- Infectious / infectious_period
 
         # Return net changes as list
@@ -214,7 +214,7 @@ solve.intervention.model <- function(y_ = state,
     out <- as.data.frame(out) %>%
         mutate(
             Prevalence = Exposed + Infectious,
-            Incidence = Exposed / parms_["incubation_period"],
+            Incidence = Exposed / parms_["latent_period"],
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
             Date = times_

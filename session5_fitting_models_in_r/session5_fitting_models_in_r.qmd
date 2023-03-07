@@ -120,7 +120,7 @@ times <- seq(start_date, end_date, by = 1)
 # Model parameters
 parameters <- c(
     R0 = 4,
-    incubation_period = 5,
+    latent_period = 5,
     infectious_period = 6
 )
 
@@ -151,8 +151,8 @@ COVID.base <- function(t, state, parameters) {
 
         # Calculate the net (instantaneous) change in each state variable
         Susceptible_change <- -force_of_infection * Susceptible
-        Exposed_change <- force_of_infection * Susceptible - Exposed / incubation_period
-        Infectious_change <- Exposed / incubation_period - Infectious / infectious_period
+        Exposed_change <- force_of_infection * Susceptible - Exposed / latent_period
+        Infectious_change <- Exposed / latent_period - Infectious / infectious_period
         Recovered_change <- Infectious / infectious_period
 
         # Return net changes as list
@@ -182,7 +182,7 @@ solve.base.model <- function(y_ = state,
     out <- as.data.frame(out) %>%
         mutate(
             Prevalence = Exposed + Infectious,
-            Incidence = Exposed / parms_["incubation_period"],
+            Incidence = Exposed / parms_["latent_period"],
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
             Date = times_
