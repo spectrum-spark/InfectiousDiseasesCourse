@@ -349,9 +349,9 @@ optimum_parameters
 
 But have we improved our SSQ from the initial guess we had?
 ```{r SSQ-check}
-# Inspect the optimal negative log-likelihood
-optimum_NLL <- optim_NM$value
-optimum_NLL
+# Inspect the optimal sum of squared residuals
+optimum_SSQ <- optim_NM$value
+optimum_SSQ
 ```
 How does the SSQ score at the optimal value compare with our initial SSQ score (`SSQ_initial`)?
 <textarea name='Text1' cols='127' rows='2'></textarea>
