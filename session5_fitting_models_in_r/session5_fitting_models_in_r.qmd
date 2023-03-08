@@ -506,7 +506,7 @@ Let us calculate the *likelihood* of our observed data given our COVID model (wh
 $$
 \log p(\text{Cases}|\vec{\theta}) = \sum_{i=1}^N \log \text{Poisson}(c_i|\mu = \text{Model}(\theta,i)),
 $$
-where Cases is the vector containing our case data, $c_i$ is the number of cases on the $i$th day and Model$(\theta,i)$ is the model output given our parameters on day $i$.
+where Cases is the vector containing our case data, $c_i$ is the number of cases on the $i$th day,  Model$(\theta,i)$ is the model output given our parameters on day $i$, and $\mu$ is the mean of the Poisson distribution.
 
 
 <!-- ```{r log-likelihood}
