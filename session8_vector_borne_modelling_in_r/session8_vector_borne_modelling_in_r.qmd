@@ -614,7 +614,7 @@ al. Two of those parameters, the probability of transmission from
 mosquito to human (T_HM) and the probability of transmission
 from human to mosquito (T_MH) were **fitted** using the Ndii et
 al. model, which has a different structure to the model we developed in
-Part 1.This highlights the very important point that:
+Part 1. This highlights the very important point that:
 
 <center>[*Parameter values may not be directly transferable between
 models*]{style="font-size:16pt; color: red"}</center>
