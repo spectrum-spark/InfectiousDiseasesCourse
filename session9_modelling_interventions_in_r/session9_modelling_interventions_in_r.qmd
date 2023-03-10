@@ -124,7 +124,7 @@ parameters <- c(
 )
 ```
 
-Since we're using the same model from Session 5, we also need the same initial conditions, state variables and time window.
+Since we're using the same model from Sessions 4 and 5, we also need the same initial conditions, state variables and time window.
 
 ```{r initial-conditions}
 # Initial conditions
@@ -192,7 +192,7 @@ COVID.intervention <- function(t, state, parameters) {
 }
 ```
 
-What is different for this implementation compared to the implementation in session 6? Why?
+What is different for this implementation compared to the implementation in session 4? Why?
 <textarea name='Text1' cols='127' rows='4'></textarea>
 
 Now, we wrap this function in a call to `ode` to solve our model, and give us the outputs we are interested in.
