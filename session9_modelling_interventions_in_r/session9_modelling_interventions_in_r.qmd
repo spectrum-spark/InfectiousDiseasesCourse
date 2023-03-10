@@ -96,7 +96,7 @@ ggplot(first_wave, aes(x = Date, y = Cases)) +
 ```
 
 # Coding Interventions
-We're going to model two interventions: the emergency declaration, which was made on February 26, and the start of curfew, which was on March 4th.
+We're going to model two interventions: the emergency declaration, which was made on March 26, and the start of curfew, which was on March 4th.
 
 ```{r key-dates}
 fitting_start_date <- as.Date("2020-03-07") # start of fitting window
