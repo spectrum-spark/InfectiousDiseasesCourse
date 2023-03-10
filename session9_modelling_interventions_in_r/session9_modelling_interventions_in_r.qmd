@@ -214,10 +214,10 @@ solve.intervention.model <- function(y_ = state,
     # Calculate the prevalence, incidence and cumulative incidence (for comparison with data)
     out <- as.data.frame(out) %>%
         mutate(
-            Prevalence = Exposed + Infectious,
             Incidence = Exposed / parms_["latent_period"],
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
+            Prevalence = (Exposed + Infectious)/Population,
             Date = times_
         )
 
