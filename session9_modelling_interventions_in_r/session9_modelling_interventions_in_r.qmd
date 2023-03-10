@@ -119,7 +119,7 @@ parameters <- c(
     R0 = 3.970588, # from the NM fitting session
     latent_period = 5, # Rounded from Trauer, J.M., Lydeamore, M.J., Dalton, G.W. et al. Understanding how Victoria, Australia gained control of its second COVID-19 wave. Nat Commun 12, 6266 (2021). https://doi.org/10.1038/s41467-021-26558-4
     infectious_period = 6, # Rounded from Trauer et al
-    emergency_efficacy = 0.70, # guess
+    emergency_efficacy = 0.70, # guess, assuming Reff = (1-efficacy) * R0
     curfew_efficacy = 0.80 # guess
 )
 ```
