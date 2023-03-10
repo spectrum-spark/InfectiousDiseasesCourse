@@ -341,7 +341,7 @@ optim_NM <- optim(
 )
 
 # Check for convergence
-optim_NM$convergence # 0 - converged; 1 - failed
+optim_NM$convergence # 0 - converged; nonzero - failed
 
 # Back-transform parameters
 c(inverse.logit(optim_NM$par[c(
