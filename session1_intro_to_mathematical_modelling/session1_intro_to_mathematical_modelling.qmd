@@ -1,12 +1,12 @@
 ---
 title: "Introduction to Mathematical Modelling"
 author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Yogyakarta, Indonesia, 2023***
   |
   | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
   | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
-  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
+  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
+
 output: 
   html_document:
      self_contained: yes
