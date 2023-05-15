@@ -1,5 +1,5 @@
 ---
-title: "Fitting models in R"
+title: "Modelling an outbreak - COVID-19 in Thailand"
 author:
     - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, and <a href="https://www.ndm.ox.ac.uk/team/ben-cooper">Ben Cooper</a>, Nuffield Department of Medicine, Oxford University and
     - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
