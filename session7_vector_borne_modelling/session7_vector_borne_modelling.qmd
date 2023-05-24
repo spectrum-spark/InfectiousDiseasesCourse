@@ -1,10 +1,11 @@
 ---
-title: "Vector-borne disease modelling"
+title: "Building vector-borne disease models"
 author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
+  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, June 2023***
   |
   | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
       >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
+  | ***Updated and presented by Kartika Saraswati, for Indonesia June 2023 short course.***
 output: 
   html_document:
      self_contained: yes

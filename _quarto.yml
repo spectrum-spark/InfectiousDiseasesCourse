@@ -26,7 +26,7 @@ website:
       - href: session3_writing_a_model_to_suit_the_infectious_agent/session3_writing_a_model_to_suit_the_infectious_agent.qmd
       - href: session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.qmd
       - href: session5_fitting_models_in_r/session5_fitting_models_in_r.qmd
+      - href: session9_modelling_interventions_in_r/session9_modelling_interventions_in_r.qmd
       - href: session7_vector_borne_modelling/session7_vector_borne_modelling.qmd
       - href: session8_vector_borne_modelling_in_r/session8_vector_borne_modelling_in_r.qmd
-      - href: session9_modelling_interventions_in_r/session9_modelling_interventions_in_r.qmd
       
