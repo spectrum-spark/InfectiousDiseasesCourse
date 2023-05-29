@@ -66,7 +66,7 @@ This session is divided into three parts:
 
 ### What are vector-borne diseases?
 
-Unlike diseases that spread directly from person to person, vector-borne diseases are those diseases in which the spread of an infectious pathogen occurs via a vector --- a living organism such as a mosquito. Examples of vectors include (left to right) mosquitoes, ticks, blackflies and fleas:
+Unlike diseases that spread directly from person to person, vector-borne diseases are those diseases in which the spread of an infectious pathogen occurs via a vector --- a living organism that is typically a bloodsucking insect, such as a mosquito. Once a vector becomes infectious, they typically remain so for the rest of their life. They also are typically not adversely affected by the infection. Examples of vectors include (left to right) mosquitoes, ticks, blackflies and fleas:
 
 ::: row
   <img src="mosquito.jpg" alt="Mosquito biting" style="width:25%"/> <img src="tick.jpg" alt="Tick" style="width:25.6%"/> <img src="Simulium_Blackfly.jpg" alt="Blackfly" style="width:21.4%"/> <img src="flea.jpg" alt="Flea" style="width:12%"/>
