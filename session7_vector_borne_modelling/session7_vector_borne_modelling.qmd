@@ -425,7 +425,7 @@ The force of infection (on humans or mosquitoes) is the rate at which infection 
 
 -   Many of the processes affecting the life cycle of mosquitoes are highly climate dependent and so vary seasonally. For the purposes of illustration, we will not include seasonality in our model.
 -   As we saw when we compared the transmission cycle for onchocerciasis with the transmission cycle of West Nile virus, for some vector-borne diseases vertebrate hosts other than humans are involved. As this adds substantial complexity to the model, in this session we consider only diseases that spread human-vector-human.
--   While we have assumed a constant probability across the whole population that a bite will result in transmission, in reality this may not be the case due to population heterogeneity. Comparing the force of infection measured in humans to the measured entomological inoculation rate (EIR), which is the average number of infectious bites per human per unit time, can help calibrate models to real data.
+-   While we have assumed a constant probability across the whole population that a bite will result in transmission, in reality this may not be the case due to population heterogeneity. 
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
 
