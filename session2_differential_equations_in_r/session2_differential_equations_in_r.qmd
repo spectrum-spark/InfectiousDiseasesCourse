@@ -158,7 +158,7 @@ Next, we specify the model differential equation (given above) as a user-defined
 ```{r de-specify-growth-function}
 # We specify the system of differential equations as a function in R
 # Here we specify a function with three arguments:
-# 1. t : time, which is the dependent variable in our case
+# 1. t : time, which is the independent variable in our case
 # 2. state : a vector of state variables
 # 3. parameters : a vector of parameters (ie fixed variables)
 popmodel_exponentialgrowth <- function(t, state, parameters) {
