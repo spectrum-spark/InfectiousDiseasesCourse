@@ -279,15 +279,16 @@ solve the SIR model following the same steps described above for the population 
 ```{r sir-model, echo=T}
 SIRModel <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
-        dSdt <- -beta * S * I
-        dIdt <- beta * S * I - r * I
-        dRdt <- r * I
+        N <- S + I + R
+        dSdt <- -beta * S * I / N
+        dIdt <- beta * S * I / N - gamma * I
+        dRdt <- gamma * I
 
         return(list(c(dSdt, dIdt, dRdt)))
     })
 }
 
-parameters <- c(beta = 0.025, r = 1)
+parameters <- c(beta = 5, gamma = 1)
 initcond <- c(S = 199, I = 1, R = 0)
 
 times <- seq(0, 8, by = 0.1)
