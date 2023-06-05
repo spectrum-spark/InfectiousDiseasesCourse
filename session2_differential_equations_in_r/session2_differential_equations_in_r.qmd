@@ -276,7 +276,7 @@ and initial conditions
 
 solve the SIR model following the same steps described above for the population growth model. Plot your solution to generate the following figure:
 
-```{r sir-model, echo=F}
+```{r sir-model, echo=T}
 SIRModel <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
         dSdt <- -beta * S * I
@@ -306,8 +306,7 @@ plot_data <- as.data.frame(out) %>%
 # Colour the lines by state
 # Change the type of line depending on state
 ggplot(data = plot_data, aes(x=time, y=value, colour=state, linetype=state)) + 
-    geom_line(linewidth = 0.8) + # Plot the lines
-    geom_point(data = plot_data %>% slice(seq(1, n(), 10)), size = 2) + #Overlay points on the line curves
+    geom_line(linewidth = 0.8) +
     ggtitle("SIR Model")
 ```
 
