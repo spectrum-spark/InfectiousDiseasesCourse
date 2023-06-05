@@ -290,10 +290,10 @@ You will use your model, for example to predict the effect of interventions
 * Has three states so has three equations
 * The rate at which susceptible individuals become infected is **special** because it depends on the proportion of the population that is infected at each time $I(t)$
 * We define the force of infection, $\lambda(t) = \beta I(t)/N$, where $N=S(t)+I(t)+R(t)$ is the total population size.
-![](SIR_flow.png)
+![](SIRS.png)
 
 ### Some definitions
-A parameter is a constant value used in the model which usually has some biological significance. For example 1/(the duration of infection) is a parameter ($\nu$)
+A parameter is a constant value used in the model which usually has some biological significance. For example 1/(the duration of infection) is a parameter ($\gamma$)
 
 7. What is the name of another model parameter and it's meaning?
 <textarea name="Text1" cols="127" rows="3"></textarea>
@@ -310,6 +310,10 @@ Prevalence is the proportion or percentage of the population infected at any tim
 
 Incidence is the number of new cases per unit time and is given by the rate into the infected compartment
 $$\text{incidence} = \lambda(t)S(t)$$
+It's useful to consider what the SIRS model looks like when substituting in the expression for $\lambda(t)$, which will be used throughout the week:
+
+![](sirs_beta.png)
+
 
 ### Model assumptions
 * All models have assumptions, so what does the example SIRS model assume?
