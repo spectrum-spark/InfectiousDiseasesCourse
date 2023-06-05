@@ -274,7 +274,7 @@ and initial conditions
     R_0 &= 0
 \end{align}
 
-solve the SIR model following the same steps described above for the predator-prey model. Plot your solution to generate the following figure:
+solve the SIR model following the same steps described above for the population growth model. Plot your solution to generate the following figure:
 
 ```{r sir-model, echo=F}
 SIRModel <- function(t, state, parameters) {
