@@ -250,6 +250,7 @@ Define incidence and prevalence, and discuss the differences between them.
 ## Post-process the model output to predict standard epidemiological metrics
 
 This is great, but as we've seen before, the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
+<!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. -->
 
 ```{r clean-ode-function}
 tidy_base_model <- function(ode_output, times, parameters) {
@@ -317,7 +318,7 @@ Why do we choose to plot the population size over time?
 # Incidence
 ggplot(first_wave) +
   geom_col(aes(x=Date, y=Cases), width=1, fill=NA, colour="black") +
-  geom_line(data=tidied_output, aes(x=Date, y=Incidence), size=1, colour="firebrick") +
+  geom_line(data=tidied_output, aes(x=Date, y=Incidence), linewidth=1, colour="firebrick") +
   ylab("Daily cases") +
   xlab("") +
   ggtitle("Model-predicted incidence") +
@@ -326,8 +327,8 @@ ggplot(first_wave) +
 
 # Cumulative incidence
 ggplot(first_wave) +
-  geom_point(aes(x=Date, y=Cumulative_cases), linewidth=2, colour="skyblue") +
-  geom_line(data=tidied_output, aes(x=Date, y=Cumulative_incidence), size=1, colour="firebrick") +
+  geom_point(aes(x=Date, y=Cumulative_cases), size=2, colour="skyblue") +
+  geom_line(data=tidied_output, aes(x=Date, y=Cumulative_incidence), linewidth=1, colour="firebrick") +
   ylab("Cumulative cases") +
   xlab("") +
   ggtitle("Model-predicted cumulative incidence") +
