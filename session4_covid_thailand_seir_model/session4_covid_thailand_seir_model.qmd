@@ -130,7 +130,7 @@ Type `parameters` in your console. What do you see?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-Type \`parameters\["R0"\] into your console. What does this value mean?
+Type `parameters["R0"]` into your console. What does this value mean?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
