@@ -215,20 +215,21 @@ This will be an interactive lecture session to familiarise you with some of the 
 * What are the **mechanistic** reasons for the shape?
 ![](epimodel.png)
 
-## The basic reproduction number, $R_0$
-$R_0$ is defined as the average number of new infections that result from a single infection introduced into a totally susceptible population. This will depend on:
+## The basic reproduction number, $\mathcal{R}_0$
+$\mathcal{R}_0$ is defined as the average number of new infections that result from a single infection introduced into a totally susceptible population. This will depend on:
 
 * The number of contacts per unit time (e.g. week$^{-1}$), $c$
 * The probability of infection given a contact between an infectious and a susceptible individual, $p$
-* The duration of infection, $D$
+* The duration of infection, $1/\gamma$
 
 The equation for the basic reproduction number is
-$$R_0=pcD.$$
-The product, $pc$, can be replaced by the single parameter, $\beta$, defined as the effective contact rate per unit time.
+$$\mathcal{R}_0=\frac{pc}{\gamma}.$$
+The product, $pc$, can be replaced by the single parameter, $\beta$, defined as the effective contact rate per unit time, giving
+$$\mathcal{R}_0=\frac{\beta}{\gamma}.$$
 
-## Estimating $R_0$ from your simulation experiment
+## Estimating $\mathcal{R}_0$ from your simulation experiment
 
-1. For $D$, what were the value and units for the duration of infection?
+1. For $1/\gamma$, what were the value and units for the duration of infection?
 <textarea name="Text1" cols="127" rows="1"></textarea>
 
 2. For $p$, what was the probability of an infected individual (bean) infecting a susceptible neighbour?
@@ -241,7 +242,10 @@ The product, $pc$, can be replaced by the single parameter, $\beta$, defined as 
 Don't forget either end of the line!
 ::::
 
-4. Explain why the basic reproduction number is 1.9.
+4. What does that give us for $\beta=pc$?
+<textarea name="Text1" cols="127" rows="4"></textarea>
+
+5. Explain why the basic reproduction number is 1.9.
 <textarea name="Text1" cols="127" rows="4"></textarea>
 
 ## Saturation
@@ -249,19 +253,19 @@ Not all contacts are with susceptible individuals:
 ![](saturation.png)
 
 ### Some theory
-* The effective reproduction number $R_t$ is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
-* $R_t=R_0 x^∗$ varies over time depending on the fraction of the population susceptible, $x^∗=\left(\frac{S}{pop}\right)$
-* Incidence of infections increases when $R_t>1$ and declines when $R_t<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for $R_t=1$:
-$$R_t=1\Rightarrow R_0x^∗=1 \Rightarrow x^∗=\frac{1}{R_0}$$
+* The effective reproduction number $\mathcal{R}_e(t)$ is defined as the average number of new infections caused by an infected individual at any stage during the epidemic when there will be both susceptible and recovered (thus immune) individuals present
+* $\mathcal{R}_e(t)=\mathcal{R}_0 x^∗$ varies over time depending on the fraction of the population susceptible, $x^∗=\left(\frac{S}{pop}\right)$
+* Incidence of infections increases when $\mathcal{R}_e(t)>1$ and declines when $\mathcal{R}_e(t)<1$. Thus the **critical proportion susceptible**, $x^∗$, can be calculated for $\mathcal{R}_e(t)=1$:
+$$\mathcal{R}_e(t)=1\Rightarrow \mathcal{R}_0x^∗=1 \Rightarrow x^∗=\frac{1}{\mathcal{R}_0}$$
 
 ## Implications for vaccination
 * Critical proportion immune or the herd immunity threshold:
-$$HIT = 1-x^* \Rightarrow HIT = 1 - \frac{1}{R_0}$$
+$$HIT = 1-x^* \Rightarrow HIT = 1 - \frac{1}{\mathcal{R}_0}$$
 
 5. Using the HIT formula, explain why a target vaccination coverage of over 50% would be sufficient to control the spread of infection in your simulated epidemic.
 <textarea name="Text1" cols="127" rows="4"></textarea>
 
-6. If the target coverage for a particular vaccine is 90%, what can you infer about the $R_0$ of the pathogen in question?
+6. If the target coverage for a particular vaccine is 90%, what can you infer about the $\mathcal{R}_0$ of the pathogen in question?
 <textarea name="Text1" cols="127" rows="2"></textarea>
 
 ## Building models

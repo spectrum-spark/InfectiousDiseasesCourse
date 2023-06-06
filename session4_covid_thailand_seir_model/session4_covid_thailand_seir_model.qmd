@@ -334,12 +334,12 @@ ggplot(first_wave) +
   theme_bw()		
 ```
 
-Vary the value of $R_0$ and re-run the model. What value of $R_0$ do you think is most realistic?
+Vary the value of $\mathcal{R}_0$ and re-run the model. What value of $\mathcal{R}_0$ do you think is most realistic?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
-Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for $R_0$?
+Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for $\mathcal{R}_0$?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>

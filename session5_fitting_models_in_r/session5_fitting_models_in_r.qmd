@@ -70,7 +70,7 @@ What are the free parameters of our base model?
 
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
-In this exercise let us assume a known latent period and infectious period and use the basic reproduction number, $R_0$, and the initial size of the infected population, $I(t=0)$, as the free parameters we will calibrate using our data.
+In this exercise let us assume a known latent period and infectious period and use the basic reproduction number, $\mathcal{R}_0$, and the initial size of the infected population, $I(t=0)$, as the free parameters we will calibrate using our data.
 
 To begin, create a new R script, save the file as `fitting_models.R` into your working directory, and copy the code chunk below:
 
@@ -87,7 +87,7 @@ library(ggplot2)
 ```
 
 ## Filtering the data
-When calibrating each of these parameters, one thing we must be careful of is to account for the introduction of various interventions as these will likely have a significant impact on the parameter values (the reproduction number in particular). Therefore, in the code provided below I first isolate the "pre-intervention" era (which we defined in the last session as the first wave between 7th and 26th March 2020. We will use this truncated dataset to estimate the parameters, $R_0$ and `initial_infected_population`. The code below should let you view the data we are using to fit the model.
+When calibrating each of these parameters, one thing we must be careful of is to account for the introduction of various interventions as these will likely have a significant impact on the parameter values (the reproduction number in particular). Therefore, in the code provided below I first isolate the "pre-intervention" era (which we defined in the last session as the first wave between 7th and 26th March 2020. We will use this truncated dataset to estimate the parameters, $\mathcal{R}_0$ and `initial_infected_population`. The code below should let you view the data we are using to fit the model.
 
 ```{r load-data}
 # Data imports and filtering
@@ -226,12 +226,12 @@ SSQ_initial <- sum((uncontrolled_period$Cases[-1] - out_init$Incidence[-1])^2)
 SSQ_initial
 ```
 
-If we were to minimise `SSQ_initial`, given our parameters $R_0$ and $I(t=0)$ we can argue that we have found our parameters of interest. 
+If we were to minimise `SSQ_initial`, given our parameters $\mathcal{R}_0$ and $I(t=0)$ we can argue that we have found our parameters of interest. 
 
 ## Transforming the parameters
-Before launching into a minimisation of our SSQ function across all parameter space for the values of $R_0$ and $I(t=0)$, it would behoove us to pause and plan our search carefully. We will use the `optim()` function to minimize our function, but we should be cognisant of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$).
+Before launching into a minimisation of our SSQ function across all parameter space for the values of $\mathcal{R}_0$ and $I(t=0)$, it would behoove us to pause and plan our search carefully. We will use the `optim()` function to minimize our function, but we should be cognisant of the fact that this function searches over all conceivable values of the parameters (i.e., from $-\infty$ to $\infty$).
 
-What are the feasible ranges of values for our two parameters: $R_0$ and $I(t=0)$?
+What are the feasible ranges of values for our two parameters: $\mathcal{R}_0$ and $I(t=0)$?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 
 With this in mind, it would be sensible to restrict our search to only those values of parameters that are feasible. Not only should this increase the speed of the algorithm (hopefully leading to the desired answer more quickly) but may also help us avoid any computational errors that might arise which will kill our search prematurely. For this purpose, we introduce a set of transformed parameters, that is parameters that exist in the full interval $-\infty$ to $\infty$, but can be mapped back to our feasible regions for our parameters.
@@ -240,7 +240,7 @@ With this in mind, it would be sensible to restrict our search to only those val
 ## Transforming variables
 `optim()` is going to pass parameter values into our function on the interval $(-\infty,\infty)$. Is there a function that will take those parameter values and put them on the interval $[0,\infty)$?
 
-If $x \in (-\infty,\infty)$, then $\exp(x) \in [0,\infty)$. Therefore if we know $R_0$ and $I(t=0)$, we would use $\log$ to transform back into the `optim()` space. If we want the opposite we can use $\exp$.
+If $x \in (-\infty,\infty)$, then $\exp(x) \in [0,\infty)$. Therefore if we know $\mathcal{R}_0$ and $I(t=0)$, we would use $\log$ to transform back into the `optim()` space. If we want the opposite we can use $\exp$.
 :::
 
 ```{r transform-params}
