@@ -66,7 +66,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
-```         
+```{r write-header}      
 # SPARK Modelling Short course
 # 2023 Infectious Diseases Modelling
 
