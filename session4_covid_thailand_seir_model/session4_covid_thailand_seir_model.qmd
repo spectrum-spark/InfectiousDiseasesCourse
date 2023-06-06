@@ -317,7 +317,7 @@ Why do we choose to plot the population size over time?
 # Incidence
 ggplot(first_wave) +
   geom_col(aes(x=Date, y=Cases), width=1, fill=NA, colour="black") +
-  geom_point(data=tidied_output, aes(x=Date, y=Incidence), size=2, colour="firebrick") +
+  geom_line(data=tidied_output, aes(x=Date, y=Incidence), size=1, colour="firebrick") +
   ylab("Daily cases") +
   xlab("") +
   ggtitle("Model-predicted incidence") +
@@ -326,8 +326,8 @@ ggplot(first_wave) +
 
 # Cumulative incidence
 ggplot(first_wave) +
-  geom_line(aes(x=Date, y=Cumulative_cases), linewidth=2, colour="skyblue") +
-  geom_point(data=tidied_output, aes(x=Date, y=Cumulative_incidence), size=2, colour="firebrick") +
+  geom_point(aes(x=Date, y=Cumulative_cases), linewidth=2, colour="skyblue") +
+  geom_line(data=tidied_output, aes(x=Date, y=Cumulative_incidence), size=1, colour="firebrick") +
   ylab("Cumulative cases") +
   xlab("") +
   ggtitle("Model-predicted cumulative incidence") +
