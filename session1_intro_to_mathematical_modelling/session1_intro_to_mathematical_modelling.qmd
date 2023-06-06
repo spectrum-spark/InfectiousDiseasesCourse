@@ -292,6 +292,12 @@ You will use your model, for example to predict the effect of interventions
 * We define the force of infection, $\lambda(t) = \beta I(t)/N$, where $N=S(t)+I(t)+R(t)$ is the total population size.
 ![](SIRS.png)
 
+\begin{align}
+    \frac{dS(t)}{dt}&=-\lambda(t) S(t) + \omega R(t),\\        
+    \frac{dI(t)}{dt}&=+\lambda(t) S(t) - \gamma I(t), \\    
+    \frac{dR(t)}{dt}&=+\gamma I(t) - \omega R(t). \\
+\end{align}
+
 ### Some definitions
 A parameter is a constant value used in the model which usually has some biological significance. For example 1/(the duration of infection) is a parameter ($\gamma$)
 
@@ -312,7 +318,11 @@ Incidence is the number of new cases per unit time and is given by the rate into
 $$\text{incidence} = \lambda(t)S(t)$$
 It's useful to consider what the SIRS model looks like when substituting in the expression for $\lambda(t)$, which will be used throughout the week:
 
-![](sirs_beta.png)
+\begin{align}
+    \frac{dS(t)}{dt}&=-\beta S(t) \frac{I(t)}{N} + \omega R(t),\\        
+    \frac{dI(t)}{dt}&=+\beta S(t) \frac{I(t)}{N} - \gamma I(t), \\    
+    \frac{dR(t)}{dt}&=+\gamma I(t) - \omega R(t). \\
+\end{align}
 
 
 ### Model assumptions
