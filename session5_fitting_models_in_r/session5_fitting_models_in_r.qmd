@@ -11,6 +11,8 @@ output:
         self_contained: yes
 autocomplete: false
 ---
+
+<!-- fixme: need to make sure name changes using `.` are all removed to avoid confusion. -->
     
 ```{r, echo=F}
 knitr::opts_chunk$set(
@@ -192,7 +194,7 @@ solve.base.model <- function(y_ = state,
     return(out)
 }
 ```
-    
+<!-- fixme: NB the equation for prevalence and incidence above should be made consistent with any updates to module 4 -->    
 ## Solving the model for a specific set of parameters
 Now we use the model developed in the last session and solve the model for an initial set of parameters, an initial state and using dates from 7th - 26th March, 2020
 
