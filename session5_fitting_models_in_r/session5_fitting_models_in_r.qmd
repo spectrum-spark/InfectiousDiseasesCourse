@@ -677,7 +677,7 @@ nll_plot <- nll_grid_results %>%
     geom_contour(breaks = c(100, 110, 120, 130, 200, 500, 1000, 4000)) +
     ylab("I(0)") +
     xlab("R0") +
-    ggtitle("Likelihood surface") +
+    ggtitle("Negative likelihood surface") +
     theme_bw()
 
 # Extract optimum from grid search
