@@ -210,7 +210,7 @@ out_init <- solve.base.model(
 # Plot the filtered data and the first model "guess"
 ggplot(uncontrolled_period) +
     geom_col(aes(x = Date, y = Cases), width = 1, fill = "dodgerblue2", colour = "blue") +
-    geom_point(data = out_init, aes(x = Date, y = Incidence), size = 2, colour = "firebrick2") +
+    geom_line(data = out_init, aes(x = Date, y = Incidence), linewidth = 1, colour = "firebrick2") +
     ylab("Daily cases") +
     xlab("") +
     ggtitle("Thailand's First Wave, Jan-Jul 2020") +
@@ -381,7 +381,7 @@ optimal_solution <- solve.base.model(
 # Plot the optimal solution
 ggplot(first_wave) +
     geom_col(aes(x = Date, y = Cases), width = 1, fill = "dodgerblue2", colour = "blue") +
-    geom_point(data = optimal_solution, aes(x = Date, y = Incidence), size = 2, colour = "firebrick2") +
+    geom_line(data = optimal_solution, aes(x = Date, y = Incidence), linewidth = 1, colour = "firebrick2") +
     ylab("Daily cases") +
     xlab("") +
     ggtitle("Fit to unmitigated period") +
