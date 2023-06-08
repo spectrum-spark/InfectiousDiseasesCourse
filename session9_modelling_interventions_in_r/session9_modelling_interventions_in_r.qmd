@@ -111,12 +111,12 @@ We should filter down our data to the time period we want to fit to.
 outbreak <- first_wave %>%
     filter(Date >= fitting_start_date, Date <= fitting_end_date)
 
-# Adding a plot showing the intervention times as a visual check
-ggplot(first_wave, aes(x = Date, y = Cases)) +
+# Visual check of the filtered outbreak data and intervention times
+ggplot(outbreak, aes(x = Date, y = Cases)) +
     geom_col(fill = "gray") +
     ylab("Daily cases") +
     xlab("") +
-    ggtitle("Thailand's First Wave, Jan-Jun 2020, with intervention timings") +
+    ggtitle("Filtered data from Thailand's First Wave, with intervention timings") +
     theme_bw() +
     geom_vline(xintercept = emergency_start_date, colour='firebrick', 
                linetype='dashed', size=1.3) +
