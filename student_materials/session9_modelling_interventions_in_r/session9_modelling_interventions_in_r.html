@@ -4210,7 +4210,7 @@ font-style: italic;
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">R0 =</span> <span class="fl">3.970588</span>, <span class="co"># from the NM fitting session</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">latent_period =</span> <span class="dv">5</span>, <span class="co"># Rounded from Trauer, J.M., Lydeamore, M.J., Dalton, G.W. et al. Understanding how Victoria, Australia gained control of its second COVID-19 wave. Nat Commun 12, 6266 (2021). https://doi.org/10.1038/s41467-021-26558-4</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">infectious_period =</span> <span class="dv">6</span>, <span class="co"># Rounded from Trauer et al</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">emergency_efficacy =</span> <span class="fl">0.70</span>, <span class="co"># guess, assuming Reff = (1-efficacy) * R0</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">emergency_efficacy =</span> <span class="fl">0.70</span>, <span class="co"># guess, assuming R_interventions = (1-efficacy) * R0</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">curfew_efficacy =</span> <span class="fl">0.80</span> <span class="co"># guess</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -4253,11 +4253,11 @@ font-style: italic;
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            intervention_efficacy <span class="ot">&lt;-</span> curfew_efficacy</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        }</span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate the effective reproduction number in the presence of interventions</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        Reff <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> intervention_efficacy) <span class="sc">*</span> R0 <span class="co"># assuming everyone starts susceptible</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate the new reproduction number in the presence of interventions</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        R_interventions <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> intervention_efficacy) <span class="sc">*</span> R0 <span class="co"># assuming everyone starts susceptible</span></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate the average force of infection imposed on each susceptible individual</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        force_of_infection <span class="ot">&lt;-</span> Reff <span class="sc">*</span> Infectious <span class="sc">/</span> (Total_population <span class="sc">*</span> infectious_period)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        force_of_infection <span class="ot">&lt;-</span> R_interventions <span class="sc">*</span> Infectious <span class="sc">/</span> (Total_population <span class="sc">*</span> infectious_period)</span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate the net (instantaneous) change in each state variable</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        Susceptible_change <span class="ot">&lt;-</span> <span class="sc">-</span>force_of_infection <span class="sc">*</span> Susceptible</span>

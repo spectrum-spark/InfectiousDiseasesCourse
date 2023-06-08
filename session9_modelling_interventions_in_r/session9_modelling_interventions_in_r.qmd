@@ -131,7 +131,7 @@ parameters <- c(
     R0 = 3.970588, # from the NM fitting session
     latent_period = 5, # Rounded from Trauer, J.M., Lydeamore, M.J., Dalton, G.W. et al. Understanding how Victoria, Australia gained control of its second COVID-19 wave. Nat Commun 12, 6266 (2021). https://doi.org/10.1038/s41467-021-26558-4
     infectious_period = 6, # Rounded from Trauer et al
-    emergency_efficacy = 0.70, # guess, assuming Reff = (1-efficacy) * R0
+    emergency_efficacy = 0.70, # guess, assuming R_interventions = (1-efficacy) * R0
     curfew_efficacy = 0.80 # guess
 )
 ```
@@ -179,11 +179,11 @@ COVID.intervention <- function(t, state, parameters) {
         }
 
 
-        # Calculate the effective reproduction number in the presence of interventions
-        Reff <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
+        # Calculate the new reproduction number in the presence of interventions
+        R_interventions <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
 
         # Calculate the average force of infection imposed on each susceptible individual
-        force_of_infection <- Reff * Infectious / (Total_population * infectious_period)
+        force_of_infection <- R_interventions * Infectious / (Total_population * infectious_period)
 
         # Calculate the net (instantaneous) change in each state variable
         Susceptible_change <- -force_of_infection * Susceptible
