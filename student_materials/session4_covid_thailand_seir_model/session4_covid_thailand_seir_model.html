@@ -4358,7 +4358,7 @@ font-style: italic;
 <h1>Data processing and plotting</h1>
 <section id="post-process-the-model-output-to-predict-standard-epidemiological-metrics" class="level2">
 <h2 class="anchored" data-anchor-id="post-process-the-model-output-to-predict-standard-epidemiological-metrics">Post-process the model output to predict standard epidemiological metrics</h2>
-<p>This is great, but as we’ve seen before, the output from <code>ode</code> can be a bit unwieldy. Let’s write a function that can clean it up for us. <!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. --></p>
+<p>This is great, but as we’ve seen before, the output from <code>ode</code> can be a bit unwieldy. Let’s write a function that can clean it up for us. <!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. NB any updates should be made to module 5 too. --></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tidy_base_model <span class="ot">&lt;-</span> <span class="cf">function</span>(ode_output, times, parameters) {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(ode_output) <span class="sc">%&gt;%</span></span>
