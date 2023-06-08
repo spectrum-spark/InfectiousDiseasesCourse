@@ -227,7 +227,7 @@ solve.intervention.model <- function(y_ = state,
     out <- as.data.frame(out) %>%
         mutate(
             Incidence = Exposed / parms_["latent_period"],
-            Cumulative_incidence = cumsum(Incidence) + Incidence[1],
+            Cumulative_incidence = cumsum(Incidence),
             Population = Susceptible + Exposed + Infectious + Recovered,
             Prevalence = (Exposed + Infectious)/Population,
             Date = times_
@@ -267,7 +267,11 @@ ggplot(outbreak) +
     ylab("Daily cases") +
     xlab("") +
     ggtitle("Thailand's First Wave, 2020") +
-    theme_bw()
+    theme_bw()+
+    geom_vline(xintercept = emergency_start_date, colour='firebrick', 
+               linetype='dashed', size=1.3) +
+    geom_vline(xintercept = curfew_start_date, colour='firebrick', 
+               linetype='dashed', size=1.3)
 ```
 
 Not bad! What do you observe? Why do you think this might be, and how can the fit be improved?
