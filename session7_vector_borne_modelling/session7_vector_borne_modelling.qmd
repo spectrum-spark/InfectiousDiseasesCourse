@@ -499,7 +499,7 @@ This is the number of bites a single human receives from a single mosquito per u
 
 [It reduces as the same number of bites are spread over more people. This makes it less likely that a human
 will be bitten the two times necessary in the required timeframe in order to continue transmission (i.e. once to
-be infected by an infectious mosquito and then by a susceptible mosquito to infect them.]{style="color: blue"}
+be infected by an infectious mosquito and then by a susceptible mosquito to infect them).]{style="color: blue"}
 
 <p><br></p>
 
