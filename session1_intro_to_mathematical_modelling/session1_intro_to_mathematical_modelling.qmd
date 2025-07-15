@@ -1,17 +1,6 @@
 ---
 title: "Introduction to Mathematical Modelling"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  |
-  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
-  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases',
 execute:
   echo: false
   warning: false
@@ -35,6 +24,16 @@ textarea {
     font-style: italic;
 }
 ```
+
+Thanks to:
+
+* [Lisa White]("http://www.tropmedres.ac/researchers/researcher/lisa-white"), Nuffield Department of Medicine, Oxford University and
+* [Wirichada Pan-Ngum]("http://www.tropmedres.ac/wirichada-pan-ngum"), Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
+
+Adapted and presented by [Emma McBryde]("https://research.jcu.edu.au/portfolio/emma.mcbryde"), Australian Institute of Tropical Health & Medicine, James Cook University July 2022
+
+Adapted and presented by [Roslyn Hickson]("https://research.jcu.edu.au/portfolio/roslyn.hickson/"), College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023
+
 # Summary
 
 This is an interactive session to introduce the basic concepts of mathematical modelling of infectious diseases. The SIRS model will be derived and explained. Typical epidemiological measures such as prevalence, incidence and the basic reproduction number will be explored. Types of transmission dynamic models will be compared.
@@ -73,6 +72,7 @@ _We recommend to save your text at the end of each part by printing the file._
 ![](why_use_models.png)
 
 ## Types of infectious disease model
+
 **Covered in this course**:
 
 * Mechanistic models

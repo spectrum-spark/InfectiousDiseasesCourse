@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Diagonal Lines Background</title>
+  <style>
+    body::before {
+      content: "";
+      position: fixed;
+      top: -100vh;
+      left: 0;
+      width: 20px;
+      height: 200vh;
+      background: black;
+      transform: rotate(45deg);
+      z-index: -1;
+      pointer-events: none;
+
+      /* Simulate 3 lines using box-shadow */
+      box-shadow:
+        60px 0 black,
+        120px 0 black;
+    }
+
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+</body>
+</html>
