@@ -1,35 +1,22 @@
 ---
 title: "Fitting Models in R"
-author:
-    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University,
-    - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, and <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
-    - Adapted and presented by [Eamon Conway](https://github.com/EamonConway), The Walter and Eliza Hall Institute, Melbourne.
 date: March 2023
 date-format: MMMM YYYY
-output:
-    html_document:
-        self_contained: yes
+format: 
+    training-html:
+        presenter: Eamon Conway, Walter and Eliza Hall Institute
+        contributors:
+            - Lisa White, Nuffield Department of Medicine, Oxford University
+            - Michael Meehan and Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
 autocomplete: false
 ---
     
 ```{r, echo=F}
 knitr::opts_chunk$set(
-    g.align = "center"
+    fig.align = "center"
 )
 ```
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
 
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
-```
 # Summary
 
 A combination of theory and practice to extend the concepts of maximum likelihood and other model fitting methodologies to the context of transmission dynamic models.
@@ -89,9 +76,7 @@ To begin, create a new R script, save the file as `fitting_models.R` into your w
 #########################
 ## FITTING MODELS IN R ##
 #########################
-library(dplyr)
-library(deSolve)
-library(ggplot2)
+pacman::p_load(dplyr, deSolve, ggplot2)
 ```
 
 ## Filtering the data

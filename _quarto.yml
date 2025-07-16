@@ -7,7 +7,7 @@ toc: true
 format:
   html:
     theme: cosmo
-    css: style.css
+    css: style_training.css
     title-block-style: none
     embed-resources: true
     link-external-icon: true
