@@ -10,6 +10,8 @@ output:
         self_contained: yes
 autocomplete: false
 ---
+<!-- todo: update the example from COVID-19 in Thailand to a more local example that still needs an SEIR model. Perhaps a covid-19 in Indonesia -- e.g. Jakarta, example. -->
+<!-- todo: condense and/or move the credits for who has worked on this and is delivering it. Presenter at the top, history at the bottom. -->
 
 ```{r, echo=F}
 knitr::opts_chunk$set(
@@ -42,6 +44,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 -   Code summary
 -   Set working directory
+<!-- fixme: change the code so this isn't needed at all. i.e. as a project and using relative pathing. Also auto-check if packages are installed (and then install them if not e.g. pacman). -->
 -   Keep track of dependencies
 -   Set the start and end time for the model simulation
 -   Examine the dataset
@@ -50,7 +53,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 -   Define the model parameters
 -   Set up the initial conditions
--   Define the model variables (also known as the compartments or states)
+-   Define the model compartments
 -   Set up a function to solve the equations
 -   Run and plot the model
 
@@ -68,11 +71,11 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
 ```{r write-header}      
-# SPARK Modelling Short course
-# 2023 Infectious Diseases Modelling
+# SPARKLE Modelling Short course
+# 2025 Infectious Diseases Modelling
 
 #########################################
-## Modelling Thailand's COVID outbreak ##
+## Modelling a COVID outbreak ##
 #########################################
 
 # A model for COVID-19 
@@ -82,7 +85,7 @@ It is good practice to write a short description of your code to summarise its p
 
 Save this file in your `student_materials` folder, and give it a meaningful name, like `session_seir_ode_covid`.
 
-<!-- fixme: we may not want to do this as it caused issues in the past, if so remove from ToC-->
+<!-- fixme: we may not want to do this as it caused issues in the past, if so remove from contents-->
 ## Set working directory
 You must let R know the location of any files you plan to import, so remember to set your working directory. Copy and paste the code chunk below into your editor to continue writing your code:
 ```{r set-wd}
@@ -107,9 +110,10 @@ library(dplyr)
 library(deSolve)
 library(ggplot2)
 ```
+<!-- fixme: pacman here for installation.-->
 
 Now we load the data, and take a quick look:
-
+<!-- fixme: Use r project for relative pathing -->
 ```{r load-data}
 # Data imports
 first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
@@ -119,7 +123,7 @@ first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
 summary(first_wave)
 
 # plot Incidence
-ggplot2::ggplot(first_wave) +
+ggplot(first_wave) +
   geom_col(aes(x=Date, y=Cases), width=1, fill="dodgerblue2", colour="blue") +
   ylab("Daily cases") +
   xlab("") +
@@ -171,7 +175,9 @@ Type `parameters["R0"]` into your console. What does this value mean?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-Hint: if this isn't working, try manually typing in the quotation marks and make sure it's a zero after R.
+:::{.callout-tip}
+If this isn't working, try manually typing in the quotation marks and make sure it's a zero after R.
+:::
 
 ## Set up the initial conditions and model variables
 
@@ -185,7 +191,7 @@ Initial_infected <- 20
 Initial_recovered <- 0
 Initial_susceptible <- Total_population - Initial_exposed - Initial_infected - Initial_recovered
 
-# State variables
+# Compartments
 state <- c(
     Susceptible = Initial_susceptible,
     Exposed = Initial_exposed,
@@ -193,6 +199,7 @@ state <- c(
     Recovered = Initial_recovered
 )
 ```
+Here "state" refers to the population state, and how many are in which compartment at the initial time.
 
 We also need to define the start and end time for the model simulation:
 
@@ -205,7 +212,7 @@ times <- seq(start_date, end_date, by = 1)
 
 ## Setting up the function to solve equations
 
-Just as we did for session 2, we can write *functions* to evaluate our system of equations, which we will need to use for the ODE solver. The SEIR model we're going to use here is more complicated than we've seen, but work through it slowly and make sure it all makes sense.
+We can write *functions* to evaluate our system of equations, which we will need to use for the ODE solver. The SEIR model we're going to use here is more complicated than we've seen, but work through it slowly and make sure it all makes sense.
 
 ```{r seir-model}
 # Model function
@@ -215,13 +222,13 @@ COVID.base <- function(t, state, parameters) {
         Total_population <- Susceptible + Exposed + Infectious + Recovered
 
         # Calculate the average force of infection imposed on each susceptible individual
-        force_of_infection <- R0 * Infectious / (Total_population * infectious_period)
+        force_of_infection <- R0 * Infectious / (Total_population * infectious_period) # i.e. the infection rate
 
         # Calculate the net (instantaneous) change in each state variable
-        Susceptible_change <- -force_of_infection * Susceptible
-        Exposed_change <- force_of_infection * Susceptible - Exposed / latent_period
-        Infectious_change <- Exposed / latent_period - Infectious / infectious_period
-        Recovered_change <- Infectious / infectious_period
+        Susceptible_change <- -force_of_infection * Susceptible # dS/dt
+        Exposed_change <- force_of_infection * Susceptible - Exposed / latent_period  # dE/dt
+        Infectious_change <- Exposed / latent_period - Infectious / infectious_period  # dI/dt
+        Recovered_change <- Infectious / infectious_period # dR/dt
 
         # Return net changes as list
         return(list(
@@ -254,7 +261,7 @@ What is the rate of movement out of state `I`?
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
 
-What is the formula for $\lambda$, known as the *force of infection*?
+What is the formula for $\lambda$, the *infection rate* also known as the *force of infection*?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
@@ -277,6 +284,12 @@ out <- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, p
 par(mar = c(1, 1, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
 plot(out)
 ```
+<!-- todo: plot above needs axis labels -->
+Define incidence and prevalence, and discuss the differences between them. Which might policy makers prefer and why?
+
+```{=html}
+<textarea name="Text1" cols="127" rows="3"></textarea>
+```
 
 Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the field.
 
@@ -284,17 +297,12 @@ Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the f
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
 
-Define incidence and prevalence, and discuss the differences between them.
-
-```{=html}
-<textarea name="Text1" cols="127" rows="3"></textarea>
-```
 
 # Data processing and plotting
 
 ## Post-process the model output to predict standard epidemiological metrics
 
-This is great, but as we've seen before, the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
+This is great, but the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
 <!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. NB any updates should be made to module 5 too. -->
 
 ```{r clean-ode-function}
@@ -312,13 +320,13 @@ tidy_base_model <- function(ode_output, times, parameters) {
 tidied_output <- tidy_base_model(out, times, parameters)
 ```
 
-What is the formula for incidence?
+What is the formula for incidence? Why is that?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
 
-Write down an equation for prevalence and the corresponding R code.
+Write down an equation for prevalence and the corresponding R code. Is this the correct formula? Why or why not?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
@@ -332,7 +340,7 @@ Why do we choose to plot incidence?
 
 ## Plot the total population size, and predicted prevalence and incidence
 
-It's time to plot our solution, and make sure we haven't made any silly mistakes.
+It's time to plot our solution, and make sure we haven't made any silly mistakes (a reality check!).
 
 ```{r compare-histogram}
 ggplot() +
@@ -356,10 +364,14 @@ What is the sum of all the differential equations for the COVID-19 model?
 ```
 
 Why do we choose to plot the population size over time?
+<!-- todo: ensure this is consistent with how it's taught in the theory of ID modelling session. A could place also to discuss closed vs open populations, and how this flat line isn't always expected. -->
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+:::{.callout-note}
+When wouldn't we expect a flat line here?
+:::
 
 ## Compare the model with the data
 
