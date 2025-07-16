@@ -32,6 +32,7 @@ This session is divided into four parts:
 **Part 4**: Confidence intervals derived from likelihood methods
 
 # Model fitting
+
 The first exercise in this session is to fit a model "by eye". We hope that by the end of the exercise you will be thinking to yourself "there must be an easier and more robust way to do this". This of course motivates the rest of the session. 
 <!-- todo: Show the process instead of sending everyone to the app -->
 First open Shiny application Least_Squares_App.Rmd. (App can be accessed online [here](https://moru.shinyapps.io/Least_Squares_App/)). In this application the dots represent the data and the line represents predicted values based on a mathematical model (in this case a simple cubic equation). This application allows you to explore how changing model parameters changes SSQ (sum of squares of residuals). It is intended to give you an intuitive feel for how a model fitting approach that aims to minimize the SSQs works.

@@ -1,15 +1,13 @@
 ---
 title: "Modelling interventions in R"
-author: 
-  - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University,
-  - <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University and
-  - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  - Presented by <a href="https://research.monash.edu/en/persons/michael-lydeamore">Michael Lydeamore</a>, Department of Econometrics and Business Statistics, Monash University
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
+format:
+    training-html:
+        presenter: Michael Lydeamore, Monash University
+        contributors:
+            - Lisa White, Nuffield Department of Medicine, Oxford University
+            - Michael Meehan, Australian Institute of Tropical Health & Medicine, James Cook University
+            - Wirichada Pan-Ngum, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
 execute:
   echo: true
   warning: false
@@ -41,15 +39,20 @@ textarea {
 
 # Summary
 
-One of the most useful aspects of a mathematical model for infectious disease transmission is its capability to explore future intervention scenarios: what *could* be.
+One of the most useful aspects of a mathematical model for infectious
+disease transmission is its capability to explore future intervention
+scenarios: what *could* be.
 
-We will explore some R code for the 1st wave of COVID-19 in Thailand in 2020. This will involve the following parts:
+We will explore some R code for the 1st wave of COVID-19 in Thailand in
+2020. This will involve the following parts:
 
-1. A whiteboard discussion of how to include interventions in a model
-2. Coding a model to capture the 1st wave interventions (emergency stage and curfew stage)
-3. Estimating the effectiveness of the 1st wave interventions
-4. Exploring counterfactuals
-5. Practice building models to explicitly incorporate interventions of your choice in breakout groups
+1.  A whiteboard discussion of how to include interventions in a model
+2.  Coding a model to capture the 1st wave interventions (emergency
+    stage and curfew stage)
+3.  Estimating the effectiveness of the 1st wave interventions
+4.  Exploring counterfactuals
+5.  Practice building models to explicitly incorporate interventions of
+    your choice in breakout groups
 
 # Modelling Interventions
 
@@ -65,19 +68,21 @@ As always, we should set up a new script with a good header:
 ## MODELLING INTERVENTIONS IN R ##
 ##################################
 ```
-Save this file somewhere in your `student_materials` folder with a meaningful name, like `session_seir_ode_covid`.
 
-We also have to set the working directory. We can do this by pressing "To Source Location", or using the `setwd()` command like we've done previously.
+Save this file somewhere in your RStudio Project folder with a
+meaningful name, like `session_seir_ode_covid.R`.
 
 Now, let's load some packages.
 
 ```{r loadpackages}
-library(dplyr)
-library(deSolve)
-library(ggplot2)
+if (!require(pacman)) install.packages("pacman")
+library(pacman)
+
+p_load(dplyr, deSolve, ggplot2)
 ```
 
-We'll be making use of the first wave Thailand data. Here is a reminder of what the first wave in Thailand looked like:
+We'll be making use of the first wave Thailand data. Here is a reminder
+of what the first wave in Thailand looked like:
 
 ![](Thailand_First_Wave.png)
 
@@ -96,7 +101,9 @@ ggplot(first_wave, aes(x = Date, y = Cases)) +
 ```
 
 # Coding Interventions
-We're going to model two interventions: the emergency declaration, which was made on March 26, and the start of curfew, which was on April 3rd.
+
+We're going to model two interventions: the emergency declaration, which
+was made on March 26, and the start of curfew, which was on April 3rd.
 
 ```{r key-dates}
 fitting_start_date <- as.Date("2020-03-07") # start of fitting window
@@ -132,7 +139,10 @@ ggplot(outbreak, aes(x = Date, y = Cases)) +
     )
 ```
 
-One of the most important things when you're doing an optimisation is a decent initial guess at your parameter values. Luckily, in a previous session, we got a good estimate of R0, and we know a few things about how effective the various interventions might be.
+One of the most important things when you're doing an optimisation is a
+decent initial guess at your parameter values. Luckily, in a previous
+session, we got a good estimate of R0, and we know a few things about
+how effective the various interventions might be.
 
 ```{r initial-guesses}
 parameters <- c(
@@ -144,7 +154,8 @@ parameters <- c(
 )
 ```
 
-Since we're using the same model from Sessions 4 and 5, we also need the same initial conditions, state variables and time window.
+Since we're using the same model from Sessions 4 and 5, we also need the
+same initial conditions, state variables and time window.
 
 ```{r initial-conditions}
 # Initial conditions
@@ -167,7 +178,8 @@ state <- c(
 times <- seq(fitting_start_date, fitting_end_date, by = 1)
 ```
 
-We're going to use a slightly different implementation of the SEIR model from the previous session. See if you can spot the differences.
+We're going to use a slightly different implementation of the SEIR model
+from the previous session. See if you can spot the differences.
 
 ```{r ode-model}
 COVID.intervention <- function(t, state, parameters) {
@@ -212,10 +224,15 @@ COVID.intervention <- function(t, state, parameters) {
 }
 ```
 
-What is different for this implementation compared to the implementation in session 4? Why?
-<textarea name='Text1' cols='127' rows='4'></textarea>
+What is different for this implementation compared to the implementation
+in session 4? Why?
 
-Now, we wrap this function in a call to `ode` to solve our model, and give us the outputs we are interested in.
+```{=html}
+<textarea name='Text1' cols='127' rows='4'></textarea>
+```
+
+Now, we wrap this function in a call to `ode` to solve our model, and
+give us the outputs we are interested in.
 
 ```{r wrapper-function}
 # Wrapper function to solve model and tidy up output
@@ -234,7 +251,7 @@ solve.intervention.model <- function(y_ = state,
     # Calculate the prevalence, incidence and cumulative incidence (for comparison with data)
     out <- as.data.frame(out) %>%
         mutate(
-            Incidence = Exposed / parms_["latent_period"],
+            Incidence = Exposed * (1 / parms_["latent_period"]),
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
             Prevalence = (Exposed + Infectious)/Population,
@@ -290,43 +307,32 @@ ggplot(outbreak) +
     )
 ```
 
-Not bad! What do you observe? Why do you think this might be, and how can the fit be improved?
+Not bad! What do you observe? Why do you think this might be, and how
+can the fit be improved?
+
+```{=html}
 <textarea name='Text1' cols='127' rows='4'></textarea>
+```
 
 # Model calibration
-So we have written code that can solve our model for a given set of parameters. Now, just like we did last time, we can use maximum likelihood estimation to determine the optimal parameters for our model.
 
-::: {.callout-note}
-## Parameter scaling
-Optimisation algorithms rely on parameters being able to take on **any** value (i.e. $(-\infty, \infty)$)
-:::
-
-Our effectiveness parameters are defined as "reductions in transmission", which means they are bounded between 0 and 1. To put them in the form the optimiser is expecting, we'll use the _logit_ transform.
-
-```{r logit-transforms}
-logit <- function(x) {
-    return(log(x / (1 - x)))
-}
-
-# And its inverse
-inverse.logit <- function(x) {
-    return(exp(x) / (1 + exp(x)))
-}
-```
+So we have written code that can solve our model for a given set of
+parameters. Now, just like we did last time, we can use maximum
+likelihood estimation to determine the optimal parameters for our model.
 
 And now we're ready to write our negative log likelihood function.
 
 ```{r negative-log-likelihood}
-negative.log.likelihood <- function(transformed_parameters, # assumes logit form of parameters -- per Wednesday arvo session
+negative.log.likelihood <- function(transformed_parameters, 
                                     data = outbreak$Cases[-1],
                                     state_ = state,
                                     times_ = times,
                                     func. = COVID.intervention, # note this is our ode solver
                                     parms_base = parameters) {
 
-    # Back-transform model parameters (inverse logit)
+    # Add in our fitting parameters
     parms_base[c("emergency_efficacy", "curfew_efficacy")] <-
-        inverse.logit(transformed_parameters[c("emergency_efficacy", "curfew_efficacy")])
+        transformed_parameters[c("emergency_efficacy", "curfew_efficacy")]
 
     # Solve model with updated parameters
     out <- solve.intervention.model(
@@ -344,13 +350,12 @@ negative.log.likelihood <- function(transformed_parameters, # assumes logit form
 }
 ```
 
-The complicated part of this is transforming back and forth between the logit-transformed parameters, and the "actual" parameters that we care about. We have to make sure to transform before we start.
 
 ```{r function-check}
-init_parameters <- c(logit(parameters[c(
+init_parameters <- c(parameters[c(
     "emergency_efficacy",
     "curfew_efficacy"
-)]))
+)])
 
 # Calculate initial negative log-likelihood
 negative.log.likelihood(init_parameters)
@@ -362,13 +367,22 @@ negative_log_likelihood_initial <- -sum(dpois(
 negative_log_likelihood_initial
 ```
 
-Now we're in a place to use `optim` again, just like we've done previously.
+::: callout-note
+## Parameter bounds
+
+Optimisation algorithms by default will try any value for a parameter (i.e. $(-\infty, \infty)$). We can specify bounds on the parameters we are interested in using the `lower` and `upper` arguments to `optim()`.
+:::
+
+Now we're in a place to use `optim` again, just like we've done
+previously.
 
 ```{r using-optim}
 optim_NM <- optim(
     par = init_parameters,
     fn = negative.log.likelihood,
-    method = "Nelder-Mead",
+    method = "L-BFGS-B",
+    lower = 0,
+    upper = 1,
     hessian = TRUE
 )
 
@@ -376,25 +390,21 @@ optim_NM <- optim(
 optim_NM$convergence # 0 - converged; nonzero - failed
 
 # Back-transform parameters
-c(inverse.logit(optim_NM$par[c(
+optim_NM$par[c(
     "emergency_efficacy",
     "curfew_efficacy"
-)]))
+)]
 
 # Inspect the optimal negative log-likelihood
 optim_NM$value
 ```
-This looks pretty good, and so we can be reasonably happy we've reached an optimal solution. Now that we have a solution, let's plot it.
+
+This looks pretty good, and so we can be reasonably happy we've reached
+an optimal solution. Now that we have a solution, let's plot it.
 
 ```{r optimal-plot}
 optimal_parameters <- parameters
-optimal_parameters[c(
-    "emergency_efficacy",
-    "curfew_efficacy"
-)] <- inverse.logit(optim_NM$par[c(
-    "emergency_efficacy",
-    "curfew_efficacy"
-)])
+optimal_parameters[c("emergency_efficacy", "curfew_efficacy")] <- optim_NM$par[c("emergency_efficacy","curfew_efficacy")]
 
 
 
@@ -455,12 +465,14 @@ ggplot(outbreak) +
     theme_bw()
 ```
 
-Great! The fit looks reasonable, at least visually. To report on parameter uncertainty, we use the same tricks as last time, with the square root of the diagonals of the hessian matrix.
+Great! The fit looks reasonable, at least visually. To report on
+parameter uncertainty, we use the same tricks as last time, with the
+square root of the diagonals of the hessian matrix.
 
 ```{r report-uncertainty}
 covar_matrix <- solve(optim_NM$hessian)
 std_errors <- sqrt(diag(covar_matrix))
-estimates_transformed <- data.frame(
+estimates <- data.frame(
     estimate = optim_NM$par,
     std_error = std_errors
 ) %>%
@@ -468,41 +480,64 @@ estimates_transformed <- data.frame(
         lower95CI = estimate - 1.96 * std_error,
         upper95CI = estimate + 1.96 * std_error
     )
-estimates_transformed
 
-# Back-transform estimates and confidence intervals
-estimates <- inverse.logit(estimates_transformed[, -2])
 estimates
 ```
 
 What do you see in these plots and estimates?
-<textarea name='Text1' cols='127' rows='2'></textarea>
 
-Which type of uncertainty does this capture? What other types of uncertainty should we consider?
+```{=html}
 <textarea name='Text1' cols='127' rows='2'></textarea>
+```
+
+Which type of uncertainty does this capture? What other types of
+uncertainty should we consider?
+
+```{=html}
+<textarea name='Text1' cols='127' rows='2'></textarea>
+```
 
 # Exploring counterfactuals
-Now we have a model for the COVID-19 transmission in Thailand, and we have estimates of how effective the two stages of interventions were (emergency and curfew), we can now explore what *could* have happened, or the **counterfactuals**.
+
+Now we have a model for the COVID-19 transmission in Thailand, and we
+have estimates of how effective the two stages of interventions were
+(emergency and curfew), we can now explore what *could* have happened,
+or the **counterfactuals**.
 
 What could have happened if no intervention was applied?
+
+```{=html}
 <textarea name='Text1' cols='127' rows='2'></textarea>
+```
 
 What could have happened if we started the emergency stage earlier?
+
+```{=html}
 <textarea name='Text1' cols='127' rows='2'></textarea>
+```
 
 What other interesting counterfactual scenarios could we explore?
-<textarea name='Text1' cols='127' rows='2'></textarea>
 
-Which of the scenarios you suggested previously might be of interest to the general public and why? Would the scenarios of interest to decision makers be different? If so, how and why?
+```{=html}
 <textarea name='Text1' cols='127' rows='2'></textarea>
+```
+
+Which of the scenarios you suggested previously might be of interest to
+the general public and why? Would the scenarios of interest to decision
+makers be different? If so, how and why?
+
+```{=html}
+<textarea name='Text1' cols='127' rows='2'></textarea>
+```
+
 # Counterfactuals example solution code
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ## Spoiler alert
 
-The solutions tab contains the complete code for the counterfactuals. **Only click on it if
-you have tried to complete the exercises yourself and need some help**
+The solutions tab contains the complete code for the counterfactuals.
+**Only click on it if you have tried to complete the exercises yourself
+and need some help**
 
 ## Example code for exploring counterfactuals
 

@@ -1,4 +1,4 @@
-source("renv/activate.R")
+# source("renv/activate.R")
 Sys.setenv(TERM_PROGRAM = "vscode")
 #source(file.path(
 #    Sys.getenv(
