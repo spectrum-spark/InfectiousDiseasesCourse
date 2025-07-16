@@ -495,7 +495,7 @@ What other interesting counterfactual scenarios could we explore?
 
 Which of the scenarios you suggested previously might be of interest to the general public and why? Would the scenarios of interest to decision makers be different? If so, how and why?
 <textarea name='Text1' cols='127' rows='2'></textarea>
-# Counterfactuals example solution
+# Counterfactuals example solution code
 
 ::: {.panel-tabset}
 

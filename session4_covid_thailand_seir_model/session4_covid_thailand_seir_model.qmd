@@ -32,8 +32,20 @@ textarea {
     font-style: italic;
 }
 ```
+# Overview of days 3 and 4 of this workshop
 
-# Summary
+<!-- placeholder text, please edit and refine the content -->
+Over the next 3 sessions we are going to explore an example modelling process, where an outbreak has occurred with set interventions. The aim of our modelling is to explore the impact of the interventions that were conducted, and part of that means exploring the counterfactuals (what might have happened if there were no interventions). 
+
+The example modelling process we will undertake to achieve this aim is:
+
+-   Design a simple transmission model that captures the disease progression within the population.
+-   Fit the model to data.
+-   Model the interventions and update the model fit. Explore the impact of the interventions and the counterfactuals.
+
+In the last session, we will explore how to build a transmission model for vector borne diseases.
+
+# Session Summary
 
 A practical session where the students use a worked example to learn how a compartmental SEIRS model is written in the R programming language. Meaningful model output will be derived and plotted. We will use a COVID-19 outbreak in Thailand as an example.
 
