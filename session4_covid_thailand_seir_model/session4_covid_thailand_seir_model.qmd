@@ -1,5 +1,5 @@
 ---
-title: "Creating an SEIRS model in R"
+title: "Modelling an outbreak - COVID-19 in Thailand" # Fitting models in R
 author:
     - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, and <a href="https://www.ndm.ox.ac.uk/team/ben-cooper">Ben Cooper</a>, Nuffield Department of Medicine, Oxford University and
     - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
@@ -37,6 +37,7 @@ A practical session where the students use a worked example to learn how a compa
 
 We will write some R code for our COVID-19 model. The code for a compartmental model will require several sections:
 
+<!-- fixme: the below manual table of contents may be out of date -->
 **Part 1** covers:
 
 -   Code summary
@@ -81,6 +82,7 @@ It is good practice to write a short description of your code to summarise its p
 
 Save this file in your `student_materials` folder, and give it a meaningful name, like `session_seir_ode_covid`.
 
+<!-- fixme: we may not want to do this as it caused issues in the past, if so remove from ToC-->
 ## Set working directory
 You must let R know the location of any files you plan to import, so remember to set your working directory. Copy and paste the code chunk below into your editor to continue writing your code:
 ```{r set-wd}
