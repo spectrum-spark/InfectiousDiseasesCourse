@@ -1,5 +1,5 @@
 ---
-title: "Fitting models in R"
+title: "Creating an SEIRS model in R"
 author:
     - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, and <a href="https://www.ndm.ox.ac.uk/team/ben-cooper">Ben Cooper</a>, Nuffield Department of Medicine, Oxford University and
     - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
@@ -66,38 +66,71 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
-```         
+```{r write-header}      
 # SPARK Modelling Short course
 # 2023 Infectious Diseases Modelling
 
 #########################################
 ## Modelling Thailand's COVID outbreak ##
 #########################################
+
+# A model for COVID-19 
+# Some R code to numerically solve a set of ordinary differential equations 
+# and then plot the results
 ```
 
 Save this file in your `student_materials` folder, and give it a meaningful name, like `session_seir_ode_covid`.
 
-## Library loading and importing data
+## Set working directory
+You must let R know the location of any files you plan to import, so remember to set your working directory. Copy and paste the code chunk below into your editor to continue writing your code:
+```{r set-wd}
+# Windows
+# setwd('your_path_goes_here')
+# setwd('your_path_goes_here')
+# Mac OSX
+# setwd("./workshop")
+```
+You can also set the working directory by tabbing: Session/Set Working Directory/To Source Location
 
-We'll need three libraries for this session:
+## Keep track of dependencies through library loading and importing data
+
+List all the packages you plan to use and the files you plan to import in one place at the beginning. Copy and paste the code chunk below into your editor to continue writing your code:
 
 ```{r load-libraries}
 #| message: false
 #| warning: false
 
+# Library imports
 library(dplyr)
 library(deSolve)
 library(ggplot2)
 ```
 
-and some data
+Now we load the data, and take a quick look:
 
 ```{r load-data}
+# Data imports
 first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
 # Convert dates
 first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
 
 summary(first_wave)
+
+# plot Incidence
+ggplot2::ggplot(first_wave) +
+  geom_col(aes(x=Date, y=Cases), width=1, fill="dodgerblue2", colour="blue") +
+  ylab("Daily cases") +
+  xlab("") +
+  ggtitle("Thailand's first wave, 2020") + 
+  theme(panel.background = element_rect(fill = "white", colour = "white"),
+        panel.grid.major = element_line(colour = "grey90"),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_line(size = 0.4, colour = "grey10"),
+        text = element_text(size=12,  family="serif"),
+        legend.key = element_rect(fill = "white", colour = "white"),
+        legend.position = "top",
+        strip.background =element_rect(fill="royalblue"),
+        strip.text = element_text(size = 10, colour = 'white'))
 ```
 
 # Writing model code in R
@@ -118,23 +151,26 @@ The parameters for the model are frequently estimated either from literature or 
 
 Complete the following table using information about the natural history of COVID-19 infection:
 
-|                 Parameter |                 Flow transformation                 |                     Value/Range                     |                        Units                        |
-|--------------------:|:---------------:|:---------------:|:---------------:|
+| Parameter | Flow transformation | Value/Range | Units |
+|-------------------:|:---------------:|:---------------:|:---------------:|
 | Basic reproduction number | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
-|         Latent period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
-|     Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
-|      Duration of immunity | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+| Latent period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+| Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
+| Duration of immunity | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 
 Type `parameters` in your console. What do you see?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-Type \`parameters\["R0"\] into your console. What does this value mean?
+
+Type `parameters["R0"]` into your console. What does this value mean?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+Hint: if this isn't working, try manually typing in the quotation marks and make sure it's a zero after R.
+
 ## Set up the initial conditions and model variables
 
 Copy and paste the chunk below into your script to continue model development:
@@ -203,26 +239,31 @@ What is the name of our function and what are the inputs and outputs?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 What is the rate of movement out of state `E`?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 What is the rate of movement out of state `I`?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 What is the formula for $\lambda$, known as the *force of infection*?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 Explain the different components of the force of infection.
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="5"></textarea>
 ```
+
 ## Run and plot the model
 
 Copy the following chunk into your script to solve the ODE
@@ -240,16 +281,19 @@ Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the f
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 Define incidence and prevalence, and discuss the differences between them.
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 # Data processing and plotting
 
 ## Post-process the model output to predict standard epidemiological metrics
 
 This is great, but as we've seen before, the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
+<!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. NB any updates should be made to module 5 too. -->
 
 ```{r clean-ode-function}
 tidy_base_model <- function(ode_output, times, parameters) {
@@ -271,16 +315,19 @@ What is the formula for incidence?
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 Write down an equation for prevalence and the corresponding R code.
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 Why do we choose to plot incidence?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 ## Plot the total population size, and predicted prevalence and incidence
 
 It's time to plot our solution, and make sure we haven't made any silly mistakes.
@@ -305,11 +352,13 @@ What is the sum of all the differential equations for the COVID-19 model?
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 Why do we choose to plot the population size over time?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
+
 ## Compare the model with the data
 
 ```{r compare-data}
@@ -317,7 +366,7 @@ Why do we choose to plot the population size over time?
 # Incidence
 ggplot(first_wave) +
   geom_col(aes(x=Date, y=Cases), width=1, fill=NA, colour="black") +
-  geom_point(data=tidied_output, aes(x=Date, y=Incidence), size=2, colour="firebrick") +
+  geom_line(data=tidied_output, aes(x=Date, y=Incidence), linewidth=1, colour="firebrick") +
   ylab("Daily cases") +
   xlab("") +
   ggtitle("Model-predicted incidence") +
@@ -325,30 +374,38 @@ ggplot(first_wave) +
 
 
 # Cumulative incidence
-ggplot(first_wave) +
-  geom_line(aes(x=Date, y=Cumulative_cases), linewidth=2, colour="skyblue") +
-  geom_point(data=tidied_output, aes(x=Date, y=Cumulative_incidence), size=2, colour="firebrick") +
+# first calculate data cumulative cases from our date of interest
+cum_cases_reduced_dates = cumsum(first_wave$Cases[which(first_wave$Date>=as.Date(start_date,format = "%Y-%m-%d"))])
+tidied_output$Data_cum_cases = cum_cases_reduced_dates[1:20]
+
+ggplot(tidied_output) +
+  geom_point(aes(x=Date, y=Data_cum_cases), size=2, colour="skyblue") +
+  geom_line(data=tidied_output, aes(x=Date, y=Cumulative_incidence), linewidth=1, colour="firebrick") +
   ylab("Cumulative cases") +
   xlab("") +
   ggtitle("Model-predicted cumulative incidence") +
   theme_bw()		
 ```
 
-Vary the value of $R_0$ and re-run the model. What value of $R_0$ do you think is most realistic?
+Vary the value of $\mathcal{R}_0$ and re-run the model. What value of $\mathcal{R}_0$ do you think is most realistic?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
-Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for $R_0$?
+
+Perhaps the number of people who seeded the outbreak was smaller or larger. How can you explore that using the code and would that change your estimate for $\mathcal{R}_0$?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 What is the difference between the first and second graphs, and why should we plot these?
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+For further discussion on model fitting see, for example, [this paper by King et al.]( https://doi.org/10.1098%2Frspb.2015.0347)
+
 Try changing the end times and re-running the model:
 
 ```{r new-end-times}
@@ -365,4 +422,5 @@ Why would we do this?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
 <input type="button" value="Print this page" onclick="window.print()">
