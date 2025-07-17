@@ -120,6 +120,26 @@
     ]
   },
   {
+    "objectID": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#open-a-new-script-file-for-this-session",
+    "href": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#open-a-new-script-file-for-this-session",
+    "title": "Differential Equations in R",
+    "section": "Open a new script file for this session",
+    "text": "Open a new script file for this session\nWe have put a file in the ./student_materials folder and given it a meaningful name, session2_differential_equations_practical.",
+    "crumbs": [
+      "Differential Equations in R"
+    ]
+  },
+  {
+    "objectID": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#code-summary",
+    "href": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#code-summary",
+    "title": "Differential Equations in R",
+    "section": "Code summary",
+    "text": "Code summary\nIt is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open RStudio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:\n\n###################################################\n## DIFFERENTIAL EQUATIONS IN R PRACTICAL SESSION##\n###################################################\n\n# A model for COVID-19\n# Some R code to numerically solve a set of ordinary differential equations\n# and then plot the results\n\n1.1 What does the # character mean in the R language?\n\n###Set working directory\nYou must let R know the location of any files you plan to import, so remember to set your working directory. The most reproducible way to do this is to use an RStudio Project, combined with the here package. Projects do a few things:\n\nStore project specific settings\nProject-specific .Rhistory, .Rprofile and a handful of other files\nAdd a handy little piece of text on your RStudio icon\nStore it’s own history\nSet your working directory to the project-specific top-level folder.\n\nThey come with a file, ending in .Rproj, which you can open directly to open the project in RStudio.\nNote that RStudio Project are specific to RStudio. If you change editor they won’t work.\nTo set up an RStudio project, go to File &gt; New Project. Name it something useful. Now, our working directory is set.\nIf you don’t want to use an RStudio Project (you should), then you can manually set the working directory by going to Session &gt; Set Working Directory &gt; To Source Location\nAlternatively, copy and paste the code chunk below into your editor, and edit according to your computer to continue writing your code:\n\n# Windows\n# setwd('your_path_goes_here')\nsetwd(\"your_path_goes_here\")\n# we recommend that you put it in '.\\student_materials'\n# Mac OSX\n# setwd(\"./workshop\")",
+    "crumbs": [
+      "Differential Equations in R"
+    ]
+  },
+  {
     "objectID": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#differential-equations",
     "href": "session2_differential_equations_in_r/session2_differential_equations_in_r.html#differential-equations",
     "title": "Differential Equations in R",
@@ -224,14 +244,14 @@
     "href": "index.html",
     "title": "SPARKLE Short Course",
     "section": "",
-    "text": "Mathematical Modelling of Infectious Diseases\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Mathematical Modelling\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDifferential Equations in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDesigning a model to suit the pathogen\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModelling an outbreak - COVID-19 in Thailand\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFitting Models in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding vector-borne disease models\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVector-borne disease models in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModelling interventions in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Mathematical Modelling of Infectious Diseases\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Mathematical Modelling\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nThe basic concepts of mathematical modelling of infectious diseases.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDifferential Equations in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nSolving ordinary differential equations in R\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDesigning a model to suit the pathogen\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nPractice in building a model\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModelling an outbreak - COVID-19 in Thailand\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nWrite a disease model and compare it to data\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFitting Models in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nTake your model and formally fit it on data\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding vector-borne disease models\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nIntroduction to modelling vector-borne disease models\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVector-borne disease models in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nExtend your vector-born disease models\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModelling interventions in R\n\n\nSPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\n\n\nTake the model of COVID and introduce interventions\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "session1_intro_to_mathematical_modelling/session1_intro_to_mathematical_modelling.html",
     "href": "session1_intro_to_mathematical_modelling/session1_intro_to_mathematical_modelling.html",
     "title": "Introduction to Mathematical Modelling",
     "section": "",
-    "text": "SPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\nPresenter: Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University\nThanks to:\nAdapted and presented by Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University July 2022\nAdapted and presented by Roslyn Hickson, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023",
+    "text": "SPARKLE short course ‘Mathematical Modelling of Infectious Diseases’\nPresenter: Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University",
     "crumbs": [
       "Introduction to Mathematical Modelling"
     ]

@@ -1,6 +1,7 @@
 ---
 title: "Building vector-borne disease models"
 subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
+description: "Introduction to modelling vector-borne disease models"
 format:
     training-html:
         presenter: Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
