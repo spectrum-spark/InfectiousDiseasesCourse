@@ -30,7 +30,7 @@
     }
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 1080px) and (min-height: 600px) {
     .footer {
         display: inherit;
     }
