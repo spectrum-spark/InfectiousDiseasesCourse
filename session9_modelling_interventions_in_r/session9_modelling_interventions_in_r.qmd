@@ -527,7 +527,6 @@ and need some help**
 
 Your code to explore the counterfactuals might look like this:
 
-<!-- todo: Draw original fit as well on the top -->
 ```{r counter_factual_eg_solutions, echo=TRUE}
 # create a function to do the same steps over for us
 scenario.exploration = function(emergency_eff, curfew_eff, emergency_start, curfew_start, plot_title){
@@ -560,20 +559,27 @@ ggplot(outbreak) +
         colour = "darkgray"
     ) +
     geom_ribbon(
-        data = observational_intervals[-1, ],
-        aes(x = Date, ymin = lower50, ymax = upper50),
-        fill = "darkorchid4", colour = "darkorchid4", alpha = 0.8
+        data = optimal_solution[-1, ],
+        aes(x = Date, ymin = lower50, ymax = upper50, fill = "solution"),
+        colour = "firebrick2", alpha = 0.8
+    ) +
+    geom_ribbon(
+        data = optimal_solution[-1, ],
+        aes(x = Date, ymin = lower95, ymax = upper95, fill = "solution"),
+        colour = "firebrick2", alpha = 0.5
     ) +
     geom_ribbon(
         data = observational_intervals[-1, ],
-        aes(x = Date, ymin = lower95, ymax = upper95),
-        fill = "darkorchid4", colour = "darkorchid4", alpha = 0.5
+        aes(x = Date, ymin = lower50, ymax = upper50, fill = "counterfactual"),
+        colour = "darkorchid4", alpha = 0.8
     ) +
-    #geom_point(data=optim_solution[-1,], aes(x=Date, y=Incidence), size=2, colour="firebrick2") +
+    geom_ribbon(
+        data = observational_intervals[-1, ],
+        aes(x = Date, ymin = lower95, ymax = upper95, fill = "counterfactual"),
+        colour = "darkorchid4", alpha = 0.5
+    ) +
     geom_point(data=new_solution[-1,], aes(x=Date, y=Incidence), size=2, colour="darkorchid4") +
-    ylab("Daily cases") +
-    xlab("") +
-    ggtitle(plot_title) +
+    labs(x = "", y = "Daily cases", title = plot_title, fill = "") +
     geom_vline(
         aes(xintercept = emergency_start),
         linetype = "dashed", colour = "firebrick"
@@ -598,7 +604,9 @@ ggplot(outbreak) +
           legend.key = element_rect(fill = "white", colour = "white"),
           legend.position = "top",
           strip.background =element_rect(fill="royalblue"),
-          strip.text = element_text(size = 10, colour = 'white'))
+          strip.text = element_text(size = 10, colour = 'white')) +
+    scale_fill_manual(
+        values = c("darkorchid4", "firebrick2"), labels = c("Counterfactual", "Optimal Solution"))
 }
 
 ### No intervention ###
