@@ -1,18 +1,14 @@
 ---
 title: "Introduction to Mathematical Modelling"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Yogyakarta, Indonesia, 2023***
-  |
-  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
+subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
+format:
+    training-html:
+        presenter: Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
+        contributors:
+            - Lisa White, Nuffield Department of Medicine, Oxford University
+            - Wirichada Pan-Ngum, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
+            - Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
 
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
-subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases',
 execute:
   echo: false
   warning: false
@@ -23,19 +19,7 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
 
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
-```
 
 Thanks to:
 

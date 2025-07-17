@@ -1,16 +1,14 @@
 ---
 title: "Designing a model to suit the pathogen"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
-  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
+format:
+  training-html:
+    presenter: Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
+    contributors:
+      - Lisa White, Nuffield Department of Medicine, Oxford University
+      - Wirichada Pan-Ngum, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
+      - Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
+      - Roslyn Hickson, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO)
 execute:
   echo: false
   warning: false
@@ -21,19 +19,7 @@ knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
 
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
-```
 # Practice in building a model
 
 * Separate into groups of about 4 to 6 people

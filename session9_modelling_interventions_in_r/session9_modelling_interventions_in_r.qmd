@@ -12,29 +12,12 @@ execute:
   echo: true
   warning: false
 autocomplete: false
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r, echo=F}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 
 # Summary
