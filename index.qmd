@@ -1,0 +1,9 @@
+---
+title: "SPARKLE Short Course"
+subtitle: "Mathematical Modelling of Infectious Diseases"
+style: style_training.css
+listing:
+    contents: session*/*.qmd
+    sort: false
+---
+
