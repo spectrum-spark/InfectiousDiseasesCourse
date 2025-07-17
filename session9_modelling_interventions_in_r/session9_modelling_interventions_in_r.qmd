@@ -61,8 +61,8 @@ As always, we should set up a new script with a good header:
 ```{r}
 #| eval: false
 
-# SPARK Modelling Short course
-# 2023 Infectious Diseases Modelling
+# SPARKLE Modelling Short course
+# 2025 Infectious Diseases Modelling
 
 ##################################
 ## MODELLING INTERVENTIONS IN R ##
@@ -199,7 +199,7 @@ COVID.intervention <- function(t, state, parameters) {
         }
 
 
-        # Calculate the effective reproduction number in the presence of interventions
+        # Calculate the intervention reproduction number in the presence of interventions
         R_interventions <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
 
         # Calculate the average force of infection imposed on each susceptible individual
@@ -323,16 +323,18 @@ likelihood estimation to determine the optimal parameters for our model.
 And now we're ready to write our negative log likelihood function.
 
 ```{r negative-log-likelihood}
-negative.log.likelihood <- function(transformed_parameters, 
+negative.log.likelihood <- function(intervention_parameters, 
                                     data = outbreak$Cases[-1],
                                     state_ = state,
                                     times_ = times,
                                     func. = COVID.intervention, # note this is our ode solver
                                     parms_base = parameters) {
 
-    # Add in our fitting parameters
+# Maybe change name of parms_base / parameters to be more descriptive
+    # Add in our fitting parameters to make sure they are updated
+
     parms_base[c("emergency_efficacy", "curfew_efficacy")] <-
-        transformed_parameters[c("emergency_efficacy", "curfew_efficacy")]
+        intervention_parameters[c("emergency_efficacy", "curfew_efficacy")]
 
     # Solve model with updated parameters
     out <- solve.intervention.model(
@@ -350,7 +352,7 @@ negative.log.likelihood <- function(transformed_parameters,
 }
 ```
 
-
+Let's make sure our function works:
 ```{r function-check}
 init_parameters <- c(parameters[c(
     "emergency_efficacy",
@@ -359,12 +361,6 @@ init_parameters <- c(parameters[c(
 
 # Calculate initial negative log-likelihood
 negative.log.likelihood(init_parameters)
-negative_log_likelihood_initial <- -sum(dpois(
-    x = outbreak$Cases[-1],
-    lambda = out_init$Incidence[-1], # This is from the previous section!
-    log = TRUE
-))
-negative_log_likelihood_initial
 ```
 
 ::: callout-note
@@ -376,20 +372,21 @@ Optimisation algorithms by default will try any value for a parameter (i.e. $(-\
 Now we're in a place to use `optim` again, just like we've done
 previously.
 
+<!-- fixme: Change name of optim_NM -->
 ```{r using-optim}
 optim_NM <- optim(
     par = init_parameters,
     fn = negative.log.likelihood,
     method = "L-BFGS-B",
-    lower = 0,
-    upper = 1,
+    lower = c(0, 0),
+    upper = c(1, 1),
     hessian = TRUE
 )
 
 # Check for convergence
 optim_NM$convergence # 0 - converged; nonzero - failed
 
-# Back-transform parameters
+# Optimal parameters:
 optim_NM$par[c(
     "emergency_efficacy",
     "curfew_efficacy"
@@ -399,8 +396,9 @@ optim_NM$par[c(
 optim_NM$value
 ```
 
-This looks pretty good, and so we can be reasonably happy we've reached
-an optimal solution. Now that we have a solution, let's plot it.
+This is smaller than our initial value, because we are minimising the negative log likelihood. 
+
+It has decreased a lot, which is a good sign that we have found a better fit than our initial guess.
 
 ```{r optimal-plot}
 optimal_parameters <- parameters
@@ -466,8 +464,11 @@ ggplot(outbreak) +
 ```
 
 Great! The fit looks reasonable, at least visually. To report on
-parameter uncertainty, we use the same tricks as last time, with the
-square root of the diagonals of the hessian matrix.
+parameter uncertainty, we use the same method as last time, with the square root of the diagonals of the hessian matrix.
+
+<!-- todo: If parameter uncertainty is going to stay here, then it also has to be covered in session 5 or moved here -->
+
+<!-- fixme: Curfew & Lockdown vs Emergency & Curvew --
 
 ```{r report-uncertainty}
 covar_matrix <- solve(optim_NM$hessian)
@@ -530,6 +531,8 @@ makers be different? If so, how and why?
 <textarea name='Text1' cols='127' rows='2'></textarea>
 ```
 
+<!-- todo: Add discussion on when not to use this model, or how to extend this model for different situations -->
+
 # Counterfactuals example solution code
 
 ::: panel-tabset
@@ -543,7 +546,8 @@ and need some help**
 
 Your code to explore the counterfactuals might look like this:
 
-```{r counter_factual_eg_solutions, echo=TRUE, eval=FALSE}
+<!-- todo: Draw original fit as well on the top -->
+```{r counter_factual_eg_solutions, echo=TRUE}
 # create a function to do the same steps over for us
 scenario.exploration = function(lockdown_eff, curfew_eff, lockdown_start, curfew_start, plot_title){
   
