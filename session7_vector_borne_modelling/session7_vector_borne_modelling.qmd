@@ -104,7 +104,7 @@ library(kableExtra)
 kbl(df) %>%
 kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
 ```
-
+<!-- todo: perhaps add some more non-mosquito examples relevant to Indonesia here -->
 Source:
 <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases">
 https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases
@@ -114,8 +114,7 @@ https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases
 
 </p>
 
-**1.1 Do you know which of these vector-borne diseases is important to
-your country? Are there any others?**
+**1.1 Do you know which of these vector-borne diseases is relevant to your region? Are there any others?**
 
 ```{=html}
 <textarea cols="127" rows="3"></textarea>
@@ -136,6 +135,7 @@ with West Nile virus (bottom).
 ::: row
 <center><img src="onchocerciasis.tif" alt="Onchocerciasis transmission cycle" style="width:80%"/></center>
 :::
+<!-- todo: consider changing oncho to something more relevant. Could be malaria or dengue. Change WNV to JEV. Propogate the changes through to the questions below. -->
 
 <center>Source:
 <a href="https://www.cdc.gov/dpdx/onchocerciasis/index.html">
@@ -227,7 +227,7 @@ it if you have tried to complete the exercises yourself and need some
 help**
 
 ## **Part 1:** Solutions for Part 1
-
+<!-- todo: if you update the above in any way, remember to change this section too. -->
 ### What are vector-borne diseases?
 
 Unlike diseases that spread directly from person to person, vector-borne
@@ -348,7 +348,7 @@ Africa has the highest burden, there is substantial burden in the Asia
 Pacific region. As global temperatures increase, the global distribution
 of vectors is changing, which may allow the spread of vector-borne
 diseases into new areas.
-
+<!-- todo: update the above suggested answer to foreshadow discussions for tomorrow's session -->
 <p><img src="vector_borne_deaths.jpg" width="80%"/></p>
 
 Source: <a href="https://doi.org/10.1016/B978-0-12-384890-1.00015-7">
@@ -378,7 +378,7 @@ which vector-borne diseases spread and consider the other elements that
 are needed in vector-borne disease models.
 
 ### Simplified spread of a mosquito-borne disease
-
+<!-- todo: consider changing "vector" to "mosquito" throughout this section and the next for consistency -->
 While there are many different types of vectors, in this and the
 following part we will cover modelling of diseases that are spread by
 mosquitoes. Female mosquitoes bite humans to obtain protein from blood
@@ -447,7 +447,7 @@ to indicate that these are mosquito compartments.**
 
 The feature that makes vector-borne disease models different to models
 for diseases spread by direct contact is that the human and mosquito
-populations interact through bites. We start with the assumption that
+populations interact through bites. Note only adult female mosquitoes bite. We start with the assumption that
 each mosquito makes a fixed number of bites per unit time, and we define
 this as $b$. We further assume that those bites are uniformly spread
 across the human population, $N_H$. It follows that the rate at which a
@@ -459,6 +459,7 @@ $$r=\frac{b}{N_H}$$
 This is the number of bites a single human receives from a single
 mosquito per unit time, and is analogous to 'contact' in
 directly-transmitted disease models.
+<!-- fixme: this contact rate has not yet been explained, so needs to be here. I.e. that transmision rate = contact rate times probability of infection given that contact occurs -->
 
 **2.3 What happens to the rate $r$ as the human population increases?
 What do you think might be the implication for transmission?**
@@ -487,6 +488,8 @@ We refer to this as the probability of successful transmission.
 **2.4 Write the expression for the number of bites a single human
 receives from a single mosquito per unit time that are capable of
 transmitting infection from mosquito to human.**
+
+<!-- todo: in the solutions, explain in words before writing down the equation -->
 
 ```{=html}
 <textarea cols="127" rows="2"></textarea>
@@ -583,6 +586,7 @@ per unit time.**
 -   Many of the processes affecting the life cycle of mosquitoes are
     highly climate dependent and so vary seasonally. For the purposes of
     illustration, we will not include seasonality in our model.
+  <!-- todo: if remove oncho above, need to update this point too -->
 -   As we saw when we compared the transmission cycle for onchocerciasis
     with the transmission cycle of West Nile virus, for some
     vector-borne diseases vertebrate hosts other than humans are
@@ -591,6 +595,7 @@ per unit time.**
 -   While we have assumed a constant probability across the whole
     population that a bite will result in transmission, in reality this
     may not be the case due to population heterogeneity. 
+- If a disease is transmitted by multiple mosquito species, the lifespans and other important factors may be different, so may need to be explicitly modelled.
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
 
@@ -830,7 +835,7 @@ and the inflows and outflows from each compartment required based on the
 assumptions discussed in Part 2, draw your proposed model structure.
 
 **Instructions:**
-
+<!-- todo: get rid of the electronic upload of a diagram bits -->
 1.  You can draw a diagram electronically in a program such as
     PowerPoint, or you can draw your diagram by hand and take a photo
 
@@ -936,7 +941,7 @@ model.**
 
 ### Basic reproduction number
 
-The basic reproduction number, $R_0$, for a vector-borne disease is the
+The basic reproduction number, $\mathcal{R}_0$, for a vector-borne disease is the
 number of secondary infections of the same type (i.e. vector or human)
 generated by a single infectious vector or human in a totally
 susceptible population. Let's start with a single infectious mosquito.
@@ -1136,6 +1141,11 @@ infectiousness]{style="color: blue"}<br>
 
 [where $\mu$ is mosquito birth and death rate]{style="color: blue"}
 
+:::{.callout-note}
+This is a very simplified model of the process.
+:::
+<!-- todo: change "mosquito birth rate" throughout to better reflect that this is really the maturation rate into adult females. Or at least discuss. Add a model diagram from a real paper at the end to discuss the differences. -->
+
 <p><br></p>
 
 **3.3 Write the equations for the size of each population in your
@@ -1143,6 +1153,8 @@ model.**
 
 [$N_H = S_H + I_H + R_H$]{style="color: blue"}<br>
 [$N_M = S_M + I_M$]{style="color: blue"}
+
+<!-- this is a good place to discuss sense checking the equations by adding them to note no change in the human or mosquito population sizes -->
 
 <p><br></p>
 
@@ -1157,15 +1169,24 @@ We firstly start with the expected number of humans (in a totally
 susceptible population) infected by this mosquito over the duration of
 their infectious period.
 
+<!-- todo: for all these solutions, possibly first write it out in words so can see the direct translation to the equations. -->
+
 **3.4 Write down this expression using the information you have
 developed in Parts 2 and 3 (i.e. number of new infections and the
 duration of the infectious period). We will denote this as $\mathcal{R}_{HM}$.**
 
 [$I_M=1, \frac{S_H}{N_H}\approx 1$]{style="color: blue"}<br>
+[number of new human infections = $T_{HM} \times \frac{b}{N_H} \times I_M \times S_H$]{style="color: blue"}<br>
+[duration of the mosquito infectious period = $\frac{1}{\mu}$]{style="color: blue"}<br>
 [$\mathcal{R}_{HM} = T_{HM} \times \frac{b}{N_H} \times I_M \times S_H \times \frac{1}{\mu}$]{style="color: blue"}<br>
 [$\mathcal{R}_{HM} = T_{HM} \times b \times I_M \times \frac{S_H}{N_H} \times \frac{1}{\mu}$]{style="color: blue"}<br>
 [$\mathcal{R}_{HM} = T_{HM} \times b \times 1 \times 1 \times \frac{1}{\mu}$]{style="color: blue"}<br>
 [$\mathcal{R}_{HM} = b \times T_{HM} \times \frac{1}{\mu}$]{style="color: blue"}
+
+:::{.callout-tip}
+## Focus question
+What do you notice about the average infectious period of the mosquito? Why is it that?
+:::
 
 <p><br></p>
 
@@ -1178,6 +1199,8 @@ developed in Parts 2 and 3 (i.e. number of new infections and the
 duration of the infectious period). We will denote this as $\mathcal{R}_{MH}$.**
 
 [$I_H=1, S_M\approx N_M$]{style="color: blue"}<br>
+[number of new mosquito infections = $T_{MH} \times \frac{b}{N_H} \times I_H \times S_M$]{style="color: blue"}<br>
+[average human infectious period = $\frac{1}{\gamma}$]{style="color: blue"}<br>
 [$\mathcal{R}_{MH} = T_{MH} \times \frac{b}{N_H} \times I_H \times S_M \times \frac{1}{\gamma}$]{style="color: blue"}<br>
 [$\mathcal{R}_{MH} = T_{MH} \times \frac{b}{N_H} \times 1 \times N_M \times \frac{1}{\gamma}$]{style="color: blue"}<br>
 [$\mathcal{R}_{MH} = b \times T_{MH} \times \frac{N_M}{N_H} \times \frac{1}{\gamma}$]{style="color: blue"}
@@ -1222,6 +1245,8 @@ reduces? Why?**
 which they are able to bite humans.]{style="color: blue"}
 
 <p><br></p>
+
+<!-- todo: Add here some realistic examples of a malaria and a dengue model here, and discuss the differences in assumptions. Ensure you explain the questions those models were also designed to answer. -->
 
 <p><input type="button" value="Print this page" onClick="window.print()"></p>
 :::
