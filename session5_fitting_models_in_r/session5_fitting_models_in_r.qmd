@@ -68,7 +68,6 @@ In this exercise let us assume a known latent period and infectious period and u
 
 To begin, create a new R script, save the file as `fitting_models.R` into your working directory, and copy the code chunk below:
 
-<!-- fixme: Library loading checking / installing -->
 ```{r load-libraries}
 #| message: false
 #| warning: false
@@ -77,6 +76,9 @@ To begin, create a new R script, save the file as `fitting_models.R` into your w
 #########################
 ## FITTING MODELS IN R ##
 #########################
+if (!require(pacman)) install.packages("pacman")
+library(pacman)
+
 pacman::p_load(dplyr, deSolve, ggplot2)
 ```
 

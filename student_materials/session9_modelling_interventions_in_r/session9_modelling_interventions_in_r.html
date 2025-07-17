@@ -235,6 +235,7 @@ window.Quarto = {
   <li><a href="#modelling-interventions" id="toc-modelling-interventions" class="nav-link" data-scroll-target="#modelling-interventions">Modelling Interventions</a></li>
   <li><a href="#coding-interventions" id="toc-coding-interventions" class="nav-link" data-scroll-target="#coding-interventions">Coding Interventions</a></li>
   <li><a href="#model-calibration" id="toc-model-calibration" class="nav-link" data-scroll-target="#model-calibration">Model calibration</a></li>
+  <li><a href="#exploring-counterfactuals" id="toc-exploring-counterfactuals" class="nav-link" data-scroll-target="#exploring-counterfactuals">Exploring counterfactuals</a></li>
   <li><a href="#counterfactuals-example-solution-code" id="toc-counterfactuals-example-solution-code" class="nav-link" data-scroll-target="#counterfactuals-example-solution-code">Counterfactuals example solution code</a></li>
   </ul>
 </nav>
@@ -348,7 +349,7 @@ textarea {
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">linetype=</span><span class="st">'dashed'</span>, <span class="at">size=</span><span class="fl">1.3</span>) <span class="sc">+</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"lockdown"</span>, <span class="st">"Curfew"</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Emergency"</span>, <span class="st">"Curfew"</span>),</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(emergency_start_date, curfew_start_date),</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">175</span>),</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">90</span>,</span>
@@ -500,7 +501,7 @@ textarea {
 <span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>               <span class="at">linetype=</span><span class="st">'dashed'</span>, <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"lockdown"</span>, <span class="st">"Curfew"</span>),</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Emergency"</span>, <span class="st">"Curfew"</span>),</span>
 <span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(emergency_start_date, curfew_start_date),</span>
 <span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">175</span>),</span>
 <span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">90</span>,</span>
@@ -577,9 +578,8 @@ Parameter bounds
 </div>
 </div>
 <p>Now we’re in a place to use <code>optim</code> again, just like we’ve done previously.</p>
-<!-- fixme: Change name of optim_NM -->
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>optim_NM <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>optimal_efficacy_parameters <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> init_parameters,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> negative.log.likelihood,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>,</span>
@@ -589,12 +589,12 @@ Parameter bounds
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for convergence</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>optim_NM<span class="sc">$</span>convergence <span class="co"># 0 - converged; nonzero - failed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>optimal_efficacy_parameters<span class="sc">$</span>convergence <span class="co"># 0 - converged; nonzero - failed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimal parameters:</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>optim_NM<span class="sc">$</span>par[<span class="fu">c</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>optimal_efficacy_parameters<span class="sc">$</span>par[<span class="fu">c</span>(</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"emergency_efficacy"</span>,</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"curfew_efficacy"</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -603,7 +603,7 @@ Parameter bounds
          0.7907728          0.9164655 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the optimal negative log-likelihood</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>optim_NM<span class="sc">$</span>value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>optimal_efficacy_parameters<span class="sc">$</span>value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 372.4239</code></pre>
 </div>
@@ -612,7 +612,7 @@ Parameter bounds
 <p>It has decreased a lot, which is a good sign that we have found a better fit than our initial guess.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>optimal_parameters <span class="ot">&lt;-</span> parameters</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>optimal_parameters[<span class="fu">c</span>(<span class="st">"emergency_efficacy"</span>, <span class="st">"curfew_efficacy"</span>)] <span class="ot">&lt;-</span> optim_NM<span class="sc">$</span>par[<span class="fu">c</span>(<span class="st">"emergency_efficacy"</span>,<span class="st">"curfew_efficacy"</span>)]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>optimal_parameters[<span class="fu">c</span>(<span class="st">"emergency_efficacy"</span>, <span class="st">"curfew_efficacy"</span>)] <span class="ot">&lt;-</span> optimal_efficacy_parameters<span class="sc">$</span>par[<span class="fu">c</span>(<span class="st">"emergency_efficacy"</span>,<span class="st">"curfew_efficacy"</span>)]</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -664,7 +664,7 @@ Parameter bounds
 <span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
 <span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"lockdown"</span>, <span class="st">"Curfew"</span>),</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Emergency"</span>, <span class="st">"Curfew"</span>),</span>
 <span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(emergency_start_date, curfew_start_date),</span>
 <span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">175</span>),</span>
 <span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">90</span>,</span>
@@ -681,85 +681,41 @@ Parameter bounds
 </div>
 <p>Great! The fit looks reasonable, at least visually. To report on parameter uncertainty, we use the same method as last time, with the square root of the diagonals of the hessian matrix.</p>
 <!-- todo: If parameter uncertainty is going to stay here, then it also has to be covered in session 5 or moved here -->
-<!-- fixme: Curfew & Lockdown vs Emergency & Curvew --
-
-
-::: {.cell layout-align="center"}
-
-```{.r .cell-code}
-covar_matrix <- solve(optim_NM$hessian)
-std_errors <- sqrt(diag(covar_matrix))
-estimates <- data.frame(
-    estimate = optim_NM$par,
-    std_error = std_errors
-) %>%
-    dplyr::mutate(
-        lower95CI = estimate - 1.96 * std_error,
-        upper95CI = estimate + 1.96 * std_error
-    )
-
-estimates
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-                    estimate   std_error lower95CI upper95CI
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>covar_matrix <span class="ot">&lt;-</span> <span class="fu">solve</span>(optimal_efficacy_parameters<span class="sc">$</span>hessian)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>std_errors <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(covar_matrix))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimate =</span> optimal_efficacy_parameters<span class="sc">$</span>par,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">std_error =</span> std_errors</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower95CI =</span> estimate <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> std_error,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper95CI =</span> estimate <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> std_error</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>estimates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    estimate   std_error lower95CI upper95CI
 emergency_efficacy 0.7907728 0.009871031 0.7714256 0.8101201
-curfew_efficacy    0.9164655 0.003571024 0.9094663 0.9234647
-```
-
-
-:::
-:::
-
-
-What do you see in these plots and estimates?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
-Which type of uncertainty does this capture? What other types of
-uncertainty should we consider?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
-# Exploring counterfactuals
-
-Now we have a model for the COVID-19 transmission in Thailand, and we
-have estimates of how effective the two stages of interventions were
-(emergency and curfew), we can now explore what *could* have happened,
-or the **counterfactuals**.
-
-What could have happened if no intervention was applied?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
-What could have happened if we started the emergency stage earlier?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
-What other interesting counterfactual scenarios could we explore?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
-Which of the scenarios you suggested previously might be of interest to
-the general public and why? Would the scenarios of interest to decision
-makers be different? If so, how and why?
-
-```{=html}
-<textarea name='Text1' cols='127' rows='2'></textarea>
-```
-
+curfew_efficacy    0.9164655 0.003571024 0.9094663 0.9234647</code></pre>
+</div>
+</div>
+<p>What do you see in these plots and estimates?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
+<p>Which type of uncertainty does this capture? What other types of uncertainty should we consider?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
+</section>
+<section id="exploring-counterfactuals" class="level1">
+<h1>Exploring counterfactuals</h1>
+<p>Now we have a model for the COVID-19 transmission in Thailand, and we have estimates of how effective the two stages of interventions were (emergency and curfew), we can now explore what <em>could</em> have happened, or the <strong>counterfactuals</strong>.</p>
+<p>What could have happened if no intervention was applied?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
+<p>What could have happened if we started the emergency stage earlier?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
+<p>What other interesting counterfactual scenarios could we explore?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
+<p>Which of the scenarios you suggested previously might be of interest to the general public and why? Would the scenarios of interest to decision makers be different? If so, how and why?</p>
+<textarea name="Text1" cols="127" rows="2"></textarea>
 <!-- todo: Add discussion on when not to use this model, or how to extend this model for different situations -->
 </section>
 <section id="counterfactuals-example-solution-code" class="level1">
@@ -774,83 +730,83 @@ makers be different? If so, how and why?
 <p>Your code to explore the counterfactuals might look like this:</p>
 <!-- todo: Draw original fit as well on the top -->
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to do the same steps over for us</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>scenario.exploration <span class="ot">=</span> <span class="cf">function</span>(lockdown_eff, curfew_eff, lockdown_start, curfew_start, plot_title){</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  new_params <span class="ot">=</span> parameters </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  new_params[<span class="fu">c</span>(<span class="st">"lockdown_efficacy"</span>, <span class="st">"curfew_efficacy"</span>)] <span class="ot">=</span> <span class="fu">c</span>(lockdown_eff, curfew_eff)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  new_solution <span class="ot">&lt;-</span> <span class="fu">solve.intervention.model</span>(</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_ =</span> state,</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">times_ =</span> times,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">func. =</span> COVID.intervention,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">parms =</span> new_params</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the observational confidence intervals</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>observational_intervals <span class="ot">&lt;-</span> new_solution <span class="sc">%&gt;%</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower50 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.25</span>, <span class="at">lambda =</span> Incidence), <span class="co"># 50% confidence interval (i.e., 25 - 75th centiles)</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper50 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.75</span>, <span class="at">lambda =</span> Incidence),</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower95 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.025</span>, <span class="at">lambda =</span> Incidence), <span class="co"># 95% confidence interval (i.e., 2.5 - 97.5th centiles)</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper95 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">lambda =</span> Incidence)</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(outbreak) <span class="sc">+</span></span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Cases),</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="fl">1.0</span>,</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"gray"</span>,</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">colour =</span> <span class="st">"darkgray"</span></span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> observational_intervals[<span class="sc">-</span><span class="dv">1</span>, ],</span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">ymin =</span> lower50, <span class="at">ymax =</span> upper50),</span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"darkorchid4"</span>, <span class="at">colour =</span> <span class="st">"darkorchid4"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> observational_intervals[<span class="sc">-</span><span class="dv">1</span>, ],</span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">ymin =</span> lower95, <span class="at">ymax =</span> upper95),</span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"darkorchid4"</span>, <span class="at">colour =</span> <span class="st">"darkorchid4"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">#geom_point(data=optim_solution[-1,], aes(x=Date, y=Incidence), size=2, colour="firebrick2") +</span></span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data=</span>new_solution[<span class="sc">-</span><span class="dv">1</span>,], <span class="fu">aes</span>(<span class="at">x=</span>Date, <span class="at">y=</span>Incidence), <span class="at">size=</span><span class="dv">2</span>, <span class="at">colour=</span><span class="st">"darkorchid4"</span>) <span class="sc">+</span></span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Daily cases"</span>) <span class="sc">+</span></span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(plot_title) <span class="sc">+</span></span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(</span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xintercept =</span> lockdown_start),</span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"firebrick"</span></span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(</span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xintercept =</span> curfew_start),</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"firebrick"</span></span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">geom =</span> <span class="st">"text"</span>,</span>
-<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"lockdown"</span>, <span class="st">"Curfew"</span>),</span>
-<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(lockdown_start, curfew_start),</span>
-<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">175</span>),</span>
-<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">90</span>,</span>
-<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">vjust =</span> <span class="fl">1.5</span></span>
-<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"grey90"</span>),</span>
-<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"grey10"</span>),</span>
-<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>          <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>,  <span class="at">family=</span><span class="st">"serif"</span>),</span>
-<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
-<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span><span class="fu">element_rect</span>(<span class="at">fill=</span><span class="st">"royalblue"</span>),</span>
-<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">'white'</span>))</span>
-<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a><span class="do">### No intervention </span><span class="al">###</span></span>
-<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">lockdown_eff=</span><span class="dv">0</span>, <span class="at">curfew_eff=</span><span class="dv">0</span>, </span>
-<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lockdown_start=</span>emergency_start_date, </span>
-<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
-<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: No interventions"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to do the same steps over for us</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>scenario.exploration <span class="ot">=</span> <span class="cf">function</span>(emergency_eff, curfew_eff, emergency_start, curfew_start, plot_title){</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  new_params <span class="ot">=</span> parameters </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  new_params[<span class="fu">c</span>(<span class="st">"emergency_efficacy"</span>, <span class="st">"curfew_efficacy"</span>)] <span class="ot">=</span> <span class="fu">c</span>(emergency_eff, curfew_eff)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  new_solution <span class="ot">&lt;-</span> <span class="fu">solve.intervention.model</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y_ =</span> state,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">times_ =</span> times,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">func. =</span> COVID.intervention,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">parms =</span> new_params</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the observational confidence intervals</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>observational_intervals <span class="ot">&lt;-</span> new_solution <span class="sc">%&gt;%</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower50 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.25</span>, <span class="at">lambda =</span> Incidence), <span class="co"># 50% confidence interval (i.e., 25 - 75th centiles)</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper50 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.75</span>, <span class="at">lambda =</span> Incidence),</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">lower95 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.025</span>, <span class="at">lambda =</span> Incidence), <span class="co"># 95% confidence interval (i.e., 2.5 - 97.5th centiles)</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">upper95 =</span> <span class="fu">qpois</span>(<span class="at">p =</span> <span class="fl">0.975</span>, <span class="at">lambda =</span> Incidence)</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(outbreak) <span class="sc">+</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Cases),</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="fl">1.0</span>,</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"gray"</span>,</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">colour =</span> <span class="st">"darkgray"</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> observational_intervals[<span class="sc">-</span><span class="dv">1</span>, ],</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">ymin =</span> lower50, <span class="at">ymax =</span> upper50),</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"darkorchid4"</span>, <span class="at">colour =</span> <span class="st">"darkorchid4"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> observational_intervals[<span class="sc">-</span><span class="dv">1</span>, ],</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">ymin =</span> lower95, <span class="at">ymax =</span> upper95),</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"darkorchid4"</span>, <span class="at">colour =</span> <span class="st">"darkorchid4"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">#geom_point(data=optim_solution[-1,], aes(x=Date, y=Incidence), size=2, colour="firebrick2") +</span></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data=</span>new_solution[<span class="sc">-</span><span class="dv">1</span>,], <span class="fu">aes</span>(<span class="at">x=</span>Date, <span class="at">y=</span>Incidence), <span class="at">size=</span><span class="dv">2</span>, <span class="at">colour=</span><span class="st">"darkorchid4"</span>) <span class="sc">+</span></span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Daily cases"</span>) <span class="sc">+</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(plot_title) <span class="sc">+</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xintercept =</span> emergency_start),</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"firebrick"</span></span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">xintercept =</span> curfew_start),</span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"firebrick"</span></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">geom =</span> <span class="st">"text"</span>,</span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Emergency"</span>, <span class="st">"Curfew"</span>),</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(emergency_start, curfew_start),</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">175</span>, <span class="dv">175</span>),</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">angle =</span> <span class="dv">90</span>,</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">vjust =</span> <span class="fl">1.5</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"white"</span>),</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"grey90"</span>),</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>          <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">colour =</span> <span class="st">"grey10"</span>),</span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>          <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>,  <span class="at">family=</span><span class="st">"serif"</span>),</span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"white"</span>),</span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>          <span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.background =</span><span class="fu">element_rect</span>(<span class="at">fill=</span><span class="st">"royalblue"</span>),</span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>          <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">colour =</span> <span class="st">'white'</span>))</span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a><span class="do">### No intervention </span><span class="al">###</span></span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">emergency_eff=</span><span class="dv">0</span>, <span class="at">curfew_eff=</span><span class="dv">0</span>, </span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>                     <span class="at">emergency_start=</span>emergency_start_date, </span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: No interventions"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -858,17 +814,17 @@ makers be different? If so, how and why?
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">### What could have happened if we the emergency declaration made earlier? </span><span class="al">###</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Store original values </span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>emergency_start_date_orig <span class="ot">=</span> emergency_start_date</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>curfew_start_date_orig <span class="ot">=</span> curfew_start_date</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set new values</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> fitting_start_date  <span class="co">#  fitting start date</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">lockdown_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lockdown_start=</span>emergency_start_date, </span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made at beginning of fitting window"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">### What could have happened if we the emergency declaration made earlier? </span><span class="al">###</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Store original values </span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>emergency_start_date_orig <span class="ot">=</span> emergency_start_date</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>curfew_start_date_orig <span class="ot">=</span> curfew_start_date</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set new values</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> fitting_start_date  <span class="co">#  fitting start date</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">emergency_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">emergency_start=</span>emergency_start_date, </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made at beginning of fitting window"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -876,13 +832,13 @@ makers be different? If so, how and why?
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set new values</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> fitting_start_date <span class="sc">+</span> <span class="dv">10</span> <span class="co"># 10 days after fitting start date</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">lockdown_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lockdown_start=</span>emergency_start_date, </span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made 10 dates after fitting window"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set new values</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> fitting_start_date <span class="sc">+</span> <span class="dv">10</span> <span class="co"># 10 days after fitting start date</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">emergency_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">emergency_start=</span>emergency_start_date, </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made 10 dates after fitting window"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -890,13 +846,13 @@ makers be different? If so, how and why?
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now make it so no curfew in this scenario</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>curfew_start_date <span class="ot">&lt;-</span> fitting_end_date</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">lockdown_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lockdown_start=</span>emergency_start_date, </span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made 10 days after fitting window, no curfew"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now make it so no curfew in this scenario</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>curfew_start_date <span class="ot">&lt;-</span> fitting_end_date</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">emergency_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">emergency_start=</span>emergency_start_date, </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Emergency declaration made 10 days after fitting window, no curfew"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -904,14 +860,14 @@ makers be different? If so, how and why?
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Curfew starts at same time as state of emergency declared </span><span class="al">###</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> emergency_start_date_orig</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>curfew_start_date <span class="ot">&lt;-</span> emergency_start_date</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">lockdown_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lockdown_start=</span>emergency_start_date, </span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Curfew starts same time as emergency declaration"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Curfew starts at same time as state of emergency declared </span><span class="al">###</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>emergency_start_date <span class="ot">&lt;-</span> emergency_start_date_orig</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>curfew_start_date <span class="ot">&lt;-</span> emergency_start_date</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scenario.exploration</span>(<span class="at">emergency_eff=</span>optimal_parameters[<span class="st">"emergency_efficacy"</span>], </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_eff=</span>optimal_parameters[<span class="st">"curfew_efficacy"</span>], </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">emergency_start=</span>emergency_start_date, </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">curfew_start=</span>curfew_start_date, </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">plot_title=</span><span class="st">"Counterfactual: Curfew starts same time as emergency declaration"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
