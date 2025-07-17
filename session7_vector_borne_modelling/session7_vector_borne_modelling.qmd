@@ -939,6 +939,12 @@ duration of the infectious period). We will denote this as $\mathcal{R}_{HM}$.**
 <textarea cols="127" rows="4"></textarea>
 ```
 
+:::{.callout-tip}
+## Focus questions
+What do you notice about the average infectious period of the mosquito? Why is it that? <br>
+What do you notice about the units of $\mathcal{R}_{HM}$?
+:::
+
 <p><br></p>
 
 Next we consider the expected number of mosquitoes (in a totally
@@ -1165,8 +1171,9 @@ duration of the infectious period). We will denote this as $\mathcal{R}_{HM}$.**
 [$\mathcal{R}_{HM} = b \times T_{HM} \times \frac{1}{\mu}$]{style="color: blue"}
 
 :::{.callout-tip}
-## Focus question
-What do you notice about the average infectious period of the mosquito? Why is it that?
+## Focus questions
+What do you notice about the average infectious period of the mosquito? Why is it that? <br>
+What do you notice about the units of $\mathcal{R}_{HM}$?
 :::
 
 <p><br></p>
