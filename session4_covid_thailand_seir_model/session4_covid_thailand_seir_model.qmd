@@ -35,7 +35,7 @@ In the last session, we will explore how to build a transmission model for vecto
 
 # Session Summary
 
-A practical session where the students use a worked example to learn how a compartmental SEIRS model is written in the R programming language. Meaningful model output will be derived and plotted. We will use a COVID-19 outbreak in Thailand as an example.
+A practical session where the students use a worked example to learn how a compartmental SEIRS model is written in the R programming language. Meaningful model output will be derived and plotted. We will use a COVID-19 outbreak as an example.
 
 We will write some R code for our COVID-19 model. The code for a compartmental model will require several sections:
 
