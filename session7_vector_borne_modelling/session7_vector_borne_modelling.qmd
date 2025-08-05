@@ -85,7 +85,7 @@ library(kableExtra)
 kbl(df) %>%
 kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
 ```
-<!-- todo: perhaps add some more non-mosquito examples relevant to Indonesia here -->
+<!-- todo: perhaps add some more non-mosquito examples relevant to Indonesia here e.g. rickettsia -->
 Source:
 <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases">
 https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases
