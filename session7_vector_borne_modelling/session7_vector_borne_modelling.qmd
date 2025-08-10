@@ -4,7 +4,7 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Introduction to modelling vector-borne disease models"
 format:
     training-html:
-        presenter: Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
+        presenter: Kartika Saraswati, Saw Swee Hock School of Public Health, National University of Singapore
         contributors:
             - Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
 execute:
@@ -76,8 +76,8 @@ Similarly, some vectors are able to spread multiple diseases.
 
 ```{r echo=FALSE}
 df <- data.frame(
-  Vector = c("Mosquito - Anopheles", "Mosquito - Aedes", "Mosquito - Culex", "Blackflies"),
-  Disease = c("Malaria, Lymphatic filariasis", "Zika, Dengue, Lymphatic filariasis", "West Nile fever, Japanese encephalitis, Lymphatic filariasis", "Onchocerciasis")
+  Vector = c("Mosquito - Anopheles", "Mosquito - Aedes", "Mosquito - Culex", "Blackflies", "Flea", "Tick"),
+  Disease = c("Malaria, Lymphatic filariasis", "Zika, Dengue, Lymphatic filariasis", "West Nile fever, Japanese encephalitis, Lymphatic filariasis", "Onchocerciasis", "Murine typhus, plague", "Lyme disease, tick-borne meningoencephalitis")
 )
 if (!require(kableExtra)){install.packages("kableExtra")}
 library(kableExtra)
@@ -85,7 +85,9 @@ library(kableExtra)
 kbl(df) %>%
 kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
 ```
-<!-- todo: perhaps add some more non-mosquito examples relevant to Indonesia here e.g. rickettsia -->
+<!-- todo: perhaps add some more non-mosquito examples relevant to Indonesia here -->
+<!-- Added flea and tick along with the diseases spread -->
+
 Source:
 <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases">
 https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases
@@ -106,36 +108,35 @@ https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases
 ### How do vector-borne diseases spread?
 
 Below are diagrams showing the transmission cycles for two vector-borne
-diseases: Onchocerciasis (top) and West Nile fever, caused by infection
-with West Nile virus (bottom).
+diseases: Dengue (top) and Japanese encephalitis (bottom).
 
 <p>
 
 </p>
 
 ::: row
-<center><img src="onchocerciasis.tif" alt="Onchocerciasis transmission cycle" style="width:80%"/></center>
+<center><img src="dengue-transmission-cycle-cdc.jpg" alt="Dengue transmission cycle" style="width:80%"/></center>
 :::
-<!-- todo: consider changing oncho to something more relevant. Could be malaria or dengue. Change WNV to JEV. Propogate the changes through to the questions below. -->
+<!-- todo: consider changing oncho to something more relevant. Could be malaria or dengue. Change WNV to JEV. Propagate the changes through to the questions below. -->
 
 <center>Source:
-<a href="https://www.cdc.gov/dpdx/onchocerciasis/index.html">
-https://www.cdc.gov/dpdx/onchocerciasis/index.html</a></center>
+<a href="https://www.cdc.gov/dengue/transmission/index.html">
+https://www.cdc.gov/dengue/transmission/index.html</a></center>
 
 <p><br><br></p>
 
 ::: row
-<center><img src="west_nile.jpg" alt="West Nile fever transmission cycle" style="width:80%"/></center>
+<center><img src="jev-transmission-cycle-cdc.jpg" alt="Japanese encephalitis virus transmission cycle" style="width:80%"/></center>
 :::
 
 <center>Source:
-<a href="https://www.cdc.gov/westnile/transmission/index.html">
-https://www.cdc.gov/westnile/transmission/index.html </a></center>
+<a href="https://www.cdc.gov/japanese-encephalitis/php/transmission/index.html">
+https://www.cdc.gov/japanese-encephalitis/php/transmission/index.html </a></center>
 
 <p><br></p>
 
 **1.2 What type of vector is responsible for the spread of
-onchocerciasis?**
+dengue?**
 
 ```{=html}
 <textarea cols="127" rows="3"></textarea>
@@ -143,7 +144,7 @@ onchocerciasis?**
 
 <p><br></p>
 
-**1.3 What type of vector is responsible for the spread of West Nile
+**1.3 What type of vector is responsible for the spread of Japanese encephalitis
 virus?**
 
 ```{=html}
@@ -162,8 +163,8 @@ transmission cycles?**
 <p><br></p>
 
 We can divide vector-borne diseases into two categories, those that
-spread by a human-vector-human cycle (e.g. malaria, dengue, zika,
-onchocerciasis) and those that involve a non-human host (e.g. West Nile
+spread by a human-vector-human cycle (e.g. malaria, dengue, zika) 
+and those that involve a non-human host (e.g. West Nile
 virus, Japanese encephalitis). In this session, we will only be working
 with diseases that spread by a human-vector-human cycle.
 
@@ -263,41 +264,40 @@ diseases]{style="color: blue"}
 ### How do vector-borne diseases spread?
 
 Below are diagrams showing the transmission cycles for two vector-borne
-diseases: Onchocerciasis (top) and West Nile fever, caused by infection
-with West Nile virus (bottom).
+diseases: dengue (top) and Japanese encephalitis (bottom).
 
 <p>
 
 </p>
 
 ::: row
-<center><img src="onchocerciasis.tif" alt="Onchocerciasis transmission cycle" style="width:80%"/></center>
+<center><img src="dengue-transmission-cycle-cdc.jpg" alt="Dengue transmission cycle" style="width:80%"/></center>
 :::
 
 <center>Source:
-<a href="https://www.cdc.gov/dpdx/onchocerciasis/index.html">
-https://www.cdc.gov/dpdx/onchocerciasis/index.html</a></center>
+<a href="https://www.cdc.gov/dengue/transmission/index.html">
+https://www.cdc.gov/dengue/transmission/index.html</a></center>
 
 <p><br><br></p>
 
 ::: row
-<center><img src="west_nile.jpg" alt="West Nile fever transmission cycle" style="width:80%"/></center>
+<center><img src="jev-transmission-cycle-cdc.jpg" alt="Japanese encephalitis virus transmission cycle" style="width:80%"/></center>
 :::
 
 <center>Source:
-<a href="https://www.cdc.gov/westnile/transmission/index.html">
-https://www.cdc.gov/westnile/transmission/index.html </a></center>
+<a href="https://www.cdc.gov/japanese-encephalitis/php/transmission/index.html">
+https://www.cdc.gov/japanese-encephalitis/php/transmission/index.html </a></center>
 
 <p><br></p>
 
 **1.2 What type of vector is responsible for the spread of
-onchocerciasis?**
+dengue?**
 
-[Blackfly]{style="color: blue"}
+[Mosquito]{style="color: blue"}
 
 <p><br></p>
 
-**1.3 What type of vector is responsible for the spread of West Nile
+**1.3 What type of vector is responsible for the spread of Japanese encephalitis
 virus?**
 
 [Mosquito]{style="color: blue"}
@@ -307,7 +307,7 @@ virus?**
 **1.4 What is the main difference you notice between these two
 transmission cycles?**
 
-[WNV includes non-human hosts]{style="color: blue"}
+[JEV includes non-human hosts]{style="color: blue"}
 
 <p><br></p>
 
@@ -568,8 +568,8 @@ per unit time.**
     highly climate dependent and so vary seasonally. For the purposes of
     illustration, we will not include seasonality in our model.
   <!-- todo: if remove oncho above, need to update this point too -->
--   As we saw when we compared the transmission cycle for onchocerciasis
-    with the transmission cycle of West Nile virus, for some
+-   As we saw when we compared the transmission cycle for dengue
+    with the transmission cycle of Japanese encephalitis virus, for some
     vector-borne diseases vertebrate hosts other than humans are
     involved. As this adds substantial complexity to the model, in this
     session we consider only diseases that spread human-vector-human.
@@ -788,8 +788,8 @@ per unit time.**
 -   Many of the processes affecting the life cycle of mosquitoes are
     highly climate dependent and so vary seasonally. For the purposes of
     illustration, we will not include seasonality in our model.
--   As we saw when we compared the transmission cycle for onchocerciasis
-    with the transmission cycle of West Nile virus, for some
+-   As we saw when we compared the transmission cycle for dengue
+    with the transmission cycle of Japanese encephalitis, for some
     vector-borne diseases vertebrate hosts other than humans are
     involved. As this adds substantial complexity to the model, in this
     session we consider only diseases that spread human-vector-human.
