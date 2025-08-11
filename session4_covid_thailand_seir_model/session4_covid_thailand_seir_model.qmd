@@ -1,5 +1,5 @@
 ---
-title: "Modelling an outbreak - COVID-19 in Thailand"
+title: "Modelling an outbreak - COVID-19"
 subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Write a disease model and compare it to data"
 format:
@@ -11,7 +11,7 @@ format:
             - Emma McBryde, Australian Institute of Tropical Health & Medicine, James Cook University
 autocomplete: false
 ---
-<!-- todo: update the example from COVID-19 in Thailand to a more local example that still needs an SEIR model. Perhaps a covid-19 in Indonesia -- e.g. Jakarta, example. -->
+
 <!-- todo: condense and/or move the credits for who has worked on this and is delivering it. Presenter at the top, history at the bottom. -->
 
 ```{r, echo=F}
@@ -22,8 +22,7 @@ knitr::opts_chunk$set(
 
 # Overview of days 3 and 4 of this workshop
 
-<!-- placeholder text, please edit and refine the content -->
-Over the next 3 sessions we are going to explore an example modelling process, where an outbreak has occurred with set interventions. The aim of our modelling is to explore the impact of the interventions that were conducted, and part of that means exploring the counterfactuals (what might have happened if there were no interventions). 
+Over the next three sessions, we will explore an example modelling process where an outbreak has occurred with set interventions. Our model aims to explore the impact of the interventions that were conducted and explore the counterfactuals (what might have happened if there were no interventions).
 
 The example modelling process we will undertake to achieve this aim is:
 
@@ -39,23 +38,19 @@ A practical session where the students use a worked example to learn how a compa
 
 We will write some R code for our COVID-19 model. The code for a compartmental model will require several sections:
 
-<!-- fixme: the below manual table of contents may be out of date -->
 **Part 1** covers:
 
 -   Code summary
 -   Set working directory
-<!-- fixme: change the code so this isn't needed at all. i.e. as a project and using relative pathing. Also auto-check if packages are installed (and then install them if not e.g. pacman). -->
 -   Keep track of dependencies
--   Set the start and end time for the model simulation
--   Examine the dataset
 
 **Part 2** covers:
 
 -   Define the model parameters
 -   Set up the initial conditions
--   Define the model compartments
 -   Set up a function to solve the equations
 -   Run and plot the model
+-   Compare the model with the data
 
 **Part 3** covers:
 
@@ -70,7 +65,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
-```{r write-header}      
+```{r write-header}
 # SPARKLE Modelling Short course
 # 2025 Infectious Diseases Modelling
 
@@ -83,18 +78,19 @@ It is good practice to write a short description of your code to summarise its p
 # and then plot the results
 ```
 
-Save this file in your `student_materials` folder, and give it a meaningful name, like `session_seir_ode_covid`.
-
-<!-- fixme: we may not want to do this as it caused issues in the past, if so remove from contents-->
 ## Set working directory
+
 You must let R know the location of any files you plan to import, so remember to set your working directory. Copy and paste the code chunk below into your editor to continue writing your code:
+
+-   <!-- fixme: change the code so this isn't needed at all. i.e. as a project and using relative pathing. DC: ini berarti setting up Rproject buat workshop di awal2 kah? -->
+
 ```{r set-wd}
 # Windows
-# setwd('your_path_goes_here')
 # setwd('your_path_goes_here')
 # Mac OSX
 # setwd("./workshop")
 ```
+
 You can also set the working directory by tabbing: Session/Set Working Directory/To Source Location
 
 ## Keep track of dependencies through library loading and importing data
@@ -105,15 +101,16 @@ List all the packages you plan to use and the files you plan to import in one pl
 #| message: false
 #| warning: false
 
-# Library imports
-library(dplyr)
-library(deSolve)
-library(ggplot2)
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(
+  dplyr,
+  deSolve,
+  ggplot2
+)
 ```
-<!-- fixme: pacman here for installation.-->
 
-Now we load the data, and take a quick look:
-<!-- fixme: Use r project for relative pathing -->
+Now we load the data, and take a quick look: <!-- fixme: Use r project for relative pathing -->
+
 ```{r load-data}
 # Data imports
 first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
@@ -127,7 +124,7 @@ ggplot(first_wave) +
   geom_col(aes(x=Date, y=Cases), width=1, fill="dodgerblue2", colour="blue") +
   ylab("Daily cases") +
   xlab("") +
-  ggtitle("Thailand's first wave, 2020") + 
+  ggtitle("COVID19's first wave, 2020") + 
   theme(panel.background = element_rect(fill = "white", colour = "white"),
         panel.grid.major = element_line(colour = "grey90"),
         panel.grid.major.x = element_blank(),
@@ -158,7 +155,7 @@ The parameters for the model are frequently estimated either from literature or 
 Complete the following table using information about the natural history of COVID-19 infection:
 
 | Parameter | Flow transformation | Value/Range | Units |
-|-------------------:|:---------------:|:---------------:|:---------------:|
+|------------------:|:----------------:|:----------------:|:----------------:|
 | Basic reproduction number | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 | Latent period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 | Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
@@ -175,7 +172,8 @@ Type `parameters["R0"]` into your console. What does this value mean?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-:::{.callout-tip}
+
+::: callout-tip
 If this isn't working, try manually typing in the quotation marks and make sure it's a zero after R.
 :::
 
@@ -199,6 +197,7 @@ state <- c(
     Recovered = Initial_recovered
 )
 ```
+
 Here "state" refers to the population state, and how many are in which compartment at the initial time.
 
 We also need to define the start and end time for the model simulation:
@@ -282,9 +281,11 @@ Copy the following chunk into your script to solve the ODE
 out <- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, parms = parameters)
 # Plot solution
 par(mar = c(1, 1, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
-plot(out)
+plot(out,
+     xlab = "Time (days)",
+     ylab = "Population size")
 ```
-<!-- todo: plot above needs axis labels -->
+
 Define incidence and prevalence, and discuss the differences between them. Which might policy makers prefer and why?
 
 ```{=html}
@@ -297,13 +298,11 @@ Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the f
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
 
-
 # Data processing and plotting
 
 ## Post-process the model output to predict standard epidemiological metrics
 
-This is great, but the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us.
-<!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. NB any updates should be made to module 5 too. -->
+This is great, but the output from `ode` can be a bit unwieldy. Let's write a function that can clean it up for us. <!-- fixme: prevalence is typically reported as number of cases per 100,000 population. Needs to be discussion about whether to incidence should be those entering exposed or infectious. NB any updates should be made to module 5 too. -->
 
 ```{r clean-ode-function}
 tidy_base_model <- function(ode_output, times, parameters) {
@@ -346,14 +345,14 @@ It's time to plot our solution, and make sure we haven't made any silly mistakes
 ggplot() +
     geom_line(aes(x = Date, y = Prevalence), data = tidied_output, linewidth = 1, colour = "firebrick") +
     labs(x="Date", y="Modelled Prevalence") +
-    ggtitle("Thailand's First Wave, Jan-Jul 2020") +
+    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
     theme_bw()
 
 ggplot() +
     geom_line(aes(x = Date, y = Population), data = tidied_output, linewidth = 1, colour = "firebrick") +
-    ggtitle("Thailand's First Wave, Jan-Jul 2020") +
+    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
     labs(x="Date", y="Total Population") +
-    ggtitle("Thailand's First Wave, Jan-Jul 2020") +
+    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
     theme_bw()
 ```
 
@@ -363,13 +362,13 @@ What is the sum of all the differential equations for the COVID-19 model?
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
 
-Why do we choose to plot the population size over time?
-<!-- todo: ensure this is consistent with how it's taught in the theory of ID modelling session. A could place also to discuss closed vs open populations, and how this flat line isn't always expected. -->
+Why do we choose to plot the population size over time? <!-- todo: ensure this is consistent with how it's taught in the theory of ID modelling session. A could place also to discuss closed vs open populations, and how this flat line isn't always expected. -->
 
 ```{=html}
 <textarea name="Text1" cols="127" rows="1"></textarea>
 ```
-:::{.callout-note}
+
+::: callout-note
 When wouldn't we expect a flat line here?
 :::
 
@@ -418,7 +417,8 @@ What is the difference between the first and second graphs, and why should we pl
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
-For further discussion on model fitting see, for example, [this paper by King et al.]( https://doi.org/10.1098%2Frspb.2015.0347)
+
+For further discussion on model fitting see, for example, [this paper by King et al.](https://doi.org/10.1098%2Frspb.2015.0347)
 
 Try changing the end times and re-running the model:
 
