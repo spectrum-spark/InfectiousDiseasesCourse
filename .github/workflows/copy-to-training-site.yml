@@ -25,7 +25,7 @@ jobs:
 
       - name: Copy files
         run: |
-          rsync -av --delete source/docs target-repo/InfectiousDiseasesCourse
+          rsync -av --delete source/docs/ target-repo/InfectiousDiseasesCourse
 
       - name: Commit & push changes
         working-directory: target-repo
