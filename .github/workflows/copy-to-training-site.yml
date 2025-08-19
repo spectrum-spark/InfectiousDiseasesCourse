@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - main
+
+
+name: Copy to training site
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy
+        uses: andstor/copycat-action@v3
+        with:
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          src_path: /docs
+          dst_path: /InfectiousDiseasesCourse/
+          dst_owner: spectrum-spark
+          dst_repo_name: trianing
