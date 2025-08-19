@@ -19,4 +19,4 @@ jobs:
           dst_path: /InfectiousDiseasesCourse/
           dst_branch: main
           dst_owner: spectrum-spark
-          dst_repo_name: training
+          dst_repo_name: courses
