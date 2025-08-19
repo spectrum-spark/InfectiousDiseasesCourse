@@ -1,23 +1,36 @@
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-
-
 name: Copy to training site
 
+on:
+  workflow_dispatch:   # run manually
+  push:
+    branches:
+      - main           # or whichever branch triggers it
+
 jobs:
-  build:
+  copy-directory:
     runs-on: ubuntu-latest
     steps:
-      - name: Copy
-        uses: andstor/copycat-action@v3
+      - name: Checkout source repo
+        uses: actions/checkout@v4
         with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: /docs
-          src_branch: main
-          dst_path: /InfectiousDiseasesCourse/
-          dst_branch: main
-          dst_owner: spectrum-spark
-          dst_repo_name: courses
+          path: source
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: spectrum-spark/courses   # replace with destination
+          path: target-repo
+          token: ${{ secrets.PERSONAL_TOKEN }}       # Personal Access Token with repo write perms
+
+      - name: Copy files
+        run: |
+          rsync -av --delete source/docs target-repo/InfectiousDiseasesCourse
+
+      - name: Commit & push changes
+        working-directory: target-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Sync directory from source repo" || echo "No changes to commit"
+          git push
