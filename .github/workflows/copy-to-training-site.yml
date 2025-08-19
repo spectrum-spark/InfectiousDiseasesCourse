@@ -13,6 +13,7 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.repository }}
           path: source
 
       - name: Checkout target repo
