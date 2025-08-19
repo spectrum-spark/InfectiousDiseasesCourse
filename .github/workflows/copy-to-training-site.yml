@@ -19,13 +19,13 @@ jobs:
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
-          repository: spectrum-spark/courses   # replace with destination
+          repository: spectrum-spark/courses 
           path: target-repo
           token: ${{ secrets.PERSONAL_TOKEN }}       # Personal Access Token with repo write perms
 
       - name: Copy files
         run: |
-          rsync -av --delete source/docs/ target-repo/InfectiousDiseasesCourse
+          rsync -av --delete source/docs/ target-repo/courses/intro-mathematical-modelling
 
       - name: Commit & push changes
         working-directory: target-repo
