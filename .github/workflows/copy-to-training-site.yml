@@ -25,6 +25,7 @@ jobs:
 
       - name: Copy files
         run: |
+          mkdir -p target-repo/courses/intro-mathematical-modelling
           rsync -av --delete source/docs/ target-repo/courses/intro-mathematical-modelling
 
       - name: Commit & push changes
