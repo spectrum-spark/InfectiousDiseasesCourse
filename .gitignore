@@ -4,3 +4,4 @@
 .vscode/
 sir_simulations_ode.png
 sir_simulations.png
+**/*.quarto_ipynb

@@ -4,7 +4,7 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Write a disease model and compare it to data"
 format:
     training-html:
-        presenter: Dewi Anastasia Christina, Eijkman/DIDE, The National Research and Innovation Agency/Imperial College London
+        presenter: Dewi Anastasia Christina, Eijkman Molecular Biology Research Group/School of Public Health, The National Research and Innovation Agency (BRIN)/Imperial College London
         contributors:
             - Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
 autocomplete: false
@@ -18,13 +18,13 @@ knitr::opts_chunk$set(
 
 # Overview of days 3 and 4 of this workshop
 
-Over the next three sessions, we will explore an example modelling process where an outbreak has occurred with set interventions. Our model aims to explore the impact of the interventions that were conducted and explore the counterfactuals (what might have happened if there were no interventions).
+Over the next three sessions, we will explore an example modelling process where an outbreak has occurred with set interventions. Our model aims to explore the impact of the interventions that were conducted and explore the counter-factuals (what might have happened if there were no interventions).
 
 The example modelling process we will undertake to achieve this aim is:
 
 -   Design a simple transmission model that captures the disease progression within the population.
 -   Fit the model to data.
--   Model the interventions and update the model fit. Explore the impact of the interventions and the counterfactuals.
+-   Model the interventions and update the model fit. Explore the impact of the interventions and the counter-factuals.
 
 In the last session, we will explore how to build a transmission model for vector borne diseases.
 
@@ -37,7 +37,7 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 **Part 1** covers:
 
 -   Code summary
--   Set working directory
+-   Generate R project for this workshop
 -   Keep track of dependencies
 
 **Part 2** covers:
@@ -74,19 +74,48 @@ It is good practice to write a short description of your code to summarise its p
 # and then plot the results
 ```
 
-## Set working directory
+## Generate R project for this workshop
 
-You must let R know the location of any files you plan to import, so remember to set your working directory. Copy and paste the code chunk below into your editor to continue writing your code:
+You must let R know the location of any files you plan to import, so remember to set your R project. Follow the instruction below to create a new R project:
 
--   <!-- fixme: change the code so this isn't needed at all. i.e. as a project and using relative pathing. DC: ini berarti setting up Rproject buat workshop di awal2 kah? -->
+:::::::::::: row
+<center>
 
-```{r set-wd}
-# Windows
-# setwd('your_path_goes_here')
-# Mac OSX
-# setwd("./workshop")
-```
+1.  <div>
 
+    ![Open **RStudio**, navigate to **File**, then choose **New Project.**](new_R_project1.png)
+
+    </div>
+
+</center>
+
+::::::::::: row
+:::::: {#fig-project .figure .text-center}
+::::: row
+::: col
+<img src="new_R_project2.png" style="width:40%"/>
+:::
+
+::: col
+<img src="new_R_project3.png" style="width:40%"/>
+:::
+:::::
+
+2.  To create a project, click on **New Directory** and choose **New Project.**
+::::::
+
+:::::: row
+<center>
+
+3.  <div>
+
+    ![Write the name and set the storage of the project](new_R_project4.png)
+
+    </div>
+
+</center>
+
+::::: row
 You can also set the working directory by tabbing: Session/Set Working Directory/To Source Location
 
 ## Keep track of dependencies through library loading and importing data
@@ -433,4 +462,8 @@ Why would we do this?
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
 
-<input type="button" value="Print this page" onclick="window.print()">
+<input type="button" value="Print this page" onclick="window.print()"> :::::: ::::::::
+:::::
+::::::
+:::::::::::
+::::::::::::
