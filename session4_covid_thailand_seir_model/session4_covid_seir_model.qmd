@@ -78,45 +78,36 @@ It is good practice to write a short description of your code to summarise its p
 
 You must let R know the location of any files you plan to import, so remember to set your R project. Follow the instruction below to create a new R project:
 
-:::::::::::: row
-<center>
-
-1.  <div>
-
-    ![Open **RStudio**, navigate to **File**, then choose **New Project.**](new_R_project1.png)
-
-    </div>
-
-</center>
-
-::::::::::: row
-:::::: {#fig-project .figure .text-center}
-::::: row
-::: col
-<img src="new_R_project2.png" style="width:40%"/>
+:::: row
+::: {style="text-align:center"}
+1.  Open **RStudio**, navigate to **File**, then choose **New Project.**
+<img src="new_R_project1.png" style="width:80%"/>
 :::
+::::
 
-::: col
-<img src="new_R_project3.png" style="width:40%"/>
+:::: {#fig-project .text-center}
+2. To create a project, click on **New Directory** and choose **New Project.**
+<div style="display: flex; justify-content: center; gap: 10px;">
+  <img src="new_R_project2.png" style="width:38%;"/>
+  <img src="new_R_project3.png" style="width:38%;"/>
+</div>
+::::
+
+:::: row
+::: {style="text-align:center"}
+3.  Name your project, select a location, and click **Create Project**.
+<img src="new_R_project4.png" style="width:80%"/>
 :::
-:::::
+::::
 
-2.  To create a project, click on **New Directory** and choose **New Project.**
-::::::
+:::: row
+::: {style="text-align:center"}
+4. RStudio will open the new project in its own session, with the working directory automatically set to the folder you specified.
+<img src="new_R_project5.png" style="width:80%"/>
+:::
+::::
 
-:::::: row
-<center>
-
-3.  <div>
-
-    ![Write the name and set the storage of the project](new_R_project4.png)
-
-    </div>
-
-</center>
-
-::::: row
-You can also set the working directory by tabbing: Session/Set Working Directory/To Source Location
+At this stage, it is best to organize your work by creating a separate R script for each workshop session.
 
 ## Keep track of dependencies through library loading and importing data
 
@@ -180,7 +171,7 @@ The parameters for the model are frequently estimated either from literature or 
 Complete the following table using information about the natural history of COVID-19 infection:
 
 | Parameter | Flow transformation | Value/Range | Units |
-|---:|:--:|:--:|:--:|
+|-----------------:|:----------------:|:----------------:|:----------------:|
 | Basic reproduction number | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 | Latent period | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
 | Duration of infection | <input type="text" id="name" name="name" size="15"> | <input type="text" id="name" name="name" size="10"> | <input type="text" id="name" name="name" size="10"> |
@@ -462,8 +453,4 @@ Why would we do this?
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
 
-<input type="button" value="Print this page" onclick="window.print()"> :::::: ::::::::
-:::::
-::::::
-:::::::::::
-::::::::::::
+<input type="button" value="Print this page" onclick="window.print()"> :::::: :::::::: ::::: :::::: ::::::::::: ::::::::::::
