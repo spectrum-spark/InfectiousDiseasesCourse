@@ -1,5 +1,5 @@
 ---
-title: "Modelling an outbreak - COVID-19 in Thailand"
+title: "Fitting Models in R"
 author:
     - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University,
     - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, and <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
