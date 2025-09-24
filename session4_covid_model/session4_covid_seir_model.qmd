@@ -80,34 +80,51 @@ You must let R know the location of any files you plan to import, so remember to
 
 :::: row
 ::: {style="text-align:center"}
+<p>
 1.  Open **RStudio**, navigate to **File**, then choose **New Project.**
+</p>
 <img src="new_R_project1.png" style="width:80%"/>
 :::
 ::::
 
 :::: {#fig-project .text-center}
+<p>
 2. To create a project, click on **New Directory** and choose **New Project.**
+</p>
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="new_R_project2.png" style="width:38%;"/>
-  <img src="new_R_project3.png" style="width:38%;"/>
+  <img src="new_R_project2.png" style="width:40%;"/>
+  <img src="new_R_project3.png" style="width:40%;"/>
 </div>
 ::::
 
 :::: row
 ::: {style="text-align:center"}
+<p>
 3.  Name your project, select a location, and click **Create Project**.
-<img src="new_R_project4.png" style="width:80%"/>
+</p>
+<img src="new_R_project4.png" style="width:40%"/>
 :::
 ::::
 
 :::: row
 ::: {style="text-align:center"}
-4. RStudio will open the new project in its own session, with the working directory automatically set to the folder you specified.
-<img src="new_R_project5.png" style="width:80%"/>
+<p>
+4. The new project is now opened in its own session, with the working directory automatically set to the folder you specified.
+</p>
+<img src="new_R_project5.png" style="width:60%"/>
 :::
 ::::
+<p>
+At this stage, it is best to organize your project by creating folders for your data and R scripts. Place all datasets in the **data/** folder, and store your R scripts in the **R/** folder, using a separate script for each workshop session, as illustrated below:
+</p>
+:::: {#fig-project .text-center}
+<div style="display: flex; justify-content: center; gap: 10px;">
+  <img src="new_R_project_data_management1.png" style="width:40%;"/>
+  <img src="new_R_project_data_management2.png" style="width:40%;"/>
+</div>
+::::
 
-At this stage, it is best to organize your work by creating a separate R script for each workshop session.
+
 
 ## Keep track of dependencies through library loading and importing data
 
@@ -129,7 +146,7 @@ Now we load the data, and take a quick look: <!-- fixme: Use r project for relat
 
 ```{r load-data}
 # Data imports
-first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
+first_wave <- read.csv("data/first_wave_COVID.csv", colClasses = c("Date", "numeric", "numeric"))
 # Convert dates
 first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
 
@@ -296,7 +313,7 @@ Copy the following chunk into your script to solve the ODE
 # Solve model
 out <- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, parms = parameters)
 # Plot solution
-par(mar = c(1, 1, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
+par(mar = c(2, 2, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
 plot(out,
      xlab = "Time (days)",
      ylab = "Population size")
