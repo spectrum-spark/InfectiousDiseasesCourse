@@ -426,7 +426,7 @@ to indicate that these are mosquito compartments.**
 
 ### Human and mosquito populations interact through [bites]{style="color: red"}
 
-The feature that makes vector-borne disease models different to models
+The feature that makes mosquito-borne disease models different to models
 for diseases spread by direct contact is that the human and mosquito
 populations interact through bites. Note only adult female mosquitoes bite. We start with the assumption that
 each mosquito makes a fixed number of bites per unit time, and we define
@@ -815,80 +815,6 @@ model structure. Using the model compartments you identified in Part 2,
 and the inflows and outflows from each compartment required based on the
 assumptions discussed in Part 2, draw your proposed model structure.
 
-**Instructions:**
-<!-- todo: get rid of the electronic upload of a diagram bits -->
-1.  You can draw a diagram electronically in a program such as
-    PowerPoint, or you can draw your diagram by hand and take a photo
-
-2.  Make sure you label all compartments as well as the inflows and
-    outflows from each compartment.
-
-3.  Save your diagram in one of the following formats: .jpg, .gif, .png
-
-4.  Upload your diagram using the Browse... button below
-
-5.  If you prefer, you can describe your model in words in the space
-    below
-
-**NB: You can replace a file by clicking on the file name and selecting
-a file with a different name.**
-
-### Upload your image
-
-<p><input type="file" id="files" name="files[]" multiple></input>
-</span></p>
-
-```{=html}
-<style>
-    input[type="file"] {
-
-     display:block;
-    }
-    .imageThumb {
-     max-height: 600px;
-     border: 2px solid;
-     margin: 10px 10px 0 0;
-     padding: 1px;
-     }
-</style>
-```
-
-```{=html}
-<script type="text/javascript">
-    $(document).ready(function() {
-
-     if(window.File && window.FileList && window.FileReader) {
-        $("#files").on("change",function(e) {
-            var files = e.target.files ,
-            filesLength = files.length ;
-            for (var i = 0; i < filesLength ; i++) {
-                var f = files[i]
-                var fileReader = new FileReader();
-                fileReader.onload = (function(e) {
-                    var file = e.target;
-                    $("<span class=\"pip\">" +
-            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-            "<br/><span class=\"remove\"><u>Remove image</u></span>" +
-            "</span>").insertAfter("#files");
-          $(".remove").click(function(){
-            $(this).parent(".pip").remove();
-          });
-                });
-               fileReader.readAsDataURL(f);
-           }
-      });
-     } else { alert("Your browser doesn't support to File API") }
-    });
-
-</script>
-```
-
-### Alternatively, describe your model structure here
-
-```{=html}
-<textarea cols="127" rows="6"></textarea>
-```
-
 <p><br></p>
 
 ### Model equations
@@ -1022,76 +948,6 @@ around what to include in our first model, we will design an appropriate
 model structure. Using the model compartments you identified in Part 2,
 and the inflows and outflows from each compartment required based on the
 assumptions discussed in Part 2, draw your proposed model structure.
-
-**Instructions:**
-
-1.  You can draw a diagram electronically in a program such as
-    PowerPoint, or you can draw your diagram by hand and take a photo
-
-2.  Make sure you label all compartments as well as the inflows and
-    outflows from each compartment.
-
-3.  Save your diagram in one of the following formats: .jpg, .gif, .png
-
-4.  Upload your diagram using the Browse... button below
-
-5.  If you prefer, you can describe your model in words in the space
-    below
-
-**NB: You can replace a file by clicking on the file name and selecting
-a file with a different name.**
-
-### Upload your image
-
-<p><input type="file" id="files" name="files[]" multiple></input>
-</span></p>
-
-```{=html}
-<style>
-    input[type="file"] {
-
-     display:block;
-    }
-    .imageThumb {
-     max-height: 600px;
-     border: 2px solid;
-     margin: 10px 10px 0 0;
-     padding: 1px;
-     }
-</style>
-```
-
-```{=html}
-<script type="text/javascript">
-    $(document).ready(function() {
-
-     if(window.File && window.FileList && window.FileReader) {
-        $("#files").on("change",function(e) {
-            var files = e.target.files ,
-            filesLength = files.length ;
-            for (var i = 0; i < filesLength ; i++) {
-                var f = files[i]
-                var fileReader = new FileReader();
-                fileReader.onload = (function(e) {
-                    var file = e.target;
-                    $("<span class=\"pip\">" +
-            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-            "<br/><span class=\"remove\"><u>Remove image</u></span>" +
-            "</span>").insertAfter("#files");
-          $(".remove").click(function(){
-            $(this).parent(".pip").remove();
-          });
-                });
-               fileReader.readAsDataURL(f);
-           }
-      });
-     } else { alert("Your browser doesn't support to File API") }
-    });
-
-</script>
-```
-
-### Alternatively, describe your model structure here
 
 [SIR for humans, SI for mosquitoes. Force of infection on humans from
 mosquitoes and Force of infection on mosquitoes from
