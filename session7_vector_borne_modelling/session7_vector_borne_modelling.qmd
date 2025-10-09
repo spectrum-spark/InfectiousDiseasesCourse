@@ -4,6 +4,7 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Introduction to modelling vector-borne disease models"
 format:
     training-html:
+        embed-resources: true
         presenter: Kartika Saraswati, Saw Swee Hock School of Public Health, National University of Singapore
         contributors:
             - Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
