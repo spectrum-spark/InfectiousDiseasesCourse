@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -68,14 +68,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-215b03165fcc824be78d8411f3f532dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e73337d8d3989fb1c625dea938dceea4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -162,7 +163,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../index.html" class="sidebar-logo-link">
-      <img src="../logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="../logo.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../logo.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Modelling Infectious Diseases</a> 
@@ -191,12 +193,6 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../session3_writing_a_model_to_suit_the_infectious_agent/session3_writing_a_model_to_suit_the_infectious_agent.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Designing a model to suit the pathogen</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modelling an outbreak - COVID-19 in Thailand</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -314,13 +310,13 @@ window.Quarto = {
 <p>Before we begin developing a model, we need to set up our system.</p>
 <p>As in previous sessions, we will start by creating a new file and writing a short description of your code to summarise its purpose for future users. Below is an example of such a description for this session. Open R studio, and then open the file <code>session8_vector_model.R</code> in the <code>\student_files</code> folder. Copy and paste the code chunk below (or write your own!) into your editor to start writing your own code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A model for dengue transmission - Part 1</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Some R code to numerically solve a set of ordinary differential equations</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for a simple model of dengue. Results are then plotted.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for a simple model of dengue. Results are then plotted.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="save-your-new-file" class="level3">
@@ -336,7 +332,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="load-required-packages">Load required packages</h3>
 <p>Copy and paste the code below into your file to load the dplyr, deSolve and ggplot2 packages:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Library imports</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Library imports</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span> (<span class="fu">c</span>(<span class="st">"dplyr"</span>,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"deSolve"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"ggplot2"</span>))</span>
@@ -345,7 +341,7 @@ window.Quarto = {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(pkg, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="part-1-a-model-for-dengue" class="level2">
@@ -360,7 +356,7 @@ window.Quarto = {
 <p>Ndii, M.Z., Hickson, R.I., Allingham, D. and Mercer, G.N., 2015. Modelling the transmission dynamics of dengue in the presence of <em>Wolbachia</em>. <em>Mathematical Biosciences</em>, 262, pp.157–166.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Parameter</th>
@@ -406,21 +402,21 @@ window.Quarto = {
 </div>
 <p>Using the table of parameter names and values above, copy and paste the following code chunk into your editor and complete the code by entering the <span style="color: blue">VALUE, NAME</span> and <span style="color: blue">DESCRIPTION</span> where they are missing:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model parameters</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="at">bites =</span> VALUE, <span class="co"># number of bites per mosquito per day</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> <span class="at">NAME =</span> <span class="fl">0.26</span>, <span class="co"># probability of transmission - mosquito to human</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a> <span class="at">T_MH =</span> <span class="fl">0.26</span>, <span class="co"># DESCRIPTION</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a> <span class="at">infectious_period =</span> <span class="dv">5</span>, <span class="co"># days</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a> <span class="at">mu_M =</span> VALUE <span class="co"># DESCRIPTION</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We also need to specify the start time and end time for our simulation, as well as the time step to report values. We will use the times specified in the Ndii et al.&nbsp;paper. Copy and paste the code chunk below into your editor, and complete by specifying the arguments to the <code>seq</code>function, indicated as <span style="color: blue">VALUE, VALUE, VALUE</span> using a time step of 1 day:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2008-11-02"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2009-05-31"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(VALUE, VALUE, VALUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(VALUE, VALUE, VALUE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="set-up-the-initial-conditions" class="level3">
@@ -428,34 +424,34 @@ window.Quarto = {
 <p>The Ndii et al.&nbsp;paper develops a model for dengue transmission in the city of Cairns, Australia, which had an approximate human population of 150,000 in 2008. The carrying capacity for the mosquito population (the maximum population that can be supported without environmental degradation) is related to the number of available breeding sites, which in turn is dependent on the number of humans. The Ndii et al paper sets the carrying capacity at three times the human population, and so we will assume an initial mosquito population size of 450,000, half of which is female. We only model female mosquitoes as they are the only ones that transmit infection. Our simulations will commence with 2 infectious humans and 10 infectious mosquitoes, with all remaining humans and mosquitoes susceptible.</p>
 <p>Using this information, copy and paste the following code chunk into your editor and complete the code by entering <span style="color: blue">VALUE</span> where it is missing, and calculating the population in the human recovered compartment and mosquito infectious compartment using the values of other variables (where <span style="color: blue">EXPRESSION USING OTHER VARIABLES</span> is indicated):</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>human_population <span class="ot">&lt;-</span> VALUE <span class="co"># population of Cairns in 2008</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>initial_human_susceptible <span class="ot">&lt;-</span> VALUE</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>initial_human_infectious <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>initial_human_recovered <span class="ot">&lt;-</span> EXPRESSION USING OTHER VARIABLES</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mosquito_population <span class="ot">&lt;-</span> <span class="dv">225000</span> </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>initial_mosquito_susceptible <span class="ot">&lt;-</span> VALUE</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>initial_mosquito_infectious <span class="ot">&lt;-</span> EXPRESSION USING OTHER VARIABLES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>initial_mosquito_infectious <span class="ot">&lt;-</span> EXPRESSION USING OTHER VARIABLES</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="define-the-model-variables-also-known-as-compartments-or-states" class="level3">
 <h3 class="anchored" data-anchor-id="define-the-model-variables-also-known-as-compartments-or-states">Define the model variables (also known as compartments or states)</h3>
 <p>We define the compartments of our model, initialise the value of each using the initial conditions and then gather them together in a single variable. Copy and paste the code chunk below into your editor and complete the code by entering <span style="color: blue">VALUE</span> where it is missing:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model compartments, gather into a single variable to capture the state </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model compartments, gather into a single variable to capture the state </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of the system and set to initial values</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Susceptible_human =</span> VALUE,</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_human =</span> VALUE,</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">Recovered_human =</span> VALUE,</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">Susceptible_mosquito =</span> VALUE,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> VALUE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> VALUE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="set-up-a-function-to-solve-the-equations" class="level3">
 <h3 class="anchored" data-anchor-id="set-up-a-function-to-solve-the-equations">Set up a function to solve the equations</h3>
 <p>Now that we have defined our parameters, compartments and initial conditions, we will write a function to numerically solve our dengue model using the model equations developed in the previous session. Copy and paste the incomplete code chunk below into your editor and complete the code by replacing the text indicated by <span style="color: blue">EXPRESSION USING OTHER VARIABLES</span>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dengue_base <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parameters){</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state, parameters)), {</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the total population sizes</span></span>
@@ -486,14 +482,14 @@ window.Quarto = {
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      )</span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    ))</span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="run-the-model-and-plot-the-results" class="level3">
 <h3 class="anchored" data-anchor-id="run-the-model-and-plot-the-results">Run the model and plot the results</h3>
 <p>We now run the model, using the code you learned in a previous session. Copy and paste the code chunk below into your editor, enter <span style="color: blue">VALUE</span> where it is missing, and then run your file:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>out_dengue_base <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">y =</span> VALUE, <span class="at">times =</span> <span class="fu">as.numeric</span>(times <span class="sc">-</span> times[<span class="dv">1</span>]), </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">func =</span> VALUE, <span class="at">parms =</span> VALUE)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -501,7 +497,7 @@ window.Quarto = {
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(out_dengue_base, </span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">c</span>(<span class="st">"Susceptible humans"</span>, <span class="st">"Infectious humans"</span>, <span class="st">"Recovered humans"</span>,</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Susceptible mosquitoes"</span>, <span class="st">"Infectious mosquitoes"</span>), </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Your plot should look this this:</p>
 <div class="cell" data-layout-align="center">
@@ -530,7 +526,7 @@ Susceptible human change = - new infections
 </ul>
 <p>If we can calculate susceptible human change from our model output, we will have the number of new infections. Since our model output records the number of humans in the S compartment at each of our recorded time steps, if we take the difference between these entries, we will have the susceptible human change, and we get the new infections by changing its sign. Copy and paste the code below into your editor, to convert daily prevalence into weekly incidence and plot the results:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dengue_base_infections <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(out_dengue_base[, <span class="fu">c</span>(<span class="st">"time"</span>, <span class="st">"Susceptible_human"</span>, <span class="st">"Infectious_human"</span>, <span class="st">"Recovered_human"</span>)])</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create columns for new infections and cumulative new infections, </span></span>
@@ -546,7 +542,7 @@ Susceptible human change = - new infections
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_base_infections<span class="sc">$</span>time, dengue_base_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -565,7 +561,7 @@ Susceptible human change = - new infections
 <section id="part-1-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="part-1-solutions"><strong>Part 1:</strong> Solutions</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true"><strong>Part 1:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false"><strong>Part 1:</strong> Solutions for Part 1</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href=""><strong>Part 1:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href=""><strong>Part 1:</strong> Solutions for Part 1</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p>The solutions tab contains the complete code for Part 1. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
@@ -573,7 +569,7 @@ Susceptible human change = - new infections
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>By the end of Part 1, your script should look like this:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -681,7 +677,7 @@ Susceptible human change = - new infections
 <span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_base_infections<span class="sc">$</span>time, dengue_base_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -797,17 +793,17 @@ Upload your image
 <textarea cols="127" rows="4"></textarea>
 <p>Before beginning, you should add a heading in your file indicating that you have started a new model, as the code we write here will overwrite the parameters and variables you used in Part 1, other than your final results. For example, you could copy and paste the code chunk below into your editor to start writing your code for the new model:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A model for dengue transmission - Part 2</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Some R code to numerically solve a set of ordinary differential equations</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for a modified model of dengue. Results are then plotted.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for a modified model of dengue. Results are then plotted.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>First we need to add new parameters. Copy and paste the code chunk below into your editor, enter <span style="color: blue">VALUE</span> where it is missing, and then run your file:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model parameters</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> <span class="at">bites =</span> <span class="fl">0.63</span>, <span class="co"># number of bites per mosquito per day</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a> <span class="at">T_HM =</span> <span class="fl">0.26</span>, <span class="co"># probability of transmission - mosquito to human</span></span>
@@ -816,11 +812,11 @@ Upload your image
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a> <span class="at">mu_M =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">14</span>, <span class="co"># per day. Mosquito birth and death rate.</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a> <span class="at">exposed_period_H =</span> VALUE, <span class="co"># days. Duration in exposed compartment - human</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a> <span class="at">exposed_period_M =</span> VALUE <span class="co"># days. Duration in exposed compartment - mosquito</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next we need to add some new initial conditions. Let’s start with no exposed humans and no exposed mosquitoes. Copy and paste the code chunk below into your editor, completing <span style="color: blue">EXPRESSION USING OTHER VARIABLES</span> where it is missing:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>human_population <span class="ot">&lt;-</span> <span class="dv">150000</span> <span class="co"># population of Cairns in 2008</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>initial_human_susceptible <span class="ot">&lt;-</span> <span class="dv">149998</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>initial_human_exposed <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -829,11 +825,11 @@ Upload your image
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>mosquito_population <span class="ot">&lt;-</span> <span class="dv">225000</span> <span class="co"># 3 times human population, divided by 2</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>initial_mosquito_susceptible <span class="ot">&lt;-</span> <span class="dv">224990</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>initial_mosquito_exposed <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>initial_mosquito_infectious <span class="ot">&lt;-</span> EXPRESSION USING OTHER VARIABLES</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>initial_mosquito_infectious <span class="ot">&lt;-</span> EXPRESSION USING OTHER VARIABLES</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As before, we now initialise our model states, using the initial conditions we set above. Copy and paste the code chunk below into your editor, completing <span style="color: blue">EXPRESSION USING OTHER VARIABLES</span> where it is missing:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model compartments, gather into a single variable to capture the </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model compartments, gather into a single variable to capture the </span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># state of the system and set to initial values</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>state <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Susceptible_human =</span> initial_human_susceptible,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">Exposed_human =</span> EXPRESSION USING OTHER VARIABLES,</span>
@@ -841,18 +837,18 @@ Upload your image
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">Recovered_human =</span> initial_human_recovered,</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">Susceptible_mosquito =</span> initial_mosquito_susceptible,</span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">Exposed_mosquito =</span> EXPRESSION USING OTHER VARIABLES,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> initial_mosquito_infectious)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> initial_mosquito_infectious)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We set up times to run the model, here extending the end date (for reasons that will become clear). Copy and paste the code chunk below into your editor, to continue your code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2008-11-02"</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2011-05-31"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(start_date, end_date, <span class="at">by =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(start_date, end_date, <span class="at">by =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we adapt our model function to include the changes we have made to the model structure.Copy and paste the code chunk below into your editor to continue your code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dengue_with_E <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parameters){</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state, parameters)), {</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the total population sizes</span></span>
@@ -896,13 +892,13 @@ Upload your image
 <span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>      )</span>
 <span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>    ))</span>
 <span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>2.4 Identify the elements of the model function above that have changed compared to your model in Part 1</strong></p>
 <textarea cols="127" rows="6"></textarea>
 <p>We are now ready to run the model and plot the results. Note that we use a different name for the output to preserve the results from your model in Part 1. Copy and paste the code chunk below into your editor, enter <span style="color: blue">VALUE</span> where it is missing, and then run the new model parts of your file:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>out_dengue_with_E <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">y =</span> VALUE, <span class="at">times =</span> <span class="fu">as.numeric</span>(times <span class="sc">-</span> times[<span class="dv">1</span>]), </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">func =</span> VALUE, <span class="at">parms =</span> VALUE)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -911,7 +907,7 @@ Upload your image
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">c</span>(<span class="st">"Susceptible humans"</span>, <span class="st">"Exposed humans"</span>, <span class="st">"Infectious humans"</span>, </span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Recovered humans"</span>,   <span class="st">"Susceptible mosquitoes"</span>, </span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Exposed mosquitoes"</span>, <span class="st">"Infectious mosquitoes"</span>), </span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Your plot should look this this:</p>
 <div class="cell" data-layout-align="center">
@@ -940,7 +936,7 @@ Recovered human change = recoveries
 </ul>
 <p>As before, we could calculate the difference in our susceptible population from our model output to be left with ‘new infections’ at each time step. However, the new infections in this model may not yet have come to the attention of the health system. We make the simplifying assumption that symptoms occur at the same time that a person becomes infectious, and so we count the transitions into the infectious state as our new ‘cases’ and obtain these by adding the infectious human change and recovered human change. Copy and paste the code below into your editor, to convert daily prevalence into weekly incidence and plot the results:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dengue_with_E_infections <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  out_dengue_with_E[, <span class="fu">c</span>(<span class="st">"time"</span>, <span class="st">"Infectious_human"</span>, <span class="st">"Recovered_human"</span>)])</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -965,7 +961,7 @@ Recovered human change = recoveries
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_with_E_infections<span class="sc">$</span>time, </span>
 <span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>     dengue_with_E_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -996,7 +992,7 @@ Recovered human change = recoveries
 <section id="part-2-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="part-2-solutions"><strong>Part 2:</strong> Solutions</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><strong>Part 2:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><strong>Part 2:</strong> Solutions for Part 2</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href=""><strong>Part 2:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href=""><strong>Part 2:</strong> Solutions for Part 2</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>The solutions tab contains the complete code for Parts 1 and 2. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
@@ -1004,7 +1000,7 @@ Recovered human change = recoveries
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <p>By the end of Part 2, your script should look like this:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1221,7 +1217,7 @@ Recovered human change = recoveries
 <span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_with_E_infections<span class="sc">$</span>time, dengue_with_E_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1235,18 +1231,18 @@ Recovered human change = recoveries
 <p><span class="math display">\[death\text{ }rate(t) = average\text{ }death\text{ }rate\left(1 - amplitude * \text{cos}\left(\frac{2\pi*\left(t + phase\right)}{365}\right)\right)\]</span></p>
 <p>As before, you should add a heading in your file indicating that you have started a new model. For example, you could copy and paste the code chunk below into your editor to start writing your code for the new model:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 3##</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A model for dengue transmission - Part 3</span></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Some R code to numerically solve a set of ordinary differential equations</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for a model of dengue with an exposed period and seasonality. </span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Results are then plotted.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Results are then plotted.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>First we need to define the new seasonality parameters. Copy and paste the code chunk below into your editor to continue writing your code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add seasonality parameters</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add seasonality parameters</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a> <span class="at">bites =</span> <span class="fl">0.63</span>, <span class="co"># number of bites per mosquito per day</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a> <span class="at">T_HM =</span> <span class="fl">0.26</span>, <span class="co"># probability of transmission - mosquito to human</span></span>
@@ -1257,13 +1253,13 @@ Recovered human change = recoveries
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a> <span class="at">exposed_period_M =</span> <span class="dv">10</span>, <span class="co"># days. Duration in exposed compartment - mosquito</span></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a> <span class="at">death_amplitude =</span> <span class="fl">0.6228</span>, <span class="co"># from Ndii et al.</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a> <span class="at">death_phase =</span> <span class="fl">20.61</span> <span class="co"># days, from Ndii et al.</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>3.1 What effect do you expect a seasonal death rate to have on the size of the mosquito population?</strong></p>
 <textarea cols="127" rows="6"></textarea>
 <p>As well as the parameters, we also need to change our initial population numbers to reflect that when our model starts in November, the mosquito population is not at its maximum value. Copy and paste the code chunk below into your editor to define the new initial conditions and initialise the compartments:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial conditions</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>human_population <span class="ot">&lt;-</span> <span class="dv">150000</span> <span class="co"># population of Cairns in 2008</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>initial_human_susceptible <span class="ot">&lt;-</span> <span class="dv">149998</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>initial_human_exposed <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -1281,18 +1277,18 @@ Recovered human change = recoveries
 <span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">Recovered_human =</span> initial_human_recovered,</span>
 <span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">Susceptible_mosquito =</span> initial_mosquito_susceptible,</span>
 <span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">Exposed_mosquito =</span> initial_mosquito_exposed,</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> initial_mosquito_infectious)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">Infectious_mosquito =</span> initial_mosquito_infectious)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We set up times to run the model, returning to our original dates. Copy and paste the code chunk below into your editor, to continue your code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time window</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2008-11-02"</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"2009-05-31"</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(start_date, end_date, <span class="at">by =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>times <span class="ot">=</span> <span class="fu">seq</span>(start_date, end_date, <span class="at">by =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we adapt our model function to add seasonality to the mosquito death rate.Copy and paste the code chunk below into your editor to continue your code:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function with seasonality</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model function with seasonality</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dengue_with_E_seasonal <span class="ot">&lt;-</span> <span class="cf">function</span>(t, state, parameters){</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="fu">as.list</span>(<span class="fu">c</span>(state, parameters)), {</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the total population sizes</span></span>
@@ -1330,18 +1326,18 @@ Recovered human change = recoveries
 <span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>      )</span>
 <span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>    ))</span>
 <span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We are now ready to run the model and plot the results. Again we use a different name for the output to preserve the results from your model in Parts 1 and 2. Copy and paste the code chunk below into your editor and then run the new model parts of your file:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve model</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>out_dengue_with_E_seasonal <span class="ot">&lt;-</span> <span class="fu">ode</span>(<span class="at">y =</span> state, <span class="at">times =</span> <span class="fu">as.numeric</span>(times <span class="sc">-</span> times[<span class="dv">1</span>]), <span class="at">func =</span> dengue_with_E_seasonal, <span class="at">parms =</span> parameters)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(out_dengue_with_E_seasonal, </span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">c</span>(<span class="st">"Susceptible humans"</span>, <span class="st">"Exposed humans"</span>, <span class="st">"Infectious humans"</span>, <span class="st">"Recovered humans"</span>,</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Susceptible mosquitoes"</span>, <span class="st">"Exposed mosquitoes"</span>, <span class="st">"Infectious mosquitoes"</span>), </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"population size"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Your plot should look this this:</p>
 <div class="cell" data-layout-align="center">
@@ -1355,7 +1351,7 @@ Recovered human change = recoveries
 </div>
 <p>Copy and paste the code below into your editor, to convert daily prevalence into weekly incidence and plot the results:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ode output to data frame</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>dengue_with_E_seasonal_infections <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(out_dengue_with_E_seasonal[, <span class="fu">c</span>(<span class="st">"time"</span>, <span class="st">"Infectious_human"</span>, <span class="st">"Recovered_human"</span>)])</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create columns for new infections and cumulative new infections, </span></span>
@@ -1372,7 +1368,7 @@ Recovered human change = recoveries
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_with_E_seasonal_infections<span class="sc">$</span>time, dengue_with_E_seasonal_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E and seasonality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E and seasonality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1401,7 +1397,7 @@ Recovered human change = recoveries
 <section id="part-3-solutions" class="level2">
 <h2 class="anchored" data-anchor-id="part-3-solutions"><strong>Part 3:</strong> Solutions</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true"><strong>Part 3:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false"><strong>Part 3:</strong> Solutions for Part 3</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href=""><strong>Part 3:</strong> Spoiler alert</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href=""><strong>Part 3:</strong> Solutions for Part 3</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <p>The solutions tab contains the complete code for Parts 1, 2 and 3. <strong>Only click on it if you have tried to complete the exercises yourself and need some help</strong></p>
@@ -1409,7 +1405,7 @@ Recovered human change = recoveries
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <p>By the end of Part 3, your script should look like this:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="do">## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">#############################################################</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1741,7 +1737,7 @@ Recovered human change = recoveries
 <span id="cb27-330"><a href="#cb27-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solution</span></span>
 <span id="cb27-331"><a href="#cb27-331" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dengue_with_E_seasonal_infections<span class="sc">$</span>time, dengue_with_E_seasonal_infections<span class="sc">$</span>Weekly_human_infections, </span>
 <span id="cb27-332"><a href="#cb27-332" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Time"</span>, <span class="at">ylab =</span> <span class="fu">c</span>(<span class="st">"number of infections"</span>),</span>
-<span id="cb27-333"><a href="#cb27-333" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E and seasonality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-333"><a href="#cb27-333" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Weekly human new infections, model with E and seasonality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1835,13 +1831,14 @@ Recovered human change = recoveries
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

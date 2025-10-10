@@ -4,7 +4,7 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Take the model of COVID and introduce interventions"
 format:
     training-html:
-        presenter: Michael Lydeamore, Monash University
+        presenter: <br>**Ihsan Fadilah** <br> - Oxford University Clinical Research Unit Indonesia<br> - Centre for Tropical Medicine and Global Health, NDM, University of Oxford
         contributors:
             - Lisa White, Nuffield Department of Medicine, Oxford University
             - Michael Meehan, Australian Institute of Tropical Health & Medicine, James Cook University
@@ -27,7 +27,7 @@ One of the most useful aspects of a mathematical model for infectious
 disease transmission is its capability to explore future intervention
 scenarios: what *could* be.
 
-We will explore some R code for the 1st wave of COVID-19 in Thailand in
+We will explore some R code for a 1st wave of COVID-19 in
 2020. This will involve the following parts:
 
 1.  A whiteboard discussion of how to include interventions in a model
@@ -65,22 +65,23 @@ library(pacman)
 p_load(dplyr, deSolve, ggplot2)
 ```
 
-We'll be making use of the first wave Thailand data. Here is a reminder
-of what the first wave in Thailand looked like:
+We'll be making use of the first wave data. Here is a reminder
+of what the first wave looked like:
 
-![](Thailand_First_Wave.png)
+![](First_Wave.png)
 
 Let's load back in the data, and have a look at a plot:
 
 ```{r load-data}
-first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
+first_wave <- read.csv("first_wave_COVID.csv",
+                       colClasses = c("Date", "numeric", "numeric"))
 first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
 
 ggplot(first_wave, aes(x = Date, y = Cases)) +
     geom_col(fill = "blue") +
     ylab("Daily cases") +
     xlab("") +
-    ggtitle("Thailand's First Wave, Jan-Jun 2020") +
+    ggtitle("COVID First Wave, Jan-Jun 2020") +
     theme_bw()
 ```
 
@@ -107,17 +108,17 @@ ggplot(outbreak, aes(x = Date, y = Cases)) +
     geom_col(fill = "gray") +
     ylab("Daily cases") +
     xlab("") +
-    ggtitle("Filtered data from Thailand's First Wave, with intervention timings") +
+    ggtitle("Filtered data from the First Wave, with intervention timings") +
     theme_bw() +
     geom_vline(xintercept = emergency_start_date, colour='firebrick', 
-               linetype='dashed', size=1.3) +
+               linetype='dashed') +
     geom_vline(xintercept = curfew_start_date, colour='firebrick', 
-               linetype='dashed', size=1.3) +
+               linetype='dashed') +
     annotate(
         geom = "text",
-        label = c("Emergency", "Curfew"),
+        label = c("Emergency", "Emergency + Curfew"),
         x = c(emergency_start_date, curfew_start_date),
-        y = c(175, 175),
+        y = c(165, 155),
         angle = 90,
         vjust = 1.5
     )
@@ -133,8 +134,8 @@ parameters <- c(
     R0 = 3.970588, # from the NM fitting session
     latent_period = 5, # Rounded from Trauer, J.M., Lydeamore, M.J., Dalton, G.W. et al. Understanding how Victoria, Australia gained control of its second COVID-19 wave. Nat Commun 12, 6266 (2021). https://doi.org/10.1038/s41467-021-26558-4
     infectious_period = 6, # Rounded from Trauer et al
-    emergency_efficacy = 0.70, # guess, assuming R_interventions = (1-efficacy) * R0
-    curfew_efficacy = 0.80 # guess
+    emergency_efficacy = 0.70, # guess, assuming Reff = (1-efficacy) * R0
+    curfew_efficacy = 0.80 # guess (note that this is efficacy due to the Emergency + Curfew)
 )
 ```
 
@@ -143,7 +144,7 @@ same initial conditions, state variables and time window.
 
 ```{r initial-conditions}
 # Initial conditions
-Total_population <- 6.6e7 # Roughly population of Thailand
+Total_population <- 6.6e7 # Rough population estimate
 Initial_exposed <- 0 # Simplifying assumption
 Initial_infectious <- 30.356868 # from the NM fitting session
 Initial_recovered <- 0 # simplifying assumption
@@ -182,12 +183,11 @@ COVID.intervention <- function(t, state, parameters) {
             intervention_efficacy <- curfew_efficacy
         }
 
-
-        # Calculate the intervention reproduction number in the presence of interventions
-        R_interventions <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
+        # Calculate the effective reproduction number in the presence of interventions
+        Reff <- (1 - intervention_efficacy) * R0 # assuming everyone starts susceptible
 
         # Calculate the average force of infection imposed on each susceptible individual
-        force_of_infection <- R_interventions * Infectious / (Total_population * infectious_period)
+        force_of_infection <- Reff * Infectious / (Total_population * infectious_period)
 
         # Calculate the net (instantaneous) change in each state variable
         Susceptible_change <- -force_of_infection * Susceptible
@@ -275,17 +275,17 @@ ggplot(outbreak) +
     ) +
     ylab("Daily cases") +
     xlab("") +
-    ggtitle("Thailand's First Wave, 2020") +
+    ggtitle("COVID First Wave, 2020") +
     theme_bw()+
     geom_vline(xintercept = emergency_start_date, colour='firebrick', 
-               linetype='dashed', size=1) +
+               linetype='dashed') +
     geom_vline(xintercept = curfew_start_date, colour='firebrick', 
-               linetype='dashed', size=1) +
+               linetype='dashed') +
     annotate(
         geom = "text",
-        label = c("Emergency", "Curfew"),
+        label = c("Emergency", "Emergency + Curfew"),
         x = c(emergency_start_date, curfew_start_date),
-        y = c(175, 175),
+        y = c(165, 165),
         angle = 90,
         vjust = 1.5
     )
@@ -307,18 +307,16 @@ likelihood estimation to determine the optimal parameters for our model.
 And now we're ready to write our negative log likelihood function.
 
 ```{r negative-log-likelihood}
-negative.log.likelihood <- function(intervention_parameters, 
+negative.log.likelihood <- function(input_parameters,
                                     data = outbreak$Cases[-1],
                                     state_ = state,
                                     times_ = times,
                                     func. = COVID.intervention, # note this is our ode solver
                                     parms_base = parameters) {
 
-# Maybe change name of parms_base / parameters to be more descriptive
-    # Add in our fitting parameters to make sure they are updated
-
+    # Assign parameters
     parms_base[c("emergency_efficacy", "curfew_efficacy")] <-
-        intervention_parameters[c("emergency_efficacy", "curfew_efficacy")]
+        input_parameters[c("emergency_efficacy", "curfew_efficacy")]
 
     # Solve model with updated parameters
     out <- solve.intervention.model(
@@ -347,11 +345,14 @@ init_parameters <- c(parameters[c(
 negative.log.likelihood(init_parameters)
 ```
 
-::: callout-note
-## Parameter bounds
-
-Optimisation algorithms by default will try any value for a parameter (i.e. $(-\infty, \infty)$). We can specify bounds on the parameters we are interested in using the `lower` and `upper` arguments to `optim()`.
-:::
+```{r function-check2}
+negative_log_likelihood_initial <- -sum(dpois(
+    x = outbreak$Cases[-1],
+    lambda = out_init$Incidence[-1], # This is from the previous section!
+    log = TRUE
+))
+negative_log_likelihood_initial
+```
 
 Now we're in a place to use `optim` again, just like we've done
 previously.
@@ -361,8 +362,8 @@ optimal_efficacy_parameters <- optim(
     par = init_parameters,
     fn = negative.log.likelihood,
     method = "L-BFGS-B",
-    lower = c(0, 0),
-    upper = c(1, 1),
+    lower   = c(emergency_efficacy = 0, curfew_efficacy = 0),
+    upper   = c(emergency_efficacy = 1, curfew_efficacy = 1),
     hessian = TRUE
 )
 
@@ -386,8 +387,6 @@ It has decreased a lot, which is a good sign that we have found a better fit tha
 ```{r optimal-plot}
 optimal_parameters <- parameters
 optimal_parameters[c("emergency_efficacy", "curfew_efficacy")] <- optimal_efficacy_parameters$par[c("emergency_efficacy","curfew_efficacy")]
-
-
 
 # Solve the model given the optimal parameters and initial conditions
 optimal_solution <- solve.intervention.model(
@@ -437,9 +436,9 @@ ggplot(outbreak) +
     ) +
     annotate(
         geom = "text",
-        label = c("Emergency", "Curfew"),
+        label = c("Emergency", "Emergency + Curfew"),
         x = c(emergency_start_date, curfew_start_date),
-        y = c(175, 175),
+        y = c(165, 165),
         angle = 90,
         vjust = 1.5
     ) +
@@ -590,9 +589,9 @@ ggplot(outbreak) +
     ) +
     annotate(
         geom = "text",
-        label = c("Emergency", "Curfew"),
+        label = c("Emergency", "Emergency + Curfew"),
         x = c(emergency_start, curfew_start),
-        y = c(175, 175),
+        y = c(165, 165),
         angle = 90,
         vjust = 1.5
     ) +
