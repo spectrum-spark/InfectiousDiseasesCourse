@@ -4,9 +4,10 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Take the model of COVID and introduce interventions"
 format:
     training-html:
-        presenter: <br>**Ihsan Fadilah** <br> - Oxford University Clinical Research Unit Indonesia<br> - Centre for Tropical Medicine and Global Health, NDM, University of Oxford
+        presenter: <br>Ihsan Fadilah <br>Oxford University Clinical Research Unit Indonesia
         contributors:
             - Lisa White, Nuffield Department of Medicine, Oxford University
+            - Michael Lydeamore, Monash University
             - Michael Meehan, Australian Institute of Tropical Health & Medicine, James Cook University
             - Wirichada Pan-Ngum, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
 execute:
