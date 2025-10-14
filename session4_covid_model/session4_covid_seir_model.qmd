@@ -8,7 +8,10 @@ format:
       presenter: Dewi Anastasia Christina, Eijkman Molecular Biology Research Group (BRIN)/School of Public Health (Imperial)
       contributors:
             - Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
-autocomplete: false
+execute:
+  echo: false
+  warning: false
+
 ---
 
 ```{r, echo=F}
@@ -79,51 +82,56 @@ It is good practice to write a short description of your code to summarise its p
 
 You must let R know the location of any files you plan to import, so remember to set your R project. Follow the instruction below to create a new R project:
 
-:::: row
-::: {style="text-align:center"}
+::: row
 <p>
 1.  Open **RStudio**, navigate to **File**, then choose **New Project.**
 </p>
+<center>
 <img src="picts/new_R_project1.png" style="width:80%"/>
-:::
-::::
+</center>
 
-:::: {#fig-project .text-center}
+:::
+
+::: {#fig-project .text-center}
 <p>
 2. To create a project, click on **New Directory** and choose **New Project.**
 </p>
+<center>
 <div style="display: flex; justify-content: center; gap: 10px;">
   <img src="picts/new_R_project2.png" style="width:40%;"/>
   <img src="picts/new_R_project3.png" style="width:40%;"/>
-</div>
-::::
+  </center>
 
-:::: row
-::: {style="text-align:center"}
+</div>
+:::
+
+::: row
 <p>
 3.  Name your project, select a location, and click **Create Project**.
 </p>
+<center>
 <img src="picts/new_R_project4.png" style="width:40%"/>
+</center>
 :::
-::::
 
-:::: row
-::: {style="text-align:center"}
+::: row
 <p>
 4. The new project is now opened in its own session, with the working directory automatically set to the folder you specified.
 </p>
+<center>
 <img src="picts/new_R_project5.png" style="width:60%"/>
+</center>
 :::
-::::
 <p>
 At this stage, it is best to organize your project by creating folders for your data and R scripts. Place all datasets in the **data/** folder, and store your R scripts in the **R/** folder, using a separate script for each workshop session, as illustrated below:
 </p>
-:::: {#fig-project .text-center}
+<center>
 <div style="display: flex; justify-content: center; gap: 10px;">
   <img src="picts/new_R_project_data_management1.png" style="width:40%;"/>
   <img src="picts/new_R_project_data_management2.png" style="width:40%;"/>
 </div>
-::::
+</center>
+:::
 
 
 
@@ -486,4 +494,4 @@ Why would we do this?
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
 
-<input type="button" value="Print this page" onclick="window.print()"> :::::: :::::::: ::::: :::::: ::::::::::: ::::::::::::
+<input type="button" value="Print this page" onclick="window.print()"> :::
