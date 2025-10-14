@@ -4,7 +4,7 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Write a disease model and compare it to data"
 format:
     training-html:
-        presenter: Dewi Anastasia Christina, Eijkman Molecular Biology Research Group/School of Public Health, The National Research and Innovation Agency (BRIN)/Imperial College London
+        presenter: Dewi Anastasia Christina, Eijkman Molecular Biology Research Group (BRIN)/School of Public Health (Imperial)
         contributors:
             - Trish Campbell, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity
 autocomplete: false
@@ -83,7 +83,7 @@ You must let R know the location of any files you plan to import, so remember to
 <p>
 1.  Open **RStudio**, navigate to **File**, then choose **New Project.**
 </p>
-<img src="new_R_project1.png" style="width:80%"/>
+<img src="picts/new_R_project1.png" style="width:80%"/>
 :::
 ::::
 
@@ -92,8 +92,8 @@ You must let R know the location of any files you plan to import, so remember to
 2. To create a project, click on **New Directory** and choose **New Project.**
 </p>
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="new_R_project2.png" style="width:40%;"/>
-  <img src="new_R_project3.png" style="width:40%;"/>
+  <img src="picts/new_R_project2.png" style="width:40%;"/>
+  <img src="picts/new_R_project3.png" style="width:40%;"/>
 </div>
 ::::
 
@@ -102,7 +102,7 @@ You must let R know the location of any files you plan to import, so remember to
 <p>
 3.  Name your project, select a location, and click **Create Project**.
 </p>
-<img src="new_R_project4.png" style="width:40%"/>
+<img src="picts/new_R_project4.png" style="width:40%"/>
 :::
 ::::
 
@@ -111,7 +111,7 @@ You must let R know the location of any files you plan to import, so remember to
 <p>
 4. The new project is now opened in its own session, with the working directory automatically set to the folder you specified.
 </p>
-<img src="new_R_project5.png" style="width:60%"/>
+<img src="picts/new_R_project5.png" style="width:60%"/>
 :::
 ::::
 <p>
@@ -119,8 +119,8 @@ At this stage, it is best to organize your project by creating folders for your 
 </p>
 :::: {#fig-project .text-center}
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="new_R_project_data_management1.png" style="width:40%;"/>
-  <img src="new_R_project_data_management2.png" style="width:40%;"/>
+  <img src="picts/new_R_project_data_management1.png" style="width:40%;"/>
+  <img src="picts/new_R_project_data_management2.png" style="width:40%;"/>
 </div>
 ::::
 
@@ -142,19 +142,21 @@ pacman::p_load(
 )
 ```
 
-Now we load the data, and take a quick look: <!-- fixme: Use r project for relative pathing -->
+Now we load the data, and take a quick look:
 
 ```{r load-data}
 # Data imports
-first_wave <- read.csv("data/first_wave_COVID.csv", colClasses = c("Date", "numeric", "numeric"))
+first_wave <- read.csv("data/first_wave_COVID.csv",
+                       colClasses = c("Date", "numeric", "numeric"))
 # Convert dates
-first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
-
+first_wave$Date <- as.Date(first_wave$Date,
+                           format = "%Y-%m-%d")
 summary(first_wave)
 
 # plot Incidence
 ggplot(first_wave) +
-  geom_col(aes(x=Date, y=Cases), width=1, fill="dodgerblue2", colour="blue") +
+  geom_col(aes(x=Date, y=Cases),
+           width=1, fill="dodgerblue2", colour="blue") +
   ylab("Daily cases") +
   xlab("") +
   ggtitle("COVID19's first wave, 2020") + 
@@ -311,7 +313,10 @@ Copy the following chunk into your script to solve the ODE
 
 ```{r solve-ode-initial}
 # Solve model
-out <- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, parms = parameters)
+out <- ode(y = state,
+           times = as.numeric(times - times[1]),
+           func = COVID.base,
+           parms = parameters)
 # Plot solution
 par(mar = c(2, 2, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
 plot(out,
@@ -375,18 +380,22 @@ Why do we choose to plot incidence?
 It's time to plot our solution, and make sure we haven't made any silly mistakes (a reality check!).
 
 ```{r compare-histogram}
-ggplot() +
-    geom_line(aes(x = Date, y = Prevalence), data = tidied_output, linewidth = 1, colour = "firebrick") +
-    labs(x="Date", y="Modelled Prevalence") +
-    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
-    theme_bw()
+ggplot(data = tidied_output) +
+  geom_line(aes(x = Date, y = Prevalence),
+            linewidth = 1,
+            colour = "firebrick") +
+  labs(x="Date", y="Modelled Prevalence") +
+  ggtitle("COVID19's First Wave, Jan-Jul 2020") +
+  theme_bw()
 
-ggplot() +
-    geom_line(aes(x = Date, y = Population), data = tidied_output, linewidth = 1, colour = "firebrick") +
-    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
-    labs(x="Date", y="Total Population") +
-    ggtitle("COVID19's First Wave, Jan-Jul 2020") +
-    theme_bw()
+ggplot(data = tidied_output) +
+  geom_line(aes(x = Date, y = Population),
+            linewidth = 1,
+            colour = "firebrick") +
+  ggtitle("COVID19's First Wave, Jan-Jul 2020") +
+  labs(x="Date", y="Total Population") +
+  ggtitle("COVID19's First Wave, Jan-Jul 2020") +
+  theme_bw()
 ```
 
 What is the sum of all the differential equations for the COVID-19 model?
@@ -410,9 +419,12 @@ When wouldn't we expect a flat line here?
 ```{r compare-data}
 # Compare the solution with the data
 # Incidence
-ggplot(first_wave) +
-  geom_col(aes(x=Date, y=Cases), width=1, fill=NA, colour="black") +
-  geom_line(data=tidied_output, aes(x=Date, y=Incidence), linewidth=1, colour="firebrick") +
+ggplot(data=tidied_output) +
+  geom_col(data = first_wave,
+           aes(x=Date, y=Cases),
+           width=1, fill=NA, colour="black") +
+  geom_line(aes(x=Date, y=Incidence),
+            linewidth=1, colour="firebrick") +
   ylab("Daily cases") +
   xlab("") +
   ggtitle("Model-predicted incidence") +
@@ -425,12 +437,14 @@ cum_cases_reduced_dates = cumsum(first_wave$Cases[which(first_wave$Date>=as.Date
 tidied_output$Data_cum_cases = cum_cases_reduced_dates[1:20]
 
 ggplot(tidied_output) +
-  geom_point(aes(x=Date, y=Data_cum_cases), size=2, colour="skyblue") +
-  geom_line(data=tidied_output, aes(x=Date, y=Cumulative_incidence), linewidth=1, colour="firebrick") +
+  geom_point(aes(x=Date, y=Data_cum_cases),
+             size=2, colour="skyblue") +
+  geom_line(aes(x=Date, y=Cumulative_incidence),
+            linewidth=1, colour="firebrick") +
   ylab("Cumulative cases") +
   xlab("") +
   ggtitle("Model-predicted cumulative incidence") +
-  theme_bw()		
+  theme_bw()	
 ```
 
 Vary the value of $\mathcal{R}_0$ and re-run the model. What value of $\mathcal{R}_0$ do you think is most realistic?
@@ -460,7 +474,8 @@ start_date = as.Date("2020-03-07")
 end_date = as.Date("2020-04-26")
 times_long = seq(start_date, end_date, by=1)
 
-long_out <- ode(y = state, times = as.numeric(times_long - times_long[1]), func = COVID.base, parms = parameters)
+long_out <- ode(y = state, times = as.numeric(times_long - times_long[1]),
+                func = COVID.base, parms = parameters)
 tidied_long <- tidy_base_model(long_out, times_long, parameters)
 ```
 
