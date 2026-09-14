@@ -1,15 +1,10 @@
 ---
 title: "Modelling interventions in R"
-author: 
-  - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University,
-  - <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University and
-  - <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  - Presented by <a href="https://research.monash.edu/en/persons/michael-lydeamore">Michael Lydeamore</a>, Department of Econometrics and Business Statistics, Monash University
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+presenter: '<a href="https://research.monash.edu/en/persons/michael-lydeamore">Michael Lydeamore</a>, Department of Econometrics and Business Statistics, Monash University'
+contributors:
+  - 'With thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University'
+  - 'With thanks to <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University'
+  - 'With thanks to <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Faculty of Tropical Medicine, Mahidol University'
 execute:
   echo: true
   warning: false
@@ -19,24 +14,10 @@ editor:
     wrap: 72
 ---
 
-```{r, echo=F}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 
 # Summary
@@ -65,9 +46,7 @@ As always, we should set up a new script with a good header:
 ## MODELLING INTERVENTIONS IN R ##
 ##################################
 ```
-Save this file somewhere in your `student_materials` folder with a meaningful name, like `session_seir_ode_covid`.
-
-We also have to set the working directory. We can do this by pressing "To Source Location", or using the `setwd()` command like we've done previously.
+Open your course RStudio Project, create a new R script named `session9_interventions.R`, save it with your course files and copy the header into it. Install any missing packages once with `install.packages(c("dplyr", "deSolve", "ggplot2", "readr"))`.
 
 Now, let's load some packages.
 
@@ -77,15 +56,21 @@ library(deSolve)
 library(ggplot2)
 ```
 
-We'll be making use of the first wave Thailand data. Here is a reminder of what the first wave in Thailand looked like:
+We'll be making use of the first-wave Thailand data. [Download `first_wave_TH.csv`](../first_wave_TH.csv){download="first_wave_TH.csv"} and save it in the same directory as your R script. Here is a reminder of what the first wave in Thailand looked like:
 
 ![](Thailand_First_Wave.png)
 
 Let's load back in the data, and have a look at a plot:
 
 ```{r load-data}
-first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
-first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
+first_wave <- readr::read_csv(
+    "first_wave_TH.csv",
+    col_types = readr::cols(
+        Date = readr::col_date(),
+        Cases = readr::col_double(),
+        Cumulative_cases = readr::col_double()
+    )
+)
 
 ggplot(first_wave, aes(x = Date, y = Cases)) +
     geom_col(fill = "blue") +
@@ -96,7 +81,7 @@ ggplot(first_wave, aes(x = Date, y = Cases)) +
 ```
 
 # Coding Interventions
-We're going to model two interventions: the emergency declaration, which was made on March 26, and the start of curfew, which was on March 4th.
+We're going to model two interventions: the emergency declaration on 26 March and the start of curfew on 3 April.
 
 ```{r key-dates}
 fitting_start_date <- as.Date("2020-03-07") # start of fitting window
@@ -108,7 +93,7 @@ fitting_end_date <- as.Date("2020-05-13") # end of fitting window
 We should filter down our data to the time period we want to fit to.
 
 ```{r filter-data}
-outbreak <- first_wave %>%
+outbreak <- first_wave |>
     filter(Date >= fitting_start_date, Date <= fitting_end_date)
 ```
 
@@ -150,7 +135,7 @@ times <- seq(fitting_start_date, fitting_end_date, by = 1)
 We're going to use a slightly different implementation of the SEIR model from the previous session. See if you can spot the differences.
 
 ```{r ode-model}
-COVID.intervention <- function(t, state, parameters) {
+covid_intervention <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
 
         # Calculate the total population size
@@ -199,29 +184,29 @@ Now, we wrap this function in a call to `ode` to solve our model, and give us th
 
 ```{r wrapper-function}
 # Wrapper function to solve model and tidy up output
-solve.intervention.model <- function(y_ = state,
-                                     times_ = times,
-                                     func. = COVID.intervention,
-                                     parms_ = parameters) {
+solve_intervention_model <- function(initial_state = state,
+                                     model_times = times,
+                                     model_function = covid_intervention,
+                                     model_parameters = parameters) {
     out <- ode(
-        y = y_,
-        times = as.numeric(times_ - times_[1]),
-        func = func.,
-        parms = parms_
+        y = initial_state,
+        times = as.numeric(model_times - model_times[1]),
+        func = model_function,
+        parms = model_parameters
     )
 
 
     # Calculate the prevalence, incidence and cumulative incidence (for comparison with data)
-    out <- as.data.frame(out) %>%
+    out <- tibble::as_tibble(out) |>
         mutate(
-            Incidence = Exposed / parms_["latent_period"],
+            Incidence = Exposed / model_parameters["latent_period"],
             Cumulative_incidence = cumsum(Incidence) + Incidence[1],
             Population = Susceptible + Exposed + Infectious + Recovered,
             Prevalence = (Exposed + Infectious)/Population,
-            Date = times_
+            Date = model_times
         )
 
-    return(as.data.frame(out))
+    return(tibble::as_tibble(out))
 }
 ```
 
@@ -229,11 +214,11 @@ We can solve this for our initial guess parameters, and see how it looks
 
 ```{r solve-initial-guess}
 # Run the model for out initial set of parameters
-out_init <- solve.intervention.model()
+out_init <- solve_intervention_model()
 
 
 # Make sure to add observational uncertainty
-out_init <- out_init %>%
+out_init <- out_init |>
     mutate(
         lower50 = qpois(p = 0.25, lambda = Incidence), # 50% confidence interval (i.e., 25 - 75th centiles)
         upper50 = qpois(p = 0.75, lambda = Incidence),
@@ -261,6 +246,10 @@ ggplot(outbreak) +
 Not bad! What do you observe? Why do you think this might be, and how can the fit be improved?
 <textarea name='Text1' cols='127' rows='4'></textarea>
 
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session9_interventions_initial_model.R){download="session9_interventions_initial_model.R"}. Keep `first_wave_TH.csv` in the same directory before running it.
+:::
+
 # Model calibration
 So we have written code that can solve our model for a given set of parameters. Now, just like we did last time, we can use maximum likelihood estimation to determine the optimal parameters for our model.
 
@@ -277,7 +266,7 @@ logit <- function(x) {
 }
 
 # And its inverse
-inverse.logit <- function(x) {
+inverse_logit <- function(x) {
     return(exp(x) / (1 + exp(x)))
 }
 ```
@@ -285,23 +274,23 @@ inverse.logit <- function(x) {
 And now we're ready to write our negative log likelihood function.
 
 ```{r negative-log-likelihood}
-negative.log.likelihood <- function(transformed_parameters, # assumes logit form of parameters -- per Wednesday arvo session
+negative_log_likelihood <- function(transformed_parameters, # assumes logit form of parameters -- per Wednesday arvo session
                                     data = outbreak$Cases[-1],
-                                    state_ = state,
-                                    times_ = times,
-                                    func. = COVID.intervention, # note this is our ode solver
-                                    parms_base = parameters) {
+                                    initial_state = state,
+                                    model_times = times,
+                                    model_function = covid_intervention, # note this is our ode solver
+                                    model_parameters = parameters) {
 
     # Back-transform model parameters (inverse logit)
-    parms_base[c("emergency_efficacy", "curfew_efficacy")] <-
-        inverse.logit(transformed_parameters[c("emergency_efficacy", "curfew_efficacy")])
+    model_parameters[c("emergency_efficacy", "curfew_efficacy")] <-
+        inverse_logit(transformed_parameters[c("emergency_efficacy", "curfew_efficacy")])
 
     # Solve model with updated parameters
-    out <- solve.intervention.model(
-        state_,
-        times_,
-        func.,
-        parms_base
+    out <- solve_intervention_model(
+        initial_state,
+        model_times,
+        model_function,
+        model_parameters
     )
 
     return(-sum(dpois(
@@ -321,7 +310,7 @@ init_parameters <- c(logit(parameters[c(
 )]))
 
 # Calculate initial negative log-likelihood
-negative.log.likelihood(init_parameters)
+negative_log_likelihood(init_parameters)
 negative_log_likelihood_initial <- -sum(dpois(
     x = outbreak$Cases[-1],
     lambda = out_init$Incidence[-1], # This is from the previous section!
@@ -335,7 +324,7 @@ Now we're in a place to use `optim` again, just like we've done previously.
 ```{r using-optim}
 optim_NM <- optim(
     par = init_parameters,
-    fn = negative.log.likelihood,
+    fn = negative_log_likelihood,
     method = "Nelder-Mead",
     hessian = TRUE
 )
@@ -344,7 +333,7 @@ optim_NM <- optim(
 optim_NM$convergence # 0 - converged; nonzero - failed
 
 # Back-transform parameters
-c(inverse.logit(optim_NM$par[c(
+c(inverse_logit(optim_NM$par[c(
     "emergency_efficacy",
     "curfew_efficacy"
 )]))
@@ -359,7 +348,7 @@ optimal_parameters <- parameters
 optimal_parameters[c(
     "emergency_efficacy",
     "curfew_efficacy"
-)] <- inverse.logit(optim_NM$par[c(
+)] <- inverse_logit(optim_NM$par[c(
     "emergency_efficacy",
     "curfew_efficacy"
 )])
@@ -367,16 +356,16 @@ optimal_parameters[c(
 
 
 # Solve the model given the optimal parameters and initial conditions
-optimal_solution <- solve.intervention.model(
-    y_ = state,
-    times_ = times,
-    func. = COVID.intervention,
-    parms = optimal_parameters
+optimal_solution <- solve_intervention_model(
+    initial_state = state,
+    model_times = times,
+    model_function = covid_intervention,
+    model_parameters = optimal_parameters
 )
 
 
 # Calculate the observational confidence intervals
-optimal_solution <- optimal_solution %>%
+optimal_solution <- optimal_solution |>
     mutate(
         lower50 = qpois(p = 0.25, lambda = Incidence), # 50% confidence interval (i.e., 25 - 75th centiles)
         upper50 = qpois(p = 0.75, lambda = Incidence),
@@ -428,10 +417,10 @@ Great! The fit looks reasonable, at least visually. To report on parameter uncer
 ```{r report-uncertainty}
 covar_matrix <- solve(optim_NM$hessian)
 std_errors <- sqrt(diag(covar_matrix))
-estimates_transformed <- data.frame(
+estimates_transformed <- tibble::tibble(
     estimate = optim_NM$par,
     std_error = std_errors
-) %>%
+) |>
     dplyr::mutate(
         lower95CI = estimate - 1.96 * std_error,
         upper95CI = estimate + 1.96 * std_error
@@ -439,9 +428,13 @@ estimates_transformed <- data.frame(
 estimates_transformed
 
 # Back-transform estimates and confidence intervals
-estimates <- inverse.logit(estimates_transformed[, -2])
+estimates <- inverse_logit(estimates_transformed[, -2])
 estimates
 ```
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session9_interventions_calibrated_model.R){download="session9_interventions_calibrated_model.R"}. Keep `first_wave_TH.csv` in the same directory before running it.
+:::
 
 What do you see in these plots and estimates?
 <textarea name='Text1' cols='127' rows='2'></textarea>

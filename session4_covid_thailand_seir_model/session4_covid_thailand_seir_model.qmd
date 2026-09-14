@@ -1,34 +1,18 @@
 ---
-title: "Modelling an oubtreak - COVID-19 in Thailand"
-author:
-    - Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, and <a href="https://www.ndm.ox.ac.uk/team/ben-cooper">Ben Cooper</a>, Nuffield Department of Medicine, Oxford University and
-    - <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University.
-    - Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University
-    - July 2022
-output:
-    html_document:
-        self_contained: yes
+title: "Modelling an outbreak—COVID-19 in Thailand"
+date: July 2022
+presenter: '<a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>'
+contributors:
+  - 'With thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a> and <a href="https://www.ndm.ox.ac.uk/team/ben-cooper">Ben Cooper</a>, Nuffield Department of Medicine, Oxford University'
+  - 'With thanks to <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a>, Australian Institute of Tropical Health & Medicine, James Cook University'
+  - 'Adapted by the presenter, <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University'
 autocomplete: false
 ---
 
-```{r, echo=F}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 
 # Summary
@@ -58,13 +42,13 @@ We will write some R code for our COVID-19 model. The code for a compartmental m
 -   Post-process the model output to predict standard epidemiological metrics
 -   Plot useful outputs
 
-*We recommend to save your text at the end of each part by printing the file.*
+Save your script regularly. If you fall behind, use the cumulative download at the end of each major stage to rejoin the session.
 
 # Prerequisites and Data in R
 
 ## Code summary
 
-It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open R studio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
+It is good practice to write a short description of your code to summarise its purpose for future users. Open RStudio from your course Project, create a new R script and copy the header below into it:
 
 ```         
 # SPARK Modelling Short course
@@ -75,11 +59,11 @@ It is good practice to write a short description of your code to summarise its p
 #########################################
 ```
 
-Save this file in your `student_materials` folder, and give it a meaningful name, like `session_seir_ode_covid`.
+Save the script with your course files and give it a meaningful name, such as `session4_covid_model.R`.
 
 ## Library loading and importing data
 
-We'll need three libraries for this session:
+We'll need four packages for this session. Install any that are missing once with `install.packages(c("dplyr", "deSolve", "ggplot2", "readr"))`, then load the three used throughout the script:
 
 ```{r load-libraries}
 #| message: false
@@ -90,12 +74,17 @@ library(deSolve)
 library(ggplot2)
 ```
 
-and some data
+We also need [the Thailand first-wave data](../first_wave_TH.csv){download="first_wave_TH.csv"}. Save `first_wave_TH.csv` in the same directory as your R script before running the following code.
 
 ```{r load-data}
-first_wave <- read.csv("first_wave_TH.csv", colClasses = c("Date", "numeric", "numeric"))
-# Convert dates
-first_wave$Date <- as.Date(first_wave$Date, format = "%Y-%m-%d")
+first_wave <- readr::read_csv(
+    "first_wave_TH.csv",
+    col_types = readr::cols(
+        Date = readr::col_date(),
+        Cases = readr::col_double(),
+        Cumulative_cases = readr::col_double()
+    )
+)
 
 summary(first_wave)
 ```
@@ -171,7 +160,7 @@ Just as we did for session 2, we can write *functions* to evaluate our system of
 
 ```{r seir-model}
 # Model function
-COVID.base <- function(t, state, parameters) {
+covid_base <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
         # Calculate the total population size
         Total_population <- Susceptible + Exposed + Infectious + Recovered
@@ -229,11 +218,15 @@ Copy the following chunk into your script to solve the ODE
 
 ```{r solve-ode-initial}
 # Solve model
-out <- ode(y = state, times = as.numeric(times - times[1]), func = COVID.base, parms = parameters)
+out <- ode(y = state, times = as.numeric(times - times[1]), func = covid_base, parms = parameters)
 # Plot solution
 par(mar = c(1, 1, 1, 1)) # reduce the margins of the plot in order to fit it in the panel
 plot(out)
 ```
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session4_covid_model_initial.R){download="session4_covid_model_initial.R"}. Keep `first_wave_TH.csv` in the same directory before running it.
+:::
 
 Explain how each of the variables `S`, `E`, `I` and `R` can be measured in the field.
 
@@ -253,7 +246,7 @@ This is great, but as we've seen before, the output from `ode` can be a bit unwi
 
 ```{r clean-ode-function}
 tidy_base_model <- function(ode_output, times, parameters) {
-    as.data.frame(ode_output) %>%
+    tibble::as_tibble(ode_output) |>
         mutate(
             Prevalence = Exposed + Infectious,
             Incidence = Exposed / parameters["latent_period"],
@@ -294,7 +287,6 @@ ggplot() +
 
 ggplot() +
     geom_line(aes(x = Date, y = Population), data = tidied_output, linewidth = 1, colour = "firebrick") +
-    ggtitle("Thailand's First Wave, Jan-Jul 2020") +
     labs(x="Date", y="Total Population") +
     ggtitle("Thailand's First Wave, Jan-Jul 2020") +
     theme_bw()
@@ -356,7 +348,7 @@ start_date = as.Date("2020-03-07")
 end_date = as.Date("2020-04-26")
 times_long = seq(start_date, end_date, by=1)
 
-long_out <- ode(y = state, times = as.numeric(times_long - times_long[1]), func = COVID.base, parms = parameters)
+long_out <- ode(y = state, times = as.numeric(times_long - times_long[1]), func = covid_base, parms = parameters)
 tidied_long <- tidy_base_model(long_out, times_long, parameters)
 ```
 
@@ -365,4 +357,9 @@ Why would we do this?
 ```{=html}
 <textarea name="Text1" cols="127" rows="3"></textarea>
 ```
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session4_covid_model_complete.R){download="session4_covid_model_complete.R"}. Keep `first_wave_TH.csv` in the same directory before running it.
+:::
+
 <input type="button" value="Print this page" onclick="window.print()">

@@ -1,38 +1,18 @@
 ---
 title: "Vector-borne disease modelling"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  |
-  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
-      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+subtitle: "SPARK short course, Indonesia, March 2023"
+presenter: '<a href="https://www.doherty.edu.au/people/patricia-trish-campbell">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity'
+contributors:
+  - 'Developed by the presenter, <a href="https://www.doherty.edu.au/people/patricia-trish-campbell">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity'
 execute:
   echo: false
   warning: false
 ---
 
-```{r, echo=F, warnings=F}
+```{r, echo=FALSE, warning=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 
 # Summary {.tabset .tabset-pills .tabset-fade}
@@ -76,14 +56,14 @@ Unlike diseases that spread directly from person to person, vector-borne disease
 There are many different types of vector. While some diseases, such as malaria, are exclusively spread by a single vector genus, others, such as lymphatic filariasis, can be transmitted by multiple species. Similarly, some vectors are able to spread multiple diseases.
 
 ```{r echo=FALSE}
-df <- data.frame(
+df <- tibble::tibble(
   Vector = c("Mosquito - Anopheles", "Mosquito - Aedes", "Mosquito - Culex", "Blackflies"),
   Disease = c("Malaria, Lymphatic filariasis", "Zika, Dengue, Lymphatic filariasis", "West Nile fever, Japanese encephalitis, Lymphatic filariasis", "Onchocerciasis")
 )
 library(kableExtra)
 
-kbl(df) %>%
-kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
+kbl(df) |>
+kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE)
 ```
 
 Source: <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases"> https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases </a>
@@ -193,14 +173,14 @@ Unlike diseases that spread directly from person to person, vector-borne disease
 There are many different types of vector. While some diseases, such as malaria, are exclusively spread by a single vector genus, others, such as lymphatic filariasis, can be transmitted by multiple species. Similarly, some vectors are able to spread multiple diseases.
 
 ```{r echo=FALSE}
-df <- data.frame(
+df <- tibble::tibble(
   Vector = c("Mosquito - Anopheles", "Mosquito - Aedes", "Mosquito - Culex", "Blackflies"),
   Disease = c("Malaria, Lymphatic filariasis", "Zika, Dengue, Lymphatic filariasis", "West Nile fever, Japanese encephalitis, Lymphatic filariasis", "Onchocerciasis")
 )
 library(kableExtra)
 
-kbl(df) %>%
-kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
+kbl(df) |>
+kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE)
 ```
 
 Source: <a href="https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases"> https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases </a>
@@ -905,4 +885,3 @@ so each human is bitten less, limiting their ability to pass infection on.]{styl
 
 
 :::
-

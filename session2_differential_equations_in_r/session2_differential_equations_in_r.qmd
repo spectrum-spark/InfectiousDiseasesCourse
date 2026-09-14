@@ -1,40 +1,24 @@
 ---
-title: "Differential Equations in R"
-author:
-    - Developed by <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a> and <a href="https://research.jcu.edu.au/portfolio/rhondda.jones/">Rhondda Jones</a>
-    - Presented by <a href="https://research.monash.edu/en/persons/michael-lydeamore">Michael Lydeamore</a> and Eamon Conway
-    - July 2022
-output:
-    html_document:
-        self_contained: yes
+title: "Differential equations in R"
+date: July 2022
+presenter: '<a href="https://research.monash.edu/en/persons/michael-lydeamore">Michael Lydeamore</a> and Eamon Conway'
+contributors:
+  - 'Developed by <a href="https://research.jcu.edu.au/portfolio/michael.meehan1/">Michael Meehan</a> and <a href="https://research.jcu.edu.au/portfolio/rhondda.jones/">Rhondda Jones</a>'
 ---
     
-```{r, echo=F}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
 ```
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
+# Set up your script
 
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
-```
-### Open a new script file for this session
-
-We have put a file in the `./student_materials` folder and given it a meaningful name, `session2_differential_equations_practical`.
+[Download the Session 2 starter script](../session2_differential_equations_practical.R){download="session2_differential_equations_practical.R"}, save it with your course files and open it in RStudio.
 
 ### Code summary
 It is good practice to write a short description of your code to summarise its purpose for future users. Below is an example of such a description. Open RStudio, create a new file and copy and paste the code chunk below into your editor to start writing your own code:
 
-```{r, echo=T}
+```{r, echo=TRUE}
 ###################################################
 ## DIFFERENTIAL EQUATIONS IN R PRACTICAL SESSION##
 ###################################################
@@ -48,34 +32,23 @@ It is good practice to write a short description of your code to summarise its p
 
 
 
-### Set working directory
+## Work in your course project
 
-You must let R know the location of any files you plan to import, so remember to set your working directory. The most reproducible way to do this is to use an RStudio Project, combined with the `here` package. Projects do a few things:
+The most reproducible way to manage working directories is to use an RStudio Project. Projects do a few things:
 
 * Store project specific settings
 * Project-specific .Rhistory, .Rprofile and a handful of other files
 * Add a handy little piece of text on your RStudio icon
-* Store it's own history
+* Store their own history
 * Set your working directory to the project-specific top-level folder.
 
 They come with a file, ending in `.Rproj`, which you can open directly to open the project in RStudio.
 
-*Note that RStudio Project are specific to RStudio*. If you change editor they won't work.
+*RStudio Projects are specific to RStudio.* If you change editor, use that editor's project or workspace features instead.
 
 To set up an RStudio project, go to File > New Project. Name it something useful. Now, our working directory is set.
 
-If you don't want to use an RStudio Project (you should), then you can manually set the working directory by going to Session > Set Working Directory > To Source Location
-
-Alternatively, copy and paste the code chunk below into your editor, and edit according to your computer to continue writing your code:
-
-```{r, echo=T, eval=F}
-# Windows
-# setwd('your_path_goes_here')
-setwd("your_path_goes_here")
-# we recommend that you put it in '.\student_materials'
-# Mac OSX
-# setwd("./workshop")
-```
+If you are not using a Project, choose **Session > Set Working Directory > To Source File Location** after opening your script. Avoid hard-coded `setwd()` paths, which will not work on another participant's computer.
 
 # Material
 
@@ -147,8 +120,8 @@ The first step in solving a differential equation in `deSolve` is to specify our
 parameters <- c(r = 2) # Growth rate
 
 # Specify the initial conditions, define state variables and assign initial values
-initN <- 1 # Start with an initial population size N(0) = 1
-state <- c(N = initN) # Specify the state variables and initialize them to their initial values
+initial_population <- 1 # Start with an initial population size N(0) = 1
+state <- c(N = initial_population) # Specify the state variables and initialize them to their initial values
 ```
 
 The model parameters, which in this case is just the growth rate $r$, have been stored in the _labelled_ vector `parameters`; and the state variables and their initial conditions have been defined in the vector `state`. Here we have been careful to ensure that the parameter and state variables are stored as vectors with assigned names and values.
@@ -161,7 +134,7 @@ Next, we specify the model differential equation (given above) as a user-defined
 # 1. t : time, which is the dependent variable in our case
 # 2. state : a vector of state variables
 # 3. parameters : a vector of parameters (ie fixed variables)
-popmodel_exponentialgrowth <- function(t, state, parameters) {
+population_exponential_growth <- function(t, state, parameters) {
     # Initialize an environment with the elements of state and parameters as local variables
     with(as.list(c(state, parameters)), {
         dNdt <- r * N # The model equation
@@ -170,9 +143,9 @@ popmodel_exponentialgrowth <- function(t, state, parameters) {
 }
 ```
 
-In the function definition given above we have used the `with(as.list(c(state, parameters),{...})` statement to create an _environment_ that allows us to access the `state` and `parameter` variables directly by name within our function `popmodel_exponentialgrowth`. If we didn't use `with`, then we would have to refer to all of our parameters and states using the name notation, such as `parameters['r']`.
+In the function definition given above we have used the `with(as.list(c(state, parameters),{...})` statement to create an _environment_ that allows us to access the `state` and `parameter` variables directly by name within our function `population_exponential_growth`. If we didn't use `with`, then we would have to refer to all of our parameters and states using the name notation, such as `parameters['r']`.
 
-The user-defined function `popmodel_exponentialgrowth`, which calculates and returns the rate of change of each of our state variables, is the function that we will pass to `ode` from `deSolve` in order to solve the differential equation. However, before we can do this, we first need to specify a time lattice over which we wish our solution to our differential equation to be returned:
+The user-defined function `population_exponential_growth`, which calculates and returns the rate of change of each of our state variables, is the function that we will pass to `ode` from `deSolve` in order to solve the differential equation. However, before we can do this, we first need to specify a time lattice over which we wish our solution to our differential equation to be returned:
 
 ```{r de-specify-time-lattice}
 # Start with an initial time of t=0 and solve up to t=5 with time increments of 0.01
@@ -189,22 +162,22 @@ We now have all of the ingredients we require to solve our simple population gro
 # 2. times : the time lattice over which we solve the differential equation
 # 3. func : our differential equation given in terms of our state variables and model parameters
 # 4. parms : our model parameters
-out <- ode(y = state, times = times, func = popmodel_exponentialgrowth, parms = parameters)
+out <- ode(y = state, times = times, func = population_exponential_growth, parms = parameters)
 ```
 
-In the code above we call the `ode` function to numerically integrate our differential equation `popmodel_exponentialgrowth` and store the solution in the `deSolve` object `out`. To view the first few lines of output we can type
+In the code above we call the `ode` function to numerically integrate our differential equation `population_exponential_growth` and store the solution in the `deSolve` object `out`. To view the first few lines of output we can type
 
 ```{r de-growth-print-top}
 head(out)
 ```
 
-Here we see that the solution $N(t)$ is given at each time point specified in the time lattice times, ie at intervals of $\Delta t=0.01$ from $t=0$ up to $t=10$. Notice that the first value of the solution $N$ at time $t=0$ is the initial value we specified above, `initN = 1`.
+Here we see that the solution $N(t)$ is given at each time point specified in the time lattice times, ie at intervals of $\Delta t=0.01$ from $t=0$ up to $t=10$. Notice that the first value of the solution $N$ at time $t=0$ is the initial value we specified above, `initial_population = 1`.
 
 ### Plotting the solution
-`ggplot` doesn't know how to deal with `deSolve` outputs directly, so we have to turn it into a `data.frame` using `as.data.frame`. Then, having done that, we can map our x and y axes and plot the solution:
+`ggplot` doesn't know how to deal with `deSolve` outputs directly, so we have to turn it into a tibble using `tibble::as_tibble()`. Then, having done that, we can map our x and y axes and plot the solution:
 
 ```{r de-growth-visualise}
-ggplot(data = as.data.frame(out), aes(x=time, y=N)) +
+ggplot(data = tibble::as_tibble(out), aes(x=time, y=N)) +
     geom_line() +
     labs(x = "Time, t", y="Population size, N(t)")
 ```
@@ -224,13 +197,13 @@ where $e$ is Euler's number (=2.718282...). Given this analytical solution we ca
 # Create a coarse time lattice for display purposes
 times_coarse <- seq(from = 0, to = 5, by = 1)
 # Calculate the exact solution given the model parameters and initial conditions
-Nexact <- initN * exp(parameters["r"] * times_coarse)
+exact_population <- initial_population * exp(parameters["r"] * times_coarse)
 
-exact_solution <- data.frame(time = times_coarse, Nexact)
+exact_solution <- tibble::tibble(time = times_coarse, exact_population)
 
 ggplot() +
-    geom_line(data = as.data.frame(out), aes(x=time, y=N, colour="Numeric")) +
-    geom_point(data = exact_solution, aes(x=time, y=Nexact, colour="Exact")) +
+    geom_line(data = tibble::as_tibble(out), aes(x=time, y=N, colour="Numeric")) +
+    geom_point(data = exact_solution, aes(x=time, y=exact_population, colour="Exact")) +
     labs(x = "Time, t", y="Population size, N(t)", colour="") +
     scale_color_manual(values=c("red","black"))
 ```
@@ -241,6 +214,10 @@ Repeat your earlier calculation for the time taken for $N(t)>1000$, this time us
 <textarea cols="127" rows="2"></textarea>
 
 When exact, or even approximate analytical solutions are not available, another way to validate your numerical solution is by decreasing the time step to see if the solution varies substantially. If the solution is stable, eventually you should notice very little difference in the numerical solution as you continually decrease the time step, ie it should converge. This can be adjusted in the ode function using the rtol and atol parameters which set the relative and absolute error tolerances accepted during the integration routine (see [`deSolve` manual](https://cran.r-project.org/web/packages/deSolve/deSolve.pdf).)
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session2_differential_equations_part1.R){download="session2_differential_equations_part1.R"}. This runnable script contains the complete one-dimensional population-growth example.
+:::
 
 
 
@@ -274,31 +251,32 @@ and initial conditions
     R_0 &= 0
 \end{align}
 
-solve the SIR model following the same steps described above for the predator-prey model. Plot your solution to generate the following figure:
+solve the SIR model following the same steps used above for the population-growth model. Plot your solution to generate the following figure:
 
-```{r sir-model, echo=F}
-SIRModel <- function(t, state, parameters) {
+```{r sir-model, echo=FALSE}
+sir_model <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
-        dSdt <- -beta * S * I
-        dIdt <- beta * S * I - r * I
-        dRdt <- r * I
+        N <- S + I + R
+        dSdt <- -beta * S * I / N
+        dIdt <- beta * S * I / N - gamma * I
+        dRdt <- gamma * I
 
         return(list(c(dSdt, dIdt, dRdt)))
     })
 }
 
-parameters <- c(beta = 0.025, r = 1)
+parameters <- c(beta = 5, gamma = 1)
 initcond <- c(S = 199, I = 1, R = 0)
 
 times <- seq(0, 8, by = 0.1)
 
-out <- ode(y = initcond, times = times, func = SIRModel, parms = parameters)
+out <- ode(y = initcond, times = times, func = sir_model, parms = parameters)
 
 
 # ggplot likes "long" data, so we pivot our data from wide (1 column per state)
 # to long (1 row per state-value pair).
-plot_data <- as.data.frame(out) %>%
-    pivot_longer(!time, names_to = "state") %>%
+plot_data <- tibble::as_tibble(out) |>
+    pivot_longer(!time, names_to = "state") |>
     mutate(state = factor(state, levels=c("S","I","R")))
 
 # x-axis: Time
@@ -307,7 +285,7 @@ plot_data <- as.data.frame(out) %>%
 # Change the type of line depending on state
 ggplot(data = plot_data, aes(x=time, y=value, colour=state, linetype=state)) + 
     geom_line(linewidth = 0.8) + # Plot the lines
-    geom_point(data = plot_data %>% slice(seq(1, n(), 10)), size = 2) + #Overlay points on the line curves
+    geom_point(data = plot_data |> slice(seq(1, n(), 10)), size = 2) + #Overlay points on the line curves
     ggtitle("SIR Model")
 ```
 
@@ -327,6 +305,10 @@ ggplot(data = plot_data, aes(x=time, y=value, colour=state, linetype=state)) +
 
 5. If the reproduction number gives the multiplicative growth rate in the number of infectious individuals can you explain your observations from the previous two questions.
 <textarea cols="127" rows="2"></textarea>
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session2_differential_equations_core.R){download="session2_differential_equations_core.R"}. This runnable script includes Part 1 and the completed SIR model.
+:::
 
 # 
 <input type="button" value="Print this page" onclick="window.print()">
@@ -374,7 +356,7 @@ $$N(t) = \frac{K}{1+\left(\frac{K}{N_0}-1\right)e^{-rt}}$$
 
 Using this exact solution, check the accuracy of your numerical solution. Your answer should look something like the figure below:
 
-```{r logistic-growth-de, echo=F}
+```{r logistic-growth-de, echo=FALSE}
 popmodel_logistic <- function(t, state, parameters) {
     with(as.list(c(state, parameters)), {
         dNdt <- r * N * (1 - (N / K))
@@ -393,10 +375,10 @@ out <- ode(y = state_logistic, times = times, func = popmodel_logistic, parms = 
 
 analytic_solution <- parameters_logistic["K"] / (1 + ((parameters_logistic["K"] / state_logistic["N"]) - 1) * exp(-parameters_logistic["r"] * times_analytic))
 
-analytic_solution_data <- data.frame(time = times_analytic, analytic_solution)
+analytic_solution_data <- tibble::tibble(time = times_analytic, analytic_solution)
 
 ggplot() +
-    geom_line(data = as.data.frame(out), aes(x=time, y=N, colour="Numeric")) +
+    geom_line(data = tibble::as_tibble(out), aes(x=time, y=N, colour="Numeric")) +
     geom_point(data = analytic_solution_data, aes(x=time, y=analytic_solution, colour="Analytic")) +
     labs(x="Time, t", y="Population size, N(t)", colour="") +
     scale_color_manual(values=c("red","black"))
@@ -475,7 +457,7 @@ You need to create the function that evaluates the differential equation and cre
 # 1. t : time, which is the dependent variable in our case
 # 2. state : a vector of state variables
 # 3. parameters : a vector of parameters (ie fixed variables)
-LVmodel <- function(t, state, parameters) {
+lv_model <- function(t, state, parameters) {
     with(
         # Initialize an environment with the elements of state and parameters as local variables
         as.list(c(state, parameters)),
@@ -500,14 +482,14 @@ LVmodel <- function(t, state, parameters) {
 # 2. times : the time lattice over which we solve the differential equation
 # 3. func : our differential equation given in terms of our state variables and model parameters
 # 4. parms : our model parameters
-out <- ode(y = state, times = times, func = LVmodel, parms = parameters)
+out <- ode(y = state, times = times, func = lv_model, parms = parameters)
 ```
 
 ```{r predator-prey-plot}
 #| echo: false
-LVModel_data <- out %>% as.data.frame() %>% pivot_longer(!time, names_to="state")
+lv_model_data <- out |> tibble::as_tibble() |> pivot_longer(!time, names_to="state")
 
-ggplot(LVModel_data, aes(x=time, y=value, colour=state)) +
+ggplot(lv_model_data, aes(x=time, y=value, colour=state)) +
     geom_line(linewidth = 0.8) +
     labs(x="Time", y="Value", colour="State") +
     ggtitle("Predator-Prey Model")

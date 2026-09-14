@@ -1,0 +1,37 @@
+---
+title: "Modelling Infectious Diseases"
+subtitle: "Short course in mathematical modelling"
+presenter: SPARKLE
+---
+
+# Welcome
+
+This course introduces mathematical models of infectious disease transmission and their implementation in R. Work through the sessions in order unless your facilitator advises otherwise. The established numbering is retained, so the sequence moves from Session 5 to Session 7.
+
+## Using these materials
+
+- Work in an RStudio Project and keep the files for each session together.
+- Install the packages requested by a session once, then load them from your script.
+- Download the starter files below before the relevant session.
+- Save your work regularly.
+
+During coding sessions, a **Need to catch up?** box appears after each major stage. Its link downloads a runnable script containing all completed code up to that point, but none of the code from later exercises.
+
+## Starter files and data
+
+- [Session 1 bean simulation starter script](session1_introduction_beans.R){download="session1_introduction_beans.R"}
+- [Session 2 differential equations starter script](session2_differential_equations_practical.R){download="session2_differential_equations_practical.R"}
+- [Session 3 SEIRS Shiny app](shiny_app_SEIRS_variations.R){download="shiny_app_SEIRS_variations.R"}
+- [Thailand first-wave data for Sessions 4, 5 and 9](first_wave_TH.csv){download="first_wave_TH.csv"}
+- [Session 8 vector-borne modelling starter script](session8_vector_model.R){download="session8_vector_model.R"}
+
+## Sessions
+
+1. [Introduction to mathematical modelling](session1_intro_to_mathematical_modelling/session1_intro_to_mathematical_modelling.qmd)
+2. [Differential equations in R](session2_differential_equations_in_r/session2_differential_equations_in_r.qmd)
+3. [Designing a model to suit the pathogen](session3_writing_a_model_to_suit_the_infectious_agent/session3_writing_a_model_to_suit_the_infectious_agent.qmd)
+4. [Modelling an outbreak—COVID-19 in Thailand](session4_covid_thailand_seir_model/session4_covid_thailand_seir_model.qmd)
+5. [Fitting models in R](session5_fitting_models_in_r/session5_fitting_models_in_r.qmd)
+7. [Vector-borne disease modelling](session7_vector_borne_modelling/session7_vector_borne_modelling.qmd)
+8. [Vector-borne disease models in R](session8_vector_borne_modelling_in_r/session8_vector_borne_modelling_in_r.qmd)
+9. [Modelling interventions in R](session9_modelling_interventions_in_r/session9_modelling_interventions_in_r.qmd)

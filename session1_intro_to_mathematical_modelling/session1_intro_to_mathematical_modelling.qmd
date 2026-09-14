@@ -1,39 +1,21 @@
 ---
-title: "Introduction to Mathematical Modelling"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  |
-  | Thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University and
-  | <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University.
-  | Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University July 2022
-  | ***Adapted and presented by <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences, and Australian Institute of Tropical Health & Medicine, James Cook University (and CSIRO) March 2023***
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+title: "Introduction to mathematical modelling"
+subtitle: "SPARK short course, Indonesia, March 2023"
+presenter: '<a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>'
+contributors:
+  - 'With thanks to <a href="http://www.tropmedres.ac/researchers/researcher/lisa-white">Lisa White</a>, Nuffield Department of Medicine, Oxford University'
+  - 'With thanks to <a href="http://www.tropmedres.ac/wirichada-pan-ngum">Wirichada Pan-Ngum</a>, Faculty of Tropical Medicine, Mahidol University'
+  - 'Adapted and previously presented by <a href="https://research.jcu.edu.au/portfolio/emma.mcbryde">Emma McBryde</a>, Australian Institute of Tropical Health & Medicine, James Cook University'
+  - 'Adapted by the presenter, <a href="https://research.jcu.edu.au/portfolio/roslyn.hickson/">Roslyn Hickson</a>, College of Public Health, Medical and Veterinary Sciences and Australian Institute of Tropical Health & Medicine, James Cook University, and CSIRO'
 execute:
   echo: false
   warning: false
 ---
     
-```{r, echo=F}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 # Summary
 
@@ -150,9 +132,9 @@ This is a practical session in which, individually or as part of a group, you wi
 5. Repeat until you reach 10 weeks.
 
 ## Recording results in R
-Here is some code to record and plot your results in R. Open RStudio, open from your student files folder "session1_introduction_beans.R". Using the Session tab, Set Working Directory / To Source File Location. Copy and paste the code chunk below into your editor. Then replace the default results with your own.
+Here is some code to record and plot your results in R. Work in your course RStudio Project and [download the Session 1 starter script](../session1_introduction_beans.R){download="session1_introduction_beans.R"}. Save it with your course files, open it in RStudio and replace the default results with your own.
 
-```{r bean-plot, echo=T, eval=T}
+```{r bean-plot, echo=TRUE, eval=TRUE}
 # Mathematical Modelling of Infectious Diseases
 ###################################################
 ## INTRODUCTION TO MATHEMATICAL MODELLING PRACTICAL SESSION## 
@@ -185,14 +167,27 @@ result[,4]<-c(0,  1,  3,  7, 11, 15, 18, 19, 19, 19) # R
 ## Plotting results in R
 Copy and paste the code chunk below into your editor to plot your results:
 
-```{r plot-beans, echo=T, eval=T}
+```{r plot-beans, echo=TRUE, eval=TRUE}
 #| warning: false
 library(ggplot2)
-ggplot() +
-    geom_point(aes(x=result[, 1], y=result[, 3]), colour="red") +
-    ggtitle("My simulated epidemic") +
-    labs(x="Time in weeks", y="I")
+
+result_data <- result |>
+    tibble::as_tibble(.name_repair = ~ c(
+        "week", "susceptible", "infectious", "recovered", "total"
+    ))
+
+ggplot(result_data, aes(x = week, y = infectious)) +
+    geom_point(colour = "red") +
+    labs(
+        x = "Time in weeks",
+        y = "Infectious people",
+        title = "My simulated epidemic"
+    )
 ```
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session1_introduction_beans_complete.R){download="session1_introduction_beans_complete.R"}. This runnable script includes the completed population check and plot.
+:::
 
 8. How does your result differ from the above plot?
 <textarea name="Text1" cols="127" rows="5"></textarea>

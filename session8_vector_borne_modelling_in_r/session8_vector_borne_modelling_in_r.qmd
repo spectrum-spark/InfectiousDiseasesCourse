@@ -1,15 +1,9 @@
 ---
 title: "Vector-borne disease models in R"
-author: |
-  | ***SPARK short course 'Mathematical Modelling of Infectious Diseases', Indonesia, March 2023***
-  |
-  | ***Developed and presented by <a href="https://www.doherty.edu.au/people/patricia-trish-campbell" 
-      >Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity***
-output: 
-  html_document:
-     self_contained: yes
-     link-external-icon: true
-     link-external-newwindow: true
+subtitle: "SPARK short course, Indonesia, March 2023"
+presenter: '<a href="https://www.doherty.edu.au/people/patricia-trish-campbell">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity'
+contributors:
+  - 'Developed by the presenter, <a href="https://www.doherty.edu.au/people/patricia-trish-campbell">Trish Campbell</a>, The University of Melbourne at The Peter Doherty Institute for Infection and Immunity'
 execute:
   echo: false
   warning: false
@@ -18,24 +12,10 @@ editor:
     wrap: 72
 ---
 
-```{r, echo=F}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(
     fig.align = "center"
 )
-```
-
-```{css, echo=F}
-textarea {
-    width: 100%;
-}
-
-.line-block {
-    line-height: 1.5em;
-}
-
-.line-block a {
-    font-style: italic;
-}
 ```
 
 # Summary {.tabset .tabset-pills .tabset-fade}
@@ -76,11 +56,12 @@ Before we begin developing a model, we need to set up our system.
 As in previous sessions, we will start by creating a new file and
 writing a short description of your code to summarise its purpose for
 future users. Below is an example of such a description for this
-session. Open R studio, and then open the file `session8_vector_model.R` in the
-`\student_files` folder. Copy and paste the code chunk below (or
-write your own!) into your editor to start writing your own code:
+session. Open your course RStudio Project and [download the Session 8 starter
+script](../session8_vector_model.R){download="session8_vector_model.R"}. Save it
+with your course files and open it in RStudio. The script already contains the
+header below.
 
-```{r, echo=T}
+```{r, echo=TRUE}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
@@ -92,8 +73,7 @@ write your own!) into your editor to start writing your own code:
 
 ### Save your new file
 
-We recommend saving your file in the `\student_materials` folder as you
-work through the practical session.
+Save your script regularly as you work through the practical session.
 
 ### Set working directory
 
@@ -107,10 +87,11 @@ automatically.
 
 ### Load required packages
 
-Copy and paste the code below into your file to load the dplyr, deSolve
-and ggplot2 packages:
+Install the required packages once with
+`install.packages(c("dplyr", "deSolve", "ggplot2"))`. The starter script then
+loads them with `library()`.
 
-```{r load_packages, echo=F, eval=T, message=FALSE, warnings = FALSE}
+```{r load_packages, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
 # Library imports
 # Used this code rather than the code for students in the chunk below, as using the
 # code in the chunk below is re-installing the packages when knitr is used,
@@ -126,17 +107,11 @@ for (pkg in required_packages) {
 }
 ```
 
-```{r load_packages_student, echo=T, eval=F}
+```{r load_packages_student, echo=TRUE, eval=FALSE}
 # Library imports
-required_packages <- (c("dplyr",
-                        "deSolve",
-                        "ggplot2"))
-for (pkg in required_packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-}
+library(dplyr)
+library(deSolve)
+library(ggplot2)
 ```
 
 
@@ -159,7 +134,7 @@ Modelling the transmission dynamics of dengue in the presence of
 *Wolbachia*. *Mathematical Biosciences*, 262, pp.157--166.
 
 ```{r echo=FALSE}
-df <- data.frame(
+df <- tibble::tibble(
   Parameter = c("Number of bites", "Probability of transmission - mosquito to human", "Probability of transmission - human to mosquito", "Duration of infection - humans", "Mosquito birth and death rate"),
   Name = c("bites", "T_HM", "T_MH", "infectious period", "mu_M"),
   Value = c(0.63, 0.26, 0.26, 5, "1/14"),
@@ -167,8 +142,8 @@ df <- data.frame(
 )
 library(kableExtra)
 
-kbl(df) %>%
-kable_styling(bootstrap_options = c("striped", "hover"), full_width = T)
+kbl(df) |>
+kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE)
 ```
 
 Using the table of parameter names and values above, copy and paste the
@@ -176,7 +151,7 @@ following code chunk into your editor and complete the code by entering
 the [VALUE, NAME]{style="color: blue"} and
 [DESCRIPTION]{style="color: blue"} where they are missing:
 
-```{r load_parameters, echo=F, eval=T}
+```{r load_parameters, echo=FALSE, eval=TRUE}
 # This code chunk loads the parameters but does not show the completed code to the 
 # students. Students need to complete the chunk named 'load_parameters_student'
 parameters <- c(
@@ -188,7 +163,7 @@ parameters <- c(
 )
 ```
 
-```{r load_parameters_student, echo=T, eval=F}
+```{r load_parameters_student, echo=TRUE, eval=FALSE}
 # Model parameters
 parameters <- c(
  bites = VALUE, # number of bites per mosquito per day
@@ -206,7 +181,7 @@ into your editor, and complete by specifying the arguments to the
 `seq`function, indicated as [VALUE, VALUE, VALUE]{style="color: blue"}
 using a time step of 1 day:
 
-```{r set_up_times, echo=F, eval=T}
+```{r set_up_times, echo=FALSE, eval=TRUE}
 # This code chunk sets up the times for which to solve the odes but does not show the completed code to the 
 # students. Students need to complete the chunk named 'set_up_times_student'
 start_date = as.Date("2008-11-02")
@@ -214,7 +189,7 @@ end_date = as.Date("2009-05-31")
 times = seq(start_date, end_date, by = 1)
 ```
 
-```{r set_up_times_student, echo=T, eval=F}
+```{r set_up_times_student, echo=TRUE, eval=FALSE}
 # Time window
 start_date = as.Date("2008-11-02")
 end_date = as.Date("2009-05-31")
@@ -243,7 +218,7 @@ population in the human recovered compartment and mosquito infectious
 compartment using the values of other variables (where [EXPRESSION USING
 OTHER VARIABLES]{style="color: blue"} is indicated):
 
-```{r load_initial, echo=F, eval=T}
+```{r load_initial, echo=FALSE, eval=TRUE}
 # This code chunk loads the initial conditions but does not show the completed code to the 
 # students. Students need to complete the chunk named 'load_initial_student'
 human_population <- 150000 # population of Cairns in 2008
@@ -255,7 +230,7 @@ initial_mosquito_susceptible <- 224990
 initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible
 ```
 
-```{r load_initial_student, echo=T, eval=F}
+```{r load_initial_student, echo=TRUE, eval=FALSE}
 # Initial conditions
 human_population <- VALUE # population of Cairns in 2008
 initial_human_susceptible <- VALUE
@@ -274,7 +249,7 @@ variable. Copy and paste the code chunk below into your editor and
 complete the code by entering [VALUE]{style="color: blue"} where it is
 missing:
 
-```{r states, echo=F, eval=T}
+```{r states, echo=FALSE, eval=TRUE}
 # This code chunk initialises the compartments but does not show the completed code to the 
 # students. Students need to complete the chunk named 'states_student'
 state <- c(Susceptible_human = initial_human_susceptible,
@@ -284,7 +259,7 @@ state <- c(Susceptible_human = initial_human_susceptible,
            Infectious_mosquito = initial_mosquito_infectious)
 ```
 
-```{r states_student, echo=T, eval=F}
+```{r states_student, echo=TRUE, eval=FALSE}
 # Define model compartments, gather into a single variable to capture the state 
 # of the system and set to initial values
 state <- c(Susceptible_human = VALUE,
@@ -303,7 +278,7 @@ and paste the incomplete code chunk below into your editor and complete
 the code by replacing the text indicated by [EXPRESSION USING OTHER
 VARIABLES]{style="color: blue"}:
 
-```{r model_function, echo=F, eval=T}
+```{r model_function, echo=FALSE, eval=TRUE}
 # This code chunk contains the model function but does not show the completed code to the 
 # students. Students need to complete the chunk named 'model_function_student'
 dengue_base <- function(t, state, parameters){
@@ -339,7 +314,7 @@ dengue_base <- function(t, state, parameters){
 }
 ```
 
-```{r model_function_student, echo=T, eval=F}
+```{r model_function_student, echo=TRUE, eval=FALSE}
 # Model function
 dengue_base <- function(t, state, parameters){
   with(as.list(c(state, parameters)), {
@@ -381,7 +356,7 @@ Copy and paste the code chunk below into your editor, enter
 [VALUE]{style="color: blue"} where it is missing, and then run your
 file:
 
-```{r run_model_student, echo=T, eval=F}
+```{r run_model_student, echo=TRUE, eval=FALSE}
 # Solve model
 out_dengue_base <- ode(y = VALUE, times = as.numeric(times - times[1]), 
                        func = VALUE, parms = VALUE)
@@ -395,7 +370,7 @@ plot(out_dengue_base,
 
 Your plot should look this this:
 
-```{r run_model, echo=F, eval=T}
+```{r run_model, echo=FALSE, eval=TRUE}
 # This code chunk runs the model and plots the output but does not show the 
 # completed code to the students. Students need to complete the chunk named 
 # 'run_model_student'
@@ -448,24 +423,29 @@ susceptible human change, and we get the new infections by changing its
 sign. Copy and paste the code below into your editor, to convert daily
 prevalence into weekly incidence and plot the results:
 
-```{r new_infections, echo=T, eval=T}
-# Convert ode output to data frame
-dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+```{r new_infections, echo=TRUE, eval=TRUE}
+# Convert ODE output to a tibble
+dengue_base_infections <- tibble::as_tibble(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
- dengue_base_infections <- dengue_base_infections  %>%
+ dengue_base_infections <- dengue_base_infections  |>
                           mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
-                                 Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
-                          filter(time %% 7 == 0) %>%
-                          select(c("time", "Cumulative_human_infections")) %>%
+                                 Cumulative_human_infections = cumsum(Susceptible_human_change)) |>
+                          filter(time %% 7 == 0) |>
+                          select(time, Cumulative_human_infections) |>
                           mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
 
 
 # Plot solution
-plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections")
+ggplot(dengue_base_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections"
+  ) +
+  theme_bw()
 ```
 
 Comparing this plot to the published data, we can see that while we have
@@ -477,6 +457,10 @@ we will adapt our model to see whether we can improve the fit.
 <p><br></p>
 
 <input type="button" value="Print this page" onclick="window.print()">
+
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session8_vector_model_part1.R){download="session8_vector_model_part1.R"}. This runnable script contains the completed Part 1 model.
+:::
 
 ## **Part 1:** Solutions
 
@@ -502,15 +486,9 @@ By the end of Part 1, your script should look like this:
 # for a simple model of dengue. Results are then plotted.
 
 # Library imports
-required_packages <- (c("dplyr",
-                        "deSolve",
-                        "ggplot2"))
-for (pkg in required_packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-}
+library(dplyr)
+library(deSolve)
+library(ggplot2)
 
 # Model parameters
 parameters <- c(
@@ -585,23 +563,28 @@ plot(out_dengue_base,
               "Susceptible mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_base_infections <- tibble::as_tibble(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_base_infections <- dengue_base_infections  %>%
+dengue_base_infections <- dengue_base_infections  |>
   mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
-         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
 
 
 # Plot solution
-plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections")
+ggplot(dengue_base_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections"
+  ) +
+  theme_bw()
 ```
 :::
 
@@ -766,7 +749,7 @@ the parameters and variables you used in Part 1, other than your final
 results. For example, you could copy and paste the code chunk below into
 your editor to start writing your code for the new model:
 
-```{r, echo=T}
+```{r, echo=TRUE}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
 #############################################################
@@ -780,7 +763,7 @@ First we need to add new parameters. Copy and paste the code chunk below
 into your editor, enter [VALUE]{style="color: blue"} where it is
 missing, and then run your file:
 
-```{r load_parameters_with_E, echo=F, eval=T}
+```{r load_parameters_with_E, echo=FALSE, eval=TRUE}
 # This code chunk loads the parameters for the model with E but does not show the completed code to the 
 # students. Students need to complete the chunk named 'load_parameters_with E_student'
 parameters <- c(
@@ -794,7 +777,7 @@ parameters <- c(
 )
 ```
 
-```{r load_parameters_with_E_student, echo=T, eval=F}
+```{r load_parameters_with_E_student, echo=TRUE, eval=FALSE}
 # Model parameters
 parameters <- c(
  bites = 0.63, # number of bites per mosquito per day
@@ -812,7 +795,7 @@ exposed humans and no exposed mosquitoes. Copy and paste the code chunk
 below into your editor, completing [EXPRESSION USING OTHER
 VARIABLES]{style="color: blue"} where it is missing:
 
-```{r load_initial_with_E, echo=F, eval=T}
+```{r load_initial_with_E, echo=FALSE, eval=TRUE}
 # This code chunk loads the initial conditions for the model with E but does not show the completed code to the 
 # students. Students need to complete the chunk named 'load_initial_with_E_student'
 human_population <- 150000 # population of Cairns in 2008
@@ -826,7 +809,7 @@ initial_mosquito_exposed <- 0
 initial_mosquito_infectious <- mosquito_population - initial_mosquito_susceptible - initial_mosquito_exposed
 ```
 
-```{r load_initial_with_E_student, echo=T, eval=F}
+```{r load_initial_with_E_student, echo=TRUE, eval=FALSE}
 # Initial conditions
 human_population <- 150000 # population of Cairns in 2008
 initial_human_susceptible <- 149998
@@ -844,7 +827,7 @@ conditions we set above. Copy and paste the code chunk below into your
 editor, completing [EXPRESSION USING OTHER
 VARIABLES]{style="color: blue"} where it is missing:
 
-```{r states_with_E, echo=F, eval=T}
+```{r states_with_E, echo=FALSE, eval=TRUE}
 # This code chunk initialises the compartments but does not show the completed code to the 
 # students. Students need to complete the chunk named 'states_student'
 state <- c(Susceptible_human = initial_human_susceptible,
@@ -856,7 +839,7 @@ state <- c(Susceptible_human = initial_human_susceptible,
            Infectious_mosquito = initial_mosquito_infectious)
 ```
 
-```{r states_with_E_student, echo=T, eval=F}
+```{r states_with_E_student, echo=TRUE, eval=FALSE}
 # Define model compartments, gather into a single variable to capture the 
 # state of the system and set to initial values
 state <- c(Susceptible_human = initial_human_susceptible,
@@ -872,7 +855,7 @@ We set up times to run the model, here extending the end date (for
 reasons that will become clear). Copy and paste the code chunk below
 into your editor, to continue your code:
 
-```{r set_up_times_with_E, echo=F, eval=T}
+```{r set_up_times_with_E, echo=FALSE, eval=TRUE}
 # This code chunk sets up the times for which to solve the odes but does not 
 # show the completed code to the students. Students need to complete the chunk 
 # named 'set_up_times_student'
@@ -881,7 +864,7 @@ end_date = as.Date("2011-05-31")
 times = seq(start_date, end_date, by = 1)
 ```
 
-```{r set_up_times_with_E_student, echo=T, eval=F}
+```{r set_up_times_with_E_student, echo=TRUE, eval=FALSE}
 # Time window
 start_date = as.Date("2008-11-02")
 end_date = as.Date("2011-05-31")
@@ -892,7 +875,7 @@ Next, we adapt our model function to include the changes we have made to
 the model structure.Copy and paste the code chunk below into your editor
 to continue your code:
 
-```{r model_E_function, echo=T, eval=T}
+```{r model_E_function, echo=TRUE, eval=TRUE}
 # Model function
 dengue_with_E <- function(t, state, parameters){
   with(as.list(c(state, parameters)), {
@@ -952,7 +935,7 @@ in Part 1. Copy and paste the code chunk below into your editor, enter
 [VALUE]{style="color: blue"} where it is missing, and then run the new
 model parts of your file:
 
-```{r run_model_with_E_student, echo=T, eval=F}
+```{r run_model_with_E_student, echo=TRUE, eval=FALSE}
 # Solve model
 out_dengue_with_E <- ode(y = VALUE, times = as.numeric(times - times[1]), 
                          func = VALUE, parms = VALUE)
@@ -967,7 +950,7 @@ plot(out_dengue_with_E,
 
 Your plot should look this this:
 
-```{r run_model_with_E, echo=F, eval=T}
+```{r run_model_with_E, echo=FALSE, eval=TRUE}
 # This code chunk runs the model with E and plots the output but does not show the completed code to the 
 # students. Students need to complete the chunk named 'run_model_with_E_student'
 out_dengue_with_E <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E, parms = parameters)
@@ -1007,14 +990,14 @@ and recovered human change. Copy and paste the code below into your
 editor, to convert daily prevalence into weekly incidence and plot the
 results:
 
-```{r new_infections_with_E, echo=T, eval=T}
-# Convert ode output to data frame
-dengue_with_E_infections <- as.data.frame(
+```{r new_infections_with_E, echo=TRUE, eval=TRUE}
+# Convert ODE output to a tibble
+dengue_with_E_infections <- tibble::as_tibble(
   out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_with_E_infections <- dengue_with_E_infections  %>%
+dengue_with_E_infections <- dengue_with_E_infections  |>
                           mutate(Infectious_human_change = 
                                    c(0, diff(Infectious_human)),
                                  Recovered_human_change = 
@@ -1023,17 +1006,21 @@ dengue_with_E_infections <- dengue_with_E_infections  %>%
                                    Infectious_human_change + 
                                    Recovered_human_change,
                                  Cumulative_human_infections = 
-                                   cumsum(New_human_infections)) %>%
-                          filter(time %% 7 == 0) %>%
-                          select(c("time", "Cumulative_human_infections")) %>%
+                                   cumsum(New_human_infections)) |>
+                          filter(time %% 7 == 0) |>
+                          select(time, Cumulative_human_infections) |>
                           mutate(Weekly_human_infections = 
                                    c(0, diff(Cumulative_human_infections)))
      
 # Plot solution
-plot(dengue_with_E_infections$time, 
-     dengue_with_E_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections, model with E")
+ggplot(dengue_with_E_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections, model with E"
+  ) +
+  theme_bw()
 ```
 
 As a reminder, here are the published data from Part 1:
@@ -1062,6 +1049,10 @@ As a reminder, here are the published data from Part 1:
 
 <input type="button" value="Print this page" onclick="window.print()">
 
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session8_vector_model_part2.R){download="session8_vector_model_part2.R"}. This runnable script contains the completed models from Parts 1 and 2.
+:::
+
 ## **Part 2:** Solutions
 
 ::: {.panel-tabset}
@@ -1075,7 +1066,7 @@ it if you have tried to complete the exercises yourself and need some help**
 
 By the end of Part 2, your script should look like this:
 
-```{r part_2_solutions, echo=T, eval=F}
+```{r part_2_solutions, echo=TRUE, eval=FALSE}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
@@ -1085,15 +1076,9 @@ By the end of Part 2, your script should look like this:
 # for a simple model of dengue. Results are then plotted.
 
 # Library imports
-required_packages <- (c("dplyr",
-                        "deSolve",
-                        "ggplot2"))
-for (pkg in required_packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-}
+library(dplyr)
+library(deSolve)
+library(ggplot2)
 
 # Model parameters
 parameters <- c(
@@ -1168,23 +1153,28 @@ plot(out_dengue_base,
               "Susceptible mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_base_infections <- tibble::as_tibble(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_base_infections <- dengue_base_infections  %>%
+dengue_base_infections <- dengue_base_infections  |>
   mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
-         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
 
 
 # Plot solution
-plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections")
+ggplot(dengue_base_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections"
+  ) +
+  theme_bw()
 
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
@@ -1276,24 +1266,29 @@ plot(out_dengue_with_E,
               "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_with_E_infections <- as.data.frame(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_with_E_infections <- tibble::as_tibble(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_with_E_infections <- dengue_with_E_infections  %>%
+dengue_with_E_infections <- dengue_with_E_infections  |>
   mutate(Infectious_human_change = c(0, diff(Infectious_human)),
          Recovered_human_change = c(0, diff(Recovered_human)),
          New_human_infections = Infectious_human_change + Recovered_human_change,
-         Cumulative_human_infections = cumsum(New_human_infections)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(New_human_infections)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
 
 # Plot solution
-plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections, model with E")
+ggplot(dengue_with_E_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections, model with E"
+  ) +
+  theme_bw()
 
 
 ```
@@ -1320,7 +1315,7 @@ have started a new model. For example, you could copy and paste the code
 chunk below into your editor to start writing your code for the new
 model:
 
-```{r, echo=T}
+```{r, echo=TRUE}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 3##
 #############################################################
@@ -1334,7 +1329,7 @@ model:
 First we need to define the new seasonality parameters. Copy and paste
 the code chunk below into your editor to continue writing your code:
 
-```{r add_seasonality, echo=T, eval=T}
+```{r add_seasonality, echo=TRUE, eval=TRUE}
 # Add seasonality parameters
 parameters <- c(
  bites = 0.63, # number of bites per mosquito per day
@@ -1361,7 +1356,7 @@ population is not at its maximum value. Copy and paste the code chunk
 below into your editor to define the new initial conditions and
 initialise the compartments:
 
-```{r load_initial_with_E_seasonal, echo=T, eval=T}
+```{r load_initial_with_E_seasonal, echo=TRUE, eval=TRUE}
 # Initial conditions
 human_population <- 150000 # population of Cairns in 2008
 initial_human_susceptible <- 149998
@@ -1386,7 +1381,7 @@ state <- c(Susceptible_human = initial_human_susceptible,
 We set up times to run the model, returning to our original dates. Copy
 and paste the code chunk below into your editor, to continue your code:
 
-```{r set_up_times_with_E_seasonal, echo=F, eval=T}
+```{r set_up_times_with_E_seasonal, echo=FALSE, eval=TRUE}
 # This code chunk sets up the times for which to solve the odes but does not show the completed code to the 
 # students. Students need to complete the chunk named 'set_up_times_student'
 start_date = as.Date("2008-11-02")
@@ -1394,7 +1389,7 @@ end_date = as.Date("2009-05-31")
 times = seq(start_date, end_date, by = 1)
 ```
 
-```{r set_up_times_with_E_seasonal_student, echo=T, eval=F}
+```{r set_up_times_with_E_seasonal_student, echo=TRUE, eval=FALSE}
 # Time window
 start_date = as.Date("2008-11-02")
 end_date = as.Date("2009-05-31")
@@ -1405,7 +1400,7 @@ Next, we adapt our model function to add seasonality to the mosquito
 death rate.Copy and paste the code chunk below into your editor to
 continue your code:
 
-```{r model_E_season_function, echo=T, eval=T}
+```{r model_E_season_function, echo=TRUE, eval=TRUE}
 # Model function with seasonality
 dengue_with_E_seasonal <- function(t, state, parameters){
   with(as.list(c(state, parameters)), {
@@ -1452,7 +1447,7 @@ different name for the output to preserve the results from your model in
 Parts 1 and 2. Copy and paste the code chunk below into your editor and
 then run the new model parts of your file:
 
-```{r run_model_with_E_seasonal_student, echo=T, eval=F}
+```{r run_model_with_E_seasonal_student, echo=TRUE, eval=FALSE}
 # Solve model
 out_dengue_with_E_seasonal <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E_seasonal, parms = parameters)
 
@@ -1465,7 +1460,7 @@ plot(out_dengue_with_E_seasonal,
 
 Your plot should look this this:
 
-```{r run_model_with_E_seasonal, echo=F, eval=T}
+```{r run_model_with_E_seasonal, echo=FALSE, eval=TRUE}
 # This code chunk runs the model with E and plots the output but does not show the completed code to the 
 # students. Students need to complete the chunk named 'run_model_with_E_student'
 out_dengue_with_E_seasonal <- ode(y = state, times = as.numeric(times - times[1]), func = dengue_with_E_seasonal, parms = parameters)
@@ -1480,25 +1475,30 @@ plot(out_dengue_with_E_seasonal,
 Copy and paste the code below into your editor, to convert daily
 prevalence into weekly incidence and plot the results:
 
-```{r new_infections_with_E_seasonal_infectious, echo=T, eval=T}
-# Convert ode output to data frame
-dengue_with_E_seasonal_infections <- as.data.frame(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
+```{r new_infections_with_E_seasonal_infectious, echo=TRUE, eval=TRUE}
+# Convert ODE output to a tibble
+dengue_with_E_seasonal_infections <- tibble::as_tibble(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  %>%
+dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  |>
                           mutate(Infectious_human_change = c(0, diff(Infectious_human)),
                                  Recovered_human_change = c(0, diff(Recovered_human)),
                                  New_human_infections = Infectious_human_change + Recovered_human_change,
-                                 Cumulative_human_infections = cumsum(New_human_infections)) %>%
-                          filter(time %% 7 == 0) %>%
-                          select(c("time", "Cumulative_human_infections")) %>%
+                                 Cumulative_human_infections = cumsum(New_human_infections)) |>
+                          filter(time %% 7 == 0) |>
+                          select(time, Cumulative_human_infections) |>
                           mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
      
 # Plot solution
-plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections, model with E and seasonality")
+ggplot(dengue_with_E_seasonal_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections, model with E and seasonality"
+  ) +
+  theme_bw()
 ```
 
 As a reminder, here are the published data from Part 1:
@@ -1520,6 +1520,10 @@ be the explanation for any differences?**
 
 <input type="button" value="Print this page" onclick="window.print()">
 
+::: {.callout-tip title="Need to catch up?"}
+[Download the code for this session so far](../session8_vector_model_part3.R){download="session8_vector_model_part3.R"}. This runnable script contains the completed models from Parts 1, 2 and 3.
+:::
+
 ## **Part 3:** Solutions
 
 ::: {.panel-tabset}
@@ -1533,7 +1537,7 @@ it if you have tried to complete the exercises yourself and need some help**
 
 By the end of Part 3, your script should look like this:
 
-```{r part_3_solutions, echo=T, eval=F}
+```{r part_3_solutions, echo=TRUE, eval=FALSE}
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 1##
 #############################################################
@@ -1543,15 +1547,9 @@ By the end of Part 3, your script should look like this:
 # for a simple model of dengue. Results are then plotted.
 
 # Library imports
-required_packages <- (c("dplyr",
-                        "deSolve",
-                        "ggplot2"))
-for (pkg in required_packages) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-    library(pkg, character.only = TRUE)
-  }
-}
+library(dplyr)
+library(deSolve)
+library(ggplot2)
 
 # Model parameters
 parameters <- c(
@@ -1626,23 +1624,28 @@ plot(out_dengue_base,
               "Susceptible mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_base_infections <- as.data.frame(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_base_infections <- tibble::as_tibble(out_dengue_base[, c("time", "Susceptible_human", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_base_infections <- dengue_base_infections  %>%
+dengue_base_infections <- dengue_base_infections  |>
   mutate(Susceptible_human_change = -c(0, diff(Susceptible_human)),
-         Cumulative_human_infections = cumsum(Susceptible_human_change)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(Susceptible_human_change)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))    
 
 
 # Plot solution
-plot(dengue_base_infections$time, dengue_base_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections")
+ggplot(dengue_base_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections"
+  ) +
+  theme_bw()
 
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 2##
@@ -1734,24 +1737,29 @@ plot(out_dengue_with_E,
               "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_with_E_infections <- as.data.frame(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_with_E_infections <- tibble::as_tibble(out_dengue_with_E[, c("time", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_with_E_infections <- dengue_with_E_infections  %>%
+dengue_with_E_infections <- dengue_with_E_infections  |>
   mutate(Infectious_human_change = c(0, diff(Infectious_human)),
          Recovered_human_change = c(0, diff(Recovered_human)),
          New_human_infections = Infectious_human_change + Recovered_human_change,
-         Cumulative_human_infections = cumsum(New_human_infections)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(New_human_infections)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
 
 # Plot solution
-plot(dengue_with_E_infections$time, dengue_with_E_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections, model with E")
+ggplot(dengue_with_E_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections, model with E"
+  ) +
+  theme_bw()
 
 #############################################################
 ## MODELLING VECTOR-BORNE DISEASES PRACTICAL SESSION PART 3##
@@ -1849,24 +1857,29 @@ plot(out_dengue_with_E_seasonal,
               "Susceptible mosquitoes", "Exposed mosquitoes", "Infectious mosquitoes"), 
      xlab = "Time", ylab = c("population size"))
 
-# Convert ode output to data frame
-dengue_with_E_seasonal_infections <- as.data.frame(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
+# Convert ODE output to a tibble
+dengue_with_E_seasonal_infections <- tibble::as_tibble(out_dengue_with_E_seasonal[, c("time", "Infectious_human", "Recovered_human")])
 
 # Create columns for new infections and cumulative new infections, 
 # Select every 7th row and calculate the difference
-dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  %>%
+dengue_with_E_seasonal_infections <- dengue_with_E_seasonal_infections  |>
   mutate(Infectious_human_change = c(0, diff(Infectious_human)),
          Recovered_human_change = c(0, diff(Recovered_human)),
          New_human_infections = Infectious_human_change + Recovered_human_change,
-         Cumulative_human_infections = cumsum(New_human_infections)) %>%
-  filter(time %% 7 == 0) %>%
-  select(c("time", "Cumulative_human_infections")) %>%
+         Cumulative_human_infections = cumsum(New_human_infections)) |>
+  filter(time %% 7 == 0) |>
+  select(time, Cumulative_human_infections) |>
   mutate(Weekly_human_infections = c(0, diff(Cumulative_human_infections)))
 
 # Plot solution
-plot(dengue_with_E_seasonal_infections$time, dengue_with_E_seasonal_infections$Weekly_human_infections, 
-     xlab = "Time", ylab = c("number of infections"),
-     main = "Weekly human new infections, model with E and seasonality")
+ggplot(dengue_with_E_seasonal_infections, aes(x = time, y = Weekly_human_infections)) +
+  geom_line() +
+  labs(
+    x = "Time",
+    y = "Number of infections",
+    title = "Weekly human new infections, model with E and seasonality"
+  ) +
+  theme_bw()
 
 ```
 :::
@@ -1916,4 +1929,3 @@ our model could be adapted to include it.**
 <p><br></p>
 
 <input type="button" value="Print this page" onclick="window.print()">
-
