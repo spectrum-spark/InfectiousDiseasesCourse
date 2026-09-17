@@ -4,12 +4,13 @@ subtitle: SPARKLE short course 'Mathematical Modelling of Infectious Diseases'
 description: "Take the model of COVID and introduce interventions"
 format:
     training-html:
-        presenter: <br>Ihsan Fadilah <br>Oxford University Clinical Research Unit Indonesia
+        presenter: <br>Dewi Anastasia Christina <br>OUCRU Indonesia
         contributors:
             - Lisa White, Nuffield Department of Medicine, Oxford University
             - Michael Lydeamore, Monash University
             - Michael Meehan, Australian Institute of Tropical Health & Medicine, James Cook University
             - Wirichada Pan-Ngum, Department of Tropical Hygiene, Faculty of Tropical Medicine, Mahidol University
+            - Ihsan Fadilah, Oxford University Clinical Research Unit Indonesia
 execute:
   echo: true
   warning: false
@@ -47,7 +48,7 @@ As always, we should set up a new script with a good header:
 #| eval: false
 
 # SPARKLE Modelling Short course
-# 2025 Infectious Diseases Modelling
+# 2026 Infectious Diseases Modelling
 
 ##################################
 ## MODELLING INTERVENTIONS IN R ##
@@ -481,7 +482,7 @@ uncertainty should we consider?
 
 # Exploring counterfactuals
 
-Now we have a model for the COVID-19 transmission in Thailand, and we
+Now we have a model for the COVID-19 transmission, and we
 have estimates of how effective the two stages of interventions were
 (emergency and curfew), we can now explore what *could* have happened,
 or the **counterfactuals**.
